@@ -13,11 +13,7 @@
     "ai-companion": "/components/ai-companion/ai-companion"
   },
   "lazyCodeLoading": "requiredComponents",
-  "plugins": {
-    "WechatSI": {
-      "version": "0.3.9"
-    }
-  },
+  "cloudfunctionRoot": "cloudfunctions/",
   "window": {
     "navigationBarTitleText": "Xipoo 吸噗",
     "navigationBarBackgroundColor": "#FFFFFF",
