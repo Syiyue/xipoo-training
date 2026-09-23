@@ -1,0 +1,50 @@
+<view wx:if="{{visible && steps.length > 0}}" class="intro-guide-root {{darkMode ? 'dark-mode' : ''}}">
+  <!-- 遮罩层：四个矩形块拼出洞口 -->
+  <view class="intro-mask" bindtap="onMaskTap" wx:if="{{holeReady && !showCompletion}}">
+    <view class="mask-block" style="top: 0; left: 0; right: 0; height: {{holeTop}}px;"></view>
+    <view class="mask-block" style="top: {{holeTop + holeHeight}}px; left: 0; right: 0; bottom: 0;"></view>
+    <view class="mask-block" style="top: {{holeTop}}px; left: 0; width: {{holeLeft}}px; height: {{holeHeight}}px;"></view>
+    <view class="mask-block" style="top: {{holeTop}}px; left: {{holeLeft + holeWidth}}px; right: 0; height: {{holeHeight}}px;"></view>
+
+    <!-- 高亮边框 -->
+    <view class="hole-border" style="top: {{holeTop}}px; left: {{holeLeft}}px; width: {{holeWidth}}px; height: {{holeHeight}}px; border-color: {{themePrimary}}; box-shadow: 0 0 32rpx {{themePrimary}}44;"></view>
+  </view>
+
+  <!-- 气泡 -->
+  <view
+    wx:if="{{bubbleVisible && !showCompletion}}"
+    class="intro-bubble {{'arrow-' + bubbleArrowDir}}"
+    style="top: {{bubbleTop}}px; left: {{bubbleLeft}}px;"
+  >
+    <!-- 箭头 -->
+    <view class="bubble-arrow {{'arrow-' + bubbleArrowDir}}" style="left: {{bubbleArrowLeft}};"></view>
+
+    <text class="bubble-text">{{steps[currentStep].text}}</text>
+
+    <view class="bubble-dots">
+      <view wx:for="{{steps}}" wx:for-item="s" wx:for-index="i" wx:key="i" class="bubble-dot {{i === currentStep ? 'active' : ''}} {{i < currentStep ? 'done' : ''}}"></view>
+    </view>
+
+    <view class="bubble-actions">
+      <text class="bubble-step-hint">{{currentStep + 1}} / {{steps.length - (steps[steps.length - 1].isCompletion ? 1 : 0)}}</text>
+      <button class="bubble-btn" style="background: {{themePrimary}};" bindtap="onNext">
+        {{currentStep === steps.length - 1 ? (lang === 'en' ? 'Got it' : '知道了') : (lang === 'en' ? 'Next' : '下一步')}}
+      </button>
+    </view>
+  </view>
+
+  <!-- 收尾弹窗（无高亮） -->
+  <view wx:if="{{showCompletion}}" class="completion-root">
+    <!-- 全屏遮罩（无挖洞） -->
+    <view class="completion-mask" bindtap="onMaskTap"></view>
+    <!-- 中部弹窗 -->
+    <view class="completion-dialog">
+      <text class="completion-title">{{steps[currentStep].title}}</text>
+      <text class="completion-body">{{steps[currentStep].body}}</text>
+      <view class="completion-buttons">
+        <button class="completion-btn secondary" bindtap="onCompletionSecondary">{{steps[currentStep].btnSecondary}}</button>
+        <button class="completion-btn primary" style="background: {{themePrimary}};" bindtap="onCompletionPrimary">{{steps[currentStep].btnPrimary}}</button>
+      </view>
+    </view>
+  </view>
+</view>

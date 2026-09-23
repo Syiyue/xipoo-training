@@ -1,0 +1,230 @@
+<view style="{{themeVars}}" class="page profile-page {{darkMode ? 'dark-mode' : ''}}">
+  <!-- 页面背景图（fixed 垫底，铺满整屏） -->
+  <image class="page-bg-image" src="/images/bg/profile_bg.jpg" mode="aspectFill" />
+  <!-- 游客卡片 -->
+  <view wx:if="{{isGuest}}" class="profile-card card guest-card">
+    <view class="profile-card-top">
+      <view class="profile-avatar">
+        <text class="avatar-placeholder">?</text>
+      </view>
+      <view class="profile-info">
+        <text class="profile-name">{{t.guestProfileTitle || '未登录'}}</text>
+        <text class="profile-desc">{{t.guestProfileDesc || '登录后管理个人信息、订阅和活动。'}}</text>
+      </view>
+    </view>
+    <button class="guest-login-btn" bindtap="onGuestLogin">{{t.goLogin || '去登录'}}</button>
+  </view>
+
+  <block wx:if="{{!isGuest}}">
+    <!-- Figma：封面、悬浮头像与统计信息（支持下拉拉伸） -->
+    <view class="profile-hero"
+      bindtouchstart="onHeroTouchStart"
+      bindtouchmove="onHeroTouchMove"
+      bindtouchend="onHeroTouchEnd">
+      <view class="profile-cover-wrap" style="height: {{coverHeight}}px;{{heroPulling ? 'transition:none;' : ''}}" bindtap="changeCover">
+        <image
+          wx:if="{{user && (user.coverUrl || user.avatarUrl)}}"
+          class="profile-cover"
+          src="{{user.coverUrl || user.avatarUrl}}"
+          mode="aspectFill"
+          style="height: {{coverHeight}}px;"
+        />
+        <view wx:else class="profile-cover profile-cover-fallback" style="height: {{coverHeight}}px;"></view>
+        <view class="cover-edit-hint">
+          <text class="cover-edit-icon">📷</text>
+        </view>
+      </view>
+
+      <view class="hero-avatar" catchtap="chooseAvatar" style="transform: translateY({{pullDistance}}px);">
+        <image wx:if="{{user && user.avatarUrl}}" src="{{user.avatarUrl}}" mode="aspectFill" class="avatar-img" />
+        <text wx:else class="avatar-placeholder">{{user ? user.name.charAt(0) : '?'}}</text>
+      </view>
+
+      <view class="hero-stats" style="transform: translateY({{pullDistance}}px);">
+        <view class="stat-item" catchtap="goFriends">
+          <text class="stat-number">{{friendCount}}</text>
+          <text class="stat-label">{{t.friendCount || '联系人'}}</text>
+        </view>
+        <view class="stat-item" catchtap="goActivities">
+          <text class="stat-number">{{activityCount}}</text>
+          <text class="stat-label">{{t.activityCount || '活动'}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 下方内容区域：点击任意位置收起拉伸封面 -->
+  <view bindtap="onContentTap">
+    <block wx:if="{{!isGuest}}">
+    <view class="profile-identity" bindtap="goEditProfile">
+      <text class="profile-name">{{user ? user.name : '...'}}</text>
+      <text class="profile-desc">{{user ? (user.degree || t.notSet || '未填写') + '～' + (user.major && user.major !== '' ? user.major + '～' : '') + (user.gender || t.notSet || '未填写') : ''}}</text>
+    </view>
+
+    <view class="id-bar">
+      <view class="id-text">
+        <text class="id-label">Xipoo ID：</text>
+        <text class="id-number">{{user ? user.id : '...'}}</text>
+      </view>
+      <view class="copy-btn" bindtap="copyId" hover-class="copy-btn-hover">{{t.copyId || '复制'}}</view>
+    </view>
+  </block>
+
+  <!-- 模块4：功能列表 -->
+  <view class="menu-card card">
+
+    <!-- 4-① 编辑个人信息 -->
+    <block wx:if="{{!isGuest}}">
+    <view class="menu-item" bindtap="goEditProfileFromList" hover-class="menu-hover">
+      <view class="menu-left">
+        <text class="menu-icon">✎</text>
+        <view class="menu-text">
+          <text class="menu-title">{{t.editProfile || '编辑个人信息'}}</text>
+          <text class="menu-desc">{{t.editProfileDesc || '头像、昵称、年级、性别、专业'}}</text>
+        </view>
+      </view>
+      <text class="arrow-icon">›</text>
+    </view>
+    <view class="menu-divider"></view>
+
+    <!-- 我的预约（模块 3 自研预约） -->
+    <view class="menu-item" bindtap="goMyReservations" hover-class="menu-hover">
+      <view class="menu-left">
+        <text class="menu-icon">📅</text>
+        <view class="menu-text">
+          <text class="menu-title">{{lang === 'en' ? 'My reservations' : '我的预约'}}</text>
+          <text class="menu-desc">{{lang === 'en' ? 'View or cancel your bookings' : '查看与取消我的预约'}}</text>
+        </view>
+      </view>
+      <text class="arrow-icon">›</text>
+    </view>
+    <view class="menu-divider"></view>
+    </block>
+
+
+    <!-- 4-③ 语言设置 -->
+    <view class="menu-item">
+      <view class="menu-left">
+        <text class="menu-icon">◈</text>
+        <view class="menu-text">
+          <text class="menu-title">{{t.languageSetting || '语言设置'}}</text>
+        </view>
+      </view>
+      <view class="toggle-row">
+        <text class="toggle-label {{lang === 'zh' ? 'active' : ''}}">{{t.zh || '中文'}}</text>
+        <view class="switch-box"><switch class="settings-switch" checked="{{lang === 'en'}}" bindchange="toggleLang" color="{{themePrimary}}" /></view>
+        <text class="toggle-label toggle-label-en {{lang === 'en' ? 'active' : ''}}">{{t.en || 'English'}}</text>
+      </view>
+    </view>
+    <view class="menu-divider"></view>
+
+    <!-- 4-④ 黑夜模式 -->
+    <view class="menu-item">
+      <view class="menu-left">
+        <text class="menu-icon">☽</text>
+        <view class="menu-text">
+          <text class="menu-title">{{t.darkMode || '黑夜模式'}}</text>
+          <text class="menu-desc">{{t.darkModeDesc || '切换深色/浅色主题'}}</text>
+        </view>
+      </view>
+      <view class="toggle-row">
+        <text class="toggle-label {{!darkMode ? 'active' : ''}}">{{t.lightMode || '白天'}}</text>
+        <view class="switch-box"><switch class="settings-switch" checked="{{darkMode}}" bindchange="toggleDarkMode" color="{{themePrimary}}" /></view>
+        <text class="toggle-label {{darkMode ? 'active' : ''}}">{{t.darkMode || '黑夜'}}</text>
+      </view>
+    </view>
+    <view class="menu-divider"></view>
+
+    <!-- 意见反馈 -->
+    <view class="menu-item" bindtap="goFeedback" hover-class="menu-hover">
+      <view class="menu-left">
+        <text class="menu-icon">⚑</text>
+        <view class="menu-text">
+          <text class="menu-title">{{t.feedback || '意见反馈'}}</text>
+          <text class="menu-desc">{{t.feedbackDesc || '建议反馈、举报违规行为'}}</text>
+        </view>
+      </view>
+      <text class="arrow-icon">›</text>
+    </view>
+    <view class="menu-divider"></view>
+
+    <!-- 4-⑤ 主题外观 -->
+    <view class="menu-item" bindtap="goThemeSettings" hover-class="menu-hover">
+      <view class="menu-left">
+        <text class="menu-icon">❀</text>
+        <view class="menu-text">
+          <text class="menu-title">{{t.themeSetting || '主题外观'}}</text>
+          <text class="menu-desc">{{t.themeSettingDesc || '选择预设主题或自定义颜色'}}</text>
+        </view>
+      </view>
+      <text class="arrow-icon">›</text>
+    </view>
+    <view class="menu-divider"></view>
+
+    <!-- 4-⑥ 用户协议 -->
+    <view class="menu-item" bindtap="goUserAgreement" hover-class="menu-hover">
+      <view class="menu-left">
+        <text class="menu-icon">☰</text>
+        <view class="menu-text">
+          <text class="menu-title">{{t.userAgreement || '用户协议'}}</text>
+        </view>
+      </view>
+      <text class="arrow-icon">›</text>
+    </view>
+    <view class="menu-divider"></view>
+
+    <!-- 4-⑦ 隐私政策 -->
+    <view class="menu-item" bindtap="goPrivacyPolicy" hover-class="menu-hover">
+      <view class="menu-left">
+        <text class="menu-icon">⊙</text>
+        <view class="menu-text">
+          <text class="menu-title">{{t.privacyPolicy || '隐私政策'}}</text>
+        </view>
+      </view>
+      <text class="arrow-icon">›</text>
+    </view>
+    <view class="menu-divider"></view>
+
+    <!-- 4-⑨ 重新查看新手引导 -->
+    <view class="menu-item" bindtap="replayIntroGuide" hover-class="menu-hover">
+      <view class="menu-left">
+        <text class="menu-icon">▶</text>
+        <view class="menu-text">
+          <text class="menu-title">{{lang === 'en' ? 'Replay intro guide' : '重新查看新手引导'}}</text>
+          <text class="menu-desc">{{lang === 'en' ? 'Clear guide cache and replay' : '清除引导缓存，重新播放'}}</text>
+        </view>
+      </view>
+      <text class="arrow-icon">›</text>
+    </view>
+
+  </view>
+
+  <!-- 模块5：退出登录 -->
+  <button wx:if="{{!isGuest}}" class="logout-btn" bindtap="confirmLogout">{{t.logout || '退出登录'}}</button>
+  <app-tabbar id="app-tabbar" active="profile" />
+
+  <!-- AI 小章鱼助手 -->
+  <ai-companion page="profile" />
+  </view><!-- end onContentTap wrapper -->
+
+  <!-- 图片压缩用隐藏 canvas（上传头像/背景时压缩依赖） -->
+  <canvas canvas-id="compressCanvas"
+          class="hidden-canvas"
+          style="width: {{compressCanvasWidth}}px; height: {{compressCanvasHeight}}px;"></canvas>
+
+  <!-- 头像选择弹窗 -->
+  <avatarPicker visible="{{showAvatarPicker}}" lang="{{lang}}" currentAvatarUrl="{{user.avatarUrl || ''}}" bind:close="onAvatarPickerClose" bind:avatarpreview="onAvatarPreview" bind:avatarupdated="onAvatarUpdated" />
+
+  <!-- ===== 新手引导 ===== -->
+  <intro-guide
+    visible="{{introGuideVisible}}"
+    steps="{{introSteps}}"
+    lang="{{lang}}"
+    themePrimary="{{themePrimary || '#7c83c7'}}"
+    darkMode="{{darkMode}}"
+    storageKey="introGuideProfileDone"
+    bind:complete="onIntroComplete"
+    bind:exit="onIntroExit"
+    bind:gotoProfile="onIntroGotoProfile"
+  />
+</view>

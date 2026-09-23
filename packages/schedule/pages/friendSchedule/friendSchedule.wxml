@@ -1,0 +1,38 @@
+<view style="{{themeVars}}" class="page friend-schedule-page {{darkMode ? 'dark-mode' : ''}}">
+  <!-- 好友头像 + 姓名 -->
+  <view wx:if="{{profile}}" class="friend-profile-header">
+    <view class="fph-avatar">
+      <image wx:if="{{profile.avatarUrl}}" src="{{profile.avatarUrl}}" mode="aspectFill" class="fph-avatar-img" />
+      <text wx:else class="fph-avatar-text">{{profile.avatar || '?'}}</text>
+    </view>
+    <view class="fph-info">
+      <text class="fph-name">{{profile.name || 'Friend'}}</text>
+      <text class="fph-id">Xipoo ID · {{profile.id}}</text>
+    </view>
+  </view>
+  <text class="page-subtitle">{{subtitle}}</text>
+
+  <view class="calendar-card">
+    <view class="calendar-head"><button data-step="-1" bindtap="shiftMonth">‹</button><text>{{monthTitle}}</text><button data-step="1" bindtap="shiftMonth">›</button></view>
+    <view class="weekdays"><text wx:for="{{weekdays}}" wx:key="*this">{{item}}</text></view>
+    <view class="month-grid">
+      <view wx:for="{{monthCells}}" wx:key="date" data-date="{{item.date}}" bindtap="selectDate" class="month-day {{item.inMonth ? '' : 'muted'}} {{item.selected ? 'selected' : ''}}">
+        <text>{{item.day}}</text><view wx:if="{{item.courseCount}}" class="course-dot">{{item.courseCount}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="date-row"><text>{{lang === 'en' ? 'View date' : '查看日期'}}</text><picker mode="date" value="{{selectedDate}}" bindchange="onDate"><view>{{selectedDate}}</view></picker></view>
+
+  <view class="course-list" wx:if="{{dayCourses.length}}">
+    <view class="course-row" wx:for="{{dayCourses}}" wx:key="id">
+      <view class="time"><text>{{item.start}}</text><text>{{item.end}}</text></view>
+      <view>
+        <!-- busy 权限下服务端不返回课程名称与地点，仅显示忙闲状态 -->
+        <text>{{item.title || (lang === 'en' ? 'Busy' : '忙碌')}}</text>
+        <text wx:if="{{item.place}}">{{item.place}}</text>
+      </view>
+    </view>
+  </view>
+  <view wx:else class="empty">{{lang === 'en' ? 'No schedule on this day.' : '这一天没有安排。'}}</view>
+</view>

@@ -1,0 +1,74 @@
+<view style="{{themeVars}}" class="page detail-page {{darkMode ? 'dark-mode' : ''}}">
+  <view wx:if="{{activity}}">
+    <view class="detail-header">
+      <text class="detail-header-title">{{lang === 'en' ? 'Details' : '详情'}}</text>
+      <view class="detail-header-actions">
+        <view class="{{activity.liked ? 'header-icon-btn liked' : 'header-icon-btn'}}" hover-class="header-btn-hover" bindtap="toggleLike" aria-label="{{lang === 'en' ? 'Like' : '点赞'}}">{{activity.liked ? '♥' : '♡'}} {{activity.likeCount || 0}}</view>
+        <view class="header-icon-btn" hover-class="header-btn-hover" bindtap="toggleShare" aria-label="{{lang === 'en' ? 'Share' : '转发'}}">↗</view>
+        <view class="{{activity.subscribed ? 'header-subscribe active' : 'header-subscribe'}}" hover-class="header-btn-hover" bindtap="toggleSubscription">
+          {{activity.subscriptionActionText}}
+        </view>
+      </view>
+    </view>
+
+    <view class="section-block">
+      <text class="section-label">{{lang === 'en' ? 'Basic info' : '基本情况'}}</text>
+      <view class="detail-card card">
+        <view class="cover">
+          <image class="cover-image" src="{{activity.coverUrl}}" mode="aspectFill" />
+          <text>{{activity.displayType}}</text>
+        </view>
+        <text class="title">{{activity.displayTitle}}</text>
+        <text class="meta">{{activity.time}} · {{activity.displayPlace}}</text>
+        <text class="host">{{activity.displayHost}}</text>
+        <view class="publisher-row" bindtap="openPublisher">
+          <image wx:if="{{activity.publisherLogoUrl}}" class="publisher-avatar" src="{{activity.publisherLogoUrl}}" mode="aspectFill" />
+          <view wx:else class="publisher-avatar publisher-avatar-fallback" style="background: {{activity.publisherAccent}};">{{activity.publisherInitial}}</view>
+          <view class="publisher-copy">
+            <text>{{activity.publisherName}}</text>
+            <text>{{lang === 'en' ? 'View organizer profile' : '查看活动方门面'}}</text>
+          </view>
+          <text class="publisher-arrow">›</text>
+        </view>
+        <text class="desc">{{activity.displayDesc}}</text>
+      </view>
+    </view>
+
+    <view class="section-block">
+      <text class="section-label">{{lang === 'en' ? 'Calendar activity' : '日历展示的活动'}}</text>
+      <view class="calendar-activity-card card">
+        <text class="calendar-card-title">{{activity.displayTitle}}</text>
+        <text class="calendar-card-meta">{{activity.date}} {{activity.start}}-{{activity.end}} · {{activity.displayPlace}}</text>
+        <view class="tag-row">
+          <text wx:for="{{activity.displayTags}}" wx:for-item="tag" wx:key="*this">#{{tag}}</text>
+        </view>
+        <view wx:if="{{activity.displayScheduleTag}}" class="schedule-tag">
+          {{activity.displayScheduleTag}}
+        </view>
+      </view>
+    </view>
+
+    <view class="detail-actions card">
+      <button class="primary-btn" bindtap="toggleRegistration">{{activity.registrationActionText}}</button>
+      <button class="ghost-btn add-schedule" bindtap="addToSchedule">{{lang === 'en' ? 'Add to schedule' : '加入活动表'}}</button>
+    </view>
+
+    <view wx:if="{{sharePreviewOpen}}" class="share-mask" bindtap="closeSharePreview">
+      <view class="share-card" catchtap="noop">
+        <text class="share-title">{{activity.displayTitle}}</text>
+        <text class="share-desc">{{activity.displayDesc}}</text>
+        <image class="share-poster" src="{{activity.coverUrl}}" mode="aspectFill" />
+        <view class="share-footer">
+          <view>
+            <text>{{lang === 'en' ? 'Xipoo Campus Circle' : 'Xipoo 校园圈'}}</text>
+            <text>{{lang === 'en' ? 'Long press to open mini program' : '长按打开小程序'}}</text>
+          </view>
+          <view class="qr">XP</view>
+        </view>
+        <button class="primary-btn" open-type="share">{{lang === 'en' ? 'Share with classmates' : '分享给同学'}}</button>
+        <button class="ghost-btn" bindtap="savePoster">{{lang === 'en' ? 'Save poster' : '保存海报'}}</button>
+      </view>
+    </view>
+  </view>
+  <view wx:else class="empty card">{{lang === 'en' ? 'Activity not found or unpublished.' : '活动不存在或尚未发布。'}}</view>
+</view>

@@ -1,0 +1,288 @@
+.page {
+  padding: 24rpx 28rpx 48rpx;
+  min-height: 100vh;
+  background: #f5f7f6;
+}
+
+.section-label {
+  display: block;
+  margin-top: 28rpx;
+  margin-bottom: 12rpx;
+  color: var(--brand-ink);
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
+.required {
+  color: #f56c6c;
+}
+
+/* 类型选择器 */
+.picker-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 22rpx;
+  border-radius: 14rpx;
+  border: 2rpx solid #ececf0;
+  background: #fff;
+  font-size: 25rpx;
+  color: var(--brand-ink);
+  box-shadow: none;
+}
+
+.picker-arrow {
+  color: #b0beb6;
+  font-size: 22rpx;
+}
+
+/* 内容输入 */
+.content-input {
+  width: 100%;
+  min-height: 220rpx;
+  padding: 20rpx 22rpx;
+  border-radius: 14rpx;
+  border: 2rpx solid #ececf0;
+  background: #fff;
+  font-size: 24rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+  box-shadow: none;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  margin-top: 8rpx;
+  color: #a6b3ab;
+  font-size: 20rpx;
+}
+
+/* 图片上传 */
+.image-upload-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+}
+
+.image-preview {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 14rpx;
+  overflow: hidden;
+}
+
+.image-preview image {
+  width: 100%;
+  height: 100%;
+}
+
+.image-remove {
+  position: absolute;
+  top: 4rpx;
+  right: 4rpx;
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background: rgba(0,0,0,.54);
+  color: #fff;
+  font-size: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-image-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 14rpx;
+  border: 2rpx dashed var(--brand-border);
+  background: #fff;
+}
+
+.add-icon {
+  font-size: 40rpx;
+  color: #8ea898;
+  line-height: 1;
+}
+
+.add-text {
+  margin-top: 6rpx;
+  font-size: 19rpx;
+  color: #8ea898;
+}
+
+/* 联系方式 */
+.contact-input {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 22rpx;
+  border-radius: 14rpx;
+  border: 2rpx solid #ececf0;
+  background: #fff;
+  font-size: 24rpx;
+  color: #1e1e1e;
+  box-sizing: border-box;
+  box-shadow: none;
+}
+
+/* 提交按钮 */
+.email-hint {
+  display: block;
+  margin-top: 24rpx;
+  text-align: center;
+  color: #a6b3ab;
+  font-size: 20rpx;
+}
+
+/* 用户交流群二维码 */
+.qr-card {
+  margin-top: 36rpx;
+  padding: 28rpx;
+  border-radius: 14rpx;
+  border: 2rpx solid #ececf0;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-image {
+  width: 320rpx;
+  height: 320rpx;
+  border-radius: 12rpx;
+  background: #f0f2f1;
+}
+
+.qr-tip {
+  margin-top: 20rpx;
+  color: #1e1e1e;
+  font-size: 24rpx;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 76rpx;
+  margin-top: 48rpx;
+  border-radius: 30rpx;
+  color: #fff;
+  background: var(--brand-primary);
+  font-size: 28rpx;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+/* 我的反馈 */
+.my-feedback-label {
+  margin-top: 48rpx;
+}
+
+.my-feedback-empty {
+  padding: 40rpx 20rpx;
+  border: 1rpx dashed var(--brand-border);
+  border-radius: 14rpx;
+  background: rgba(255, 255, 255, 0.6);
+  color: #a6b3ab;
+  font-size: 22rpx;
+  text-align: center;
+}
+
+.my-feedback-card {
+  margin-bottom: 20rpx;
+  padding: 24rpx;
+  border-width: 2rpx;
+  border-radius: 14rpx;
+}
+
+.my-feedback-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.my-feedback-type {
+  color: var(--brand-ink);
+  font-size: 26rpx;
+  font-weight: 800;
+}
+
+.status-badge {
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  font-weight: 700;
+}
+
+.status-pending {
+  color: #b45309;
+  background: #fef3c7;
+}
+
+.status-resolved {
+  color: var(--brand-deep);
+  background: var(--brand-tint);
+}
+
+.status-ignored {
+  color: #6b7280;
+  background: #f3f4f6;
+}
+
+.my-feedback-content {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  margin-top: 14rpx;
+  color: #1e1e1e;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.my-feedback-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.my-feedback-images image {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 12rpx;
+  background: #f0f2f1;
+}
+
+.my-feedback-note {
+  margin-top: 16rpx;
+  padding: 14rpx 18rpx;
+  border-radius: 12rpx;
+  background: var(--brand-tint);
+  color: var(--brand-ink);
+  font-size: 22rpx;
+  line-height: 1.6;
+}
+
+.my-feedback-time {
+  display: block;
+  margin-top: 14rpx;
+  color: #a6b3ab;
+  font-size: 20rpx;
+}
+
+/* 加群是反馈页的首要行动，使用浅蓝色卡片突出二维码。 */
+.feedback-card { margin: 18rpx 0 24rpx; padding: 30rpx 24rpx 26rpx; border: 2rpx solid #b9ddf5; border-radius: 20rpx; background: #eef8ff; box-shadow: 0 8rpx 24rpx rgba(66,153,225,.12); display: flex; flex-direction: column; align-items: center; }
+.feedback-card-title { color: #1f5f8f; font-size: 30rpx; font-weight: 800; text-align: center; }
+.feedback-card-desc { margin-top: 12rpx; color: #47708f; font-size: 23rpx; line-height: 1.55; text-align: center; }
+.feedback-card .qr-image { width: 380rpx; height: 380rpx; margin-top: 22rpx; background: #fff; }
+.feedback-card .qr-tip { margin-top: 14rpx; color: #47708f; font-size: 21rpx; }
+.after-group-card { padding: 22rpx 24rpx; border-radius: 16rpx; background: #fff; border: 1rpx solid #e4edf3; }
+.after-group-title { display: block; color: var(--brand-ink); font-size: 25rpx; font-weight: 700; }
+.after-group-desc { display: block; margin-top: 8rpx; color: #71808a; font-size: 22rpx; line-height: 1.55; }

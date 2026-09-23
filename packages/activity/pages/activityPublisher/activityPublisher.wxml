@@ -1,0 +1,145 @@
+<view style="{{themeVars}}" class="publisher-page">
+  <view wx:if="{{loading}}" class="profile-loading">
+    <view class="loading-cover"></view>
+    <view class="loading-line wide"></view>
+    <view class="loading-line"></view>
+  </view>
+
+  <block wx:elif="{{publisher}}">
+    <view class="publisher-hero" style="background-color: {{publisher.accent}};">
+      <image wx:if="{{publisher.coverUrl}}" class="hero-cover" src="{{publisher.coverUrl}}" mode="aspectFill" />
+      <view class="hero-scrim"></view>
+      <button class="hero-share" open-type="share" aria-label="{{lang === 'en' ? 'Share organizer' : '分享活动方'}}">↗</button>
+    </view>
+
+    <view class="identity-card">
+      <view class="identity-main">
+        <image wx:if="{{publisher.logoUrl}}" class="publisher-logo" src="{{publisher.logoUrl}}" mode="aspectFill" />
+        <view wx:else class="publisher-logo logo-fallback" style="background: {{publisher.accent}};">{{publisher.initial}}</view>
+        <view class="identity-copy">
+          <view class="name-row">
+            <text class="publisher-name">{{publisher.displayName}}</text>
+            <text wx:if="{{publisher.verified}}" class="verified-mark">{{lang === 'en' ? 'Official' : '官方'}}</text>
+            <text wx:elif="{{publisher.sourceChannelText}}" class="source-mark">{{publisher.sourceChannelText}}</text>
+          </view>
+          <text class="publisher-type">{{publisher.officialLabel}}{{publisher.locationText ? ' · ' + publisher.locationText : ''}}</text>
+        </view>
+      </view>
+      <text class="publisher-tagline">{{publisher.taglineText}}</text>
+      <view class="identity-actions">
+        <button class="subscribe-btn {{publisher.subscribed ? 'active' : ''}}" bindtap="toggleSubscription" loading="{{subscriptionLoading}}">
+          {{publisher.subscribed ? (lang === 'en' ? 'Following' : '已关注') : (lang === 'en' ? 'Follow' : '关注活动方')}}
+        </button>
+
+      </view>
+    </view>
+
+    <view class="stat-strip">
+      <view wx:for="{{publisher.stats}}" wx:key="label" class="stat-item">
+        <text class="stat-value">{{item.value}}</text>
+        <text class="stat-label">{{item.label}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{publisher.storyText}}" class="section story-section">
+      <text class="section-kicker">{{lang === 'en' ? 'OUR STORY' : '活动方介绍'}}</text>
+      <text class="section-title">{{publisher.storyTitleText}}</text>
+      <text class="story-body">{{publisher.storyText}}</text>
+      <view wx:if="{{publisher.contentTags.length}}" class="content-tags">
+        <text class="content-tag" wx:for="{{publisher.contentTags}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+
+    <view class="section calendar-section">
+      <view class="section-head">
+        <view class="section-head-title">
+          <text class="section-kicker">{{lang === 'en' ? 'EVENT CALENDAR' : '活动日历'}}</text>
+          <text class="section-title">{{calendarTitle}}</text>
+        </view>
+        <view class="calendar-nav">
+          <view class="calendar-nav-btn" hover-class="calendar-nav-btn-hover" data-step="-1" bindtap="shiftMonth">‹</view>
+          <view class="calendar-nav-btn" hover-class="calendar-nav-btn-hover" data-step="1" bindtap="shiftMonth">›</view>
+        </view>
+      </view>
+      <view class="calendar-weekdays">
+        <text class="weekday-label" wx:for="{{weekdays}}" wx:key="*this">{{item}}</text>
+      </view>
+      <view class="calendar-grid">
+        <view
+          wx:for="{{calendarCells}}"
+          wx:key="date"
+          class="calendar-cell {{item.currentMonth ? '' : 'muted'}} {{item.selected ? 'selected' : ''}} {{item.isToday ? 'today' : ''}}"
+          data-date="{{item.date}}"
+          bindtap="selectDate"
+        >
+          <text class="calendar-day">{{item.day}}</text>
+          <view wx:if="{{item.hasEvent}}" class="event-dot" style="background: {{item.dotColor}};"></view>
+        </view>
+      </view>
+      <view class="selected-day-head">
+        <text class="selected-date-text">{{selectedDate}}</text>
+        <text class="selected-count-text">{{selectedDateActivities.length}} {{lang === 'en' ? 'events' : '场活动'}}</text>
+      </view>
+      <view wx:if="{{selectedDateActivities.length}}" class="selected-events">
+        <view wx:for="{{selectedDateActivities}}" wx:key="id" class="selected-event" data-id="{{item.id}}" bindtap="openActivity">
+          <image class="selected-event-cover" src="{{item.coverUrl}}" mode="aspectFill" />
+          <view class="selected-event-copy">
+            <text>{{item.displayTitle}}</text>
+            <text>{{item.start}}-{{item.end}} · {{item.displayPlace}}</text>
+          </view>
+          <text wx:if="{{item.statusKey}}" class="ac-status ac-status-{{item.statusKey}}">{{item.statusText}}</text>
+          <text class="row-arrow">›</text>
+        </view>
+      </view>
+      <view wx:else class="day-empty">{{lang === 'en' ? 'No events on this day' : '这一天暂时没有活动'}}</view>
+    </view>
+
+    <view wx:if="{{featuredActivities.length}}" class="section featured-section">
+      <view class="section-head">
+        <view class="section-head-title">
+          <text class="section-kicker">{{lang === 'en' ? 'EVENT SHOWCASE' : '活动展示'}}</text>
+          <text class="section-title">{{lang === 'en' ? 'Highlights' : '精彩瞬间'}}</text>
+        </view>
+      </view>
+      <scroll-view class="featured-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="featured-track">
+          <view wx:for="{{featuredActivities}}" wx:key="id" class="featured-card" data-id="{{item.id}}" bindtap="openActivity">
+            <image class="featured-image" src="{{item.coverUrl}}" mode="aspectFill" />
+            <text wx:if="{{item.statusKey}}" class="ac-status ac-status-{{item.statusKey}} ac-status-floating">{{item.statusText}}</text>
+            <view class="featured-copy">
+              <text class="featured-type">{{item.displayType}}</text>
+              <text class="featured-title">{{item.displayTitle}}</text>
+              <text class="featured-meta">{{item.displayDate}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <view class="contact-card" style="background: linear-gradient(135deg, {{publisher.accent}}, rgba(23,54,36,.72));">
+      <view class="contact-copy">
+        <text class="contact-title">{{lang === 'en' ? 'Suggest an Event or Give Feedback' : '建议活动或反馈意见'}}</text>
+        <text class="contact-subtitle">{{lang === 'en' ? 'Help the organizer improve. All suggestions are reviewed carefully.' : '你的建议将直接传达给活动方，帮助活动越办越好。'}}</text>
+      </view>
+      <button class="contact-submit" bindtap="openContactForm">{{lang === 'en' ? 'Submit →' : '提交建议 →'}}</button>
+    </view>
+  </block>
+
+  <view wx:else class="profile-empty">
+    <text>{{lang === 'en' ? 'Organizer profile is unavailable.' : '这个活动方门面暂时不可用。'}}</text>
+  </view>
+  <view wx:if="{{feedbackModalOpen}}" class="feedback-mask" catchtap="closeContactForm">
+    <view class="feedback-sheet" catchtap="noop">
+      <view class="feedback-head">
+        <view class="feedback-copy">
+          <text class="feedback-title">{{lang === 'en' ? 'Talk with the organizer' : '给活动方留言'}}</text>
+          <text class="feedback-subtitle">{{lang === 'en' ? 'Suggest a new event or tell us what could be better.' : '可以提出新活动建议，也可以反馈你希望改进的地方。'}}</text>
+        </view>
+        <button class="feedback-close" bindtap="closeContactForm">×</button>
+      </view>
+      <textarea class="feedback-textarea" maxlength="500" value="{{feedbackContent}}" bindinput="onFeedbackContentInput" placeholder="{{lang === 'en' ? 'Write your suggestion...' : '写下你的建议或反馈…'}}" />
+      <input class="feedback-contact" maxlength="80" value="{{feedbackContact}}" bindinput="onFeedbackContactInput" placeholder="{{lang === 'en' ? 'Email or WeChat ID (optional)' : '邮箱或微信号（选填，方便回复）'}}" />
+      <button class="feedback-submit" loading="{{feedbackSubmitting}}" bindtap="submitPublisherFeedback">{{lang === 'en' ? 'Submit' : '提交给活动方'}}</button>
+    </view>
+  </view>
+</view>

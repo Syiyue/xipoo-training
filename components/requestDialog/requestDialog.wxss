@@ -1,0 +1,222 @@
+.modal-mask {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(17,34,25,.46);
+}
+
+.dialog-body {
+  width: 86vw;
+  max-width: 620rpx;
+  padding: 32rpx;
+  border-radius: 24rpx;
+  background: #fff;
+}
+
+.dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.dialog-title {
+  color: var(--brand-ink);
+  font-size: 30rpx;
+  font-weight: 900;
+}
+
+.close-btn {
+  min-width: 52rpx;
+  height: 52rpx;
+  padding: 0;
+  border-radius: 50%;
+  background: #f0f2f5;
+  color: #6b7c73;
+  font-size: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.target-info {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 16rpx;
+  border-radius: 16rpx;
+  background: var(--brand-tint-2);
+  margin-bottom: 20rpx;
+}
+
+.target-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  color: var(--brand-ink);
+  background: linear-gradient(135deg, var(--brand-bright), var(--brand-soft));
+  font-size: 28rpx;
+  font-weight: 900;
+}
+
+.target-detail {
+  min-width: 0;
+  flex: 1;
+}
+
+.target-name {
+  display: block;
+  color: var(--brand-ink);
+  font-size: 25rpx;
+  font-weight: 900;
+}
+
+.target-id {
+  display: block;
+  margin-top: 4rpx;
+  color: #7a8980;
+  font-size: 20rpx;
+}
+
+.msg-input {
+  width: 100%;
+  height: 140rpx;
+  padding: 18rpx;
+  border-radius: 12rpx;
+  background: var(--brand-tint-2);
+  font-size: 23rpx;
+  box-sizing: border-box;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+
+.cancel-btn {
+  flex: 1;
+  height: 74rpx;
+  border-radius: 14rpx;
+  color: #6b7c73;
+  background: #edf1ee;
+  font-size: 24rpx;
+  font-weight: 800;
+}
+
+.send-btn {
+  flex: 1;
+  height: 74rpx;
+  border-radius: 14rpx;
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand-bright), var(--brand-primary));
+  font-size: 24rpx;
+  font-weight: 900;
+}
+
+/* Figma 申请好友弹窗 */
+.modal-mask {
+  align-items: flex-end;
+  background: rgba(0, 0, 0, .36);
+}
+
+.dialog-body {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  padding: 26rpx 24rpx calc(24rpx + env(safe-area-inset-bottom));
+  border-radius: 30rpx 30rpx 0 0;
+  background: #ffffff;
+}
+
+.dialog-head {
+  margin-bottom: 18rpx;
+}
+
+.dialog-title {
+  color: #212121;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.close-btn {
+  width: 48rpx;
+  min-width: 48rpx;
+  height: 48rpx;
+  color: #212121;
+  background: transparent;
+  font-size: 28rpx;
+}
+
+.target-info {
+  gap: 16rpx;
+  margin-bottom: 18rpx;
+  padding: 18rpx;
+  border-radius: 22rpx;
+  background: var(--brand-soft);
+}
+
+.target-avatar {
+  width: 84rpx;
+  height: 84rpx;
+  overflow: hidden;
+  border: 3rpx solid #ffffff;
+  background: #ffffff;
+  font-size: 26rpx;
+}
+
+.target-avatar-image {
+  width: 100%;
+  height: 100%;
+}
+
+.target-name {
+  color: #212121;
+  font-size: 27rpx;
+  font-weight: 700;
+}
+
+.target-id {
+  color: #526158;
+  font-size: 19rpx;
+}
+
+.msg-input {
+  height: 130rpx;
+  padding: 18rpx;
+  border: 0;
+  border-radius: 20rpx;
+  color: #212121;
+  background: #f4f4f4;
+  font-size: 21rpx;
+}
+
+.dialog-actions {
+  gap: 16rpx;
+  margin-top: 18rpx;
+}
+
+.cancel-btn,
+.send-btn {
+  height: 66rpx;
+  border-radius: 20rpx;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.cancel-btn {
+  color: #555555;
+  background: #e5e5e5;
+}
+
+.send-btn {
+  color: #ffffff;
+  background: var(--brand-primary);
+}

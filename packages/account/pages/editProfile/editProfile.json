@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "\u7f16\u8f91\u4e2a\u4eba\u4fe1\u606f",
+  "usingComponents": {
+    "avatar-cropper": "../../../../components/avatar-cropper/avatar-cropper",
+    "avatarPicker": "../../../../components/avatarPicker/avatarPicker"
+  }
+}

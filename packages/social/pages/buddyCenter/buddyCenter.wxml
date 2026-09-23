@@ -1,0 +1,305 @@
+<view style="{{themeVars}}" class="container {{darkMode ? 'dark-mode' : ''}}">
+  <view class="page-header">
+    <view class="header-top">
+      <text class="page-title">{{lang === 'en' ? 'Find Classmate' : '找课友'}}</text>
+      <view class="header-actions">
+        <view class="bell-btn" bindtap="openMessages">
+          <image class="header-action-icon bell-icon" src="/assets/figma/course-match-bell.svg" mode="aspectFit" />
+          <view wx:if="{{hasUnreadNotifications}}" class="bell-dot"></view>
+        </view>
+        <view class="settings-btn" bindtap="openSettings">
+          <image class="header-action-icon settings-icon" src="/assets/figma/course-match-settings.svg" mode="aspectFit" />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 课程选择 -->
+  <view class="course-bar">
+    <picker wx:if="{{courses.length > 0}}" range="{{courses}}" range-key="label" value="{{courseIndex}}" bindchange="onCoursePick">
+      <view class="course-pick">
+        <text>{{courses[courseIndex].label || (courses[courseIndex].courseCode + ' ' + (courses[courseIndex].section || ''))}}</text>
+        <text class="pick-arrow">▼</text>
+      </view>
+    </picker>
+    <view wx:else class="no-course">{{lang === 'en' ? 'No courses. Import your schedule first.' : '暂无课程，请先导入课表'}}</view>
+  </view>
+
+  <!-- 两段式主分段选择器 -->
+  <view class="main-view-segmented">
+    <view class="segmented-track">
+      <view class="segmented-indicator" style="transform: translateX({{mainTab === 'classmate' ? '0%' : '100%'}})"></view>
+      <view class="segmented-option {{mainTab === 'classmate' ? 'active' : ''}}" data-tab="classmate" bindtap="switchMainTab">{{lang === 'en' ? 'Classmates' : '同课同学'}}</view>
+      <view class="segmented-option {{mainTab === 'group' ? 'active' : ''}}" data-tab="group" bindtap="switchMainTab">{{lang === 'en' ? 'Groups' : '课程小组'}}</view>
+    </view>
+  </view>
+
+  <block wx:if="{{mainTab === 'classmate'}}">
+  <view wx:if="{{loading}}" class="loading">{{lang === 'en' ? 'Loading...' : '加载中...'}}</view>
+
+  <view wx:if="{{!loading}}" class="tab-content">
+    <view wx:if="{{!selectedCourseId}}" class="empty">
+      <image class="empty-book-icon" src="/assets/figma/course-match-book.svg" mode="aspectFit" />
+      <text class="empty-title">{{lang === 'en' ? 'Select a course first' : '请先选择一门课程'}}</text>
+    </view>
+    <view wx:elif="{{recommendations.length === 0 && !settingsInPool}}" class="empty">
+      <text class="empty-icon">🚫</text>
+      <text class="empty-title">{{lang === 'en' ? 'Not in the pool yet' : '暂未入池'}}</text>
+      <text class="empty-desc">{{lang === 'en' ? 'Go to Settings to join the matching pool.' : '请在设置中开启入池匹配后再查看推荐'}}</text>
+      <button class="primary-btn" bindtap="openSettings">{{lang === 'en' ? 'Open Settings' : '去设置'}}</button>
+    </view>
+    <view wx:elif="{{recommendations.length === 0}}" class="empty">
+      <text class="empty-icon">🔍</text>
+      <text class="empty-title">{{lang === 'en' ? 'No recommendations yet' : '暂无推荐'}}</text>
+    </view>
+    <view wx:else class="card-list">
+      <view wx:for="{{recommendations}}" wx:key="userId" class="card">
+        <view class="card-block-btn" data-userid="{{item.userId}}" catchtap="blockUser"><text>🚫</text></view>
+        <view class="card-head">
+          <image wx:if="{{item.profile.avatar}}" class="avatar" src="{{item.profile.avatar}}" mode="aspectFill" />
+          <view wx:else class="avatar placeholder">{{item.profile.nickname[0] || '?'}}</view>
+          <view class="head-info">
+            <text class="nickname">{{item.profile.nickname}}</text>
+            <text wx:if="{{item.profile.grade}}" class="meta">{{item.profile.grade}}</text>
+          </view>
+          <view class="completeness">{{item.profile.completeness}}%</view>
+        </view>
+        <text wx:if="{{item.hasPost}}" class="has-post-badge" data-postid="{{item.posts[0].id}}" catchtap="viewGroupPost">📢 {{lang === 'en' ? 'Has post' : '已发布招募'}}</text>
+        <text wx:if="{{item.profile.signature}}" class="signature">{{item.profile.signature}}</text>
+        <view class="detail">
+          <text>📚 {{lang === 'en' ? 'Common courses' : '共同课程'}}: {{item.commonCourses}}</text>
+          <text wx:if="{{item.commonTagCount > 0}}"> · 🏷 {{item.commonTagCount}}</text>
+          <text wx:if="{{item.sameGrade}}"> · 🎓 {{lang === 'en' ? 'Same grade' : '同年级'}}</text>
+        </view>
+        <view class="score-row">
+          <text class="score">{{lang === 'en' ? 'Match' : '匹配度'}} {{item.score}}</text>
+          <text wx:if="{{item.status === 'matched'}}" class="matched-badge">{{lang === 'en' ? 'Already Buddies' : '已成为搭子'}}</text>
+        </view>
+        <button class="btn-interest action-btn {{item.status === 'sent' ? 'applied' : ''}} {{item.status === 'matched' ? 'matched' : ''}}" data-userid="{{item.userId}}" bindtap="toggleInterest" disabled="{{item.status === 'matched'}}">{{item.status === 'matched' ? (lang === 'en' ? 'Buddies' : '已成为搭子') : (item.status === 'sent' ? (lang === 'en' ? 'Applied' : '已申请') : (lang === 'en' ? 'I am Interested' : '感兴趣'))}}</button>
+      </view>
+    </view>
+  </view>
+
+  </block>
+
+  <!-- 设置弹窗（同课同学 / 课程小组 各自独立） -->
+  <view wx:if="{{settingsOpen}}" class="modal-mask" catchtap="closeSettings">
+    <view class="editor" catchtap="noop">
+      <view class="editor-head">
+        <text>{{mainTab === 'group' ? (lang === 'en' ? 'Group Settings' : '课程小组设置') : (lang === 'en' ? 'Match Settings' : '同课同学设置')}} · {{courses[courseIndex].courseCode || courses[courseIndex].title || ''}}</text>
+        <button catchtap="closeSettings">{{lang === 'en' ? 'Close' : '关闭'}}</button>
+      </view>
+
+      <!-- ===== 同课同学设置：完整版 ===== -->
+      <block wx:if="{{mainTab === 'classmate'}}">
+        <!-- 个人标签（全局） -->
+        <text class="sec-title">{{lang === 'en' ? 'My Tags' : '个人标签'}} ({{settingsPersonalTags.length}}/10)</text>
+        <text class="sec-hint">{{lang === 'en' ? 'Describe yourself. Others can filter by these.' : '描述你自己的标签，别人可筛选到你'}}</text>
+        <view wx:for="{{personalTagGroups}}" wx:key="category" class="tag-group">
+          <text class="tag-cat">{{item.label}}</text>
+          <view class="tag-grid">
+            <view wx:for="{{item.tags}}" wx:key="id" data-tagid="{{item.id}}" catchtap="togglePersonalTag" class="tag-chip {{item.selected ? 'active' : ''}}">{{lang === 'en' ? item.en : item.zh}}</view>
+          </view>
+        </view>
+
+        <!-- 课程池筛选标签 -->
+        <text class="sec-title">{{lang === 'en' ? 'Filter Tags' : '筛选标签'}} ({{settingsSelectedTags.length}}/10)</text>
+        <view wx:for="{{settingsTagGroups}}" wx:key="category" class="tag-group">
+          <text class="tag-cat">{{item.label}}</text>
+          <view class="tag-grid">
+            <view wx:for="{{item.tags}}" wx:key="id" data-tagid="{{item.id}}" catchtap="toggleSettingsTag" class="tag-chip {{item.selected ? 'active' : ''}}">{{lang === 'en' ? item.en : item.zh}}</view>
+          </view>
+        </view>
+        <text class="sec-title">{{lang === 'en' ? 'Gender Filter' : '性别筛选'}}</text>
+        <view class="gender-row">
+          <view class="gender-opt {{settingsGender === 'any' ? 'active' : ''}}" data-g="any" bindtap="onSettingsGender">{{lang === 'en' ? 'Any' : '不限'}}</view>
+          <view class="gender-opt {{settingsGender === 'male' ? 'active' : ''}}" data-g="male" bindtap="onSettingsGender">{{lang === 'en' ? 'Male only' : '仅限男'}}</view>
+          <view class="gender-opt {{settingsGender === 'female' ? 'active' : ''}}" data-g="female" bindtap="onSettingsGender">{{lang === 'en' ? 'Female only' : '仅限女'}}</view>
+        </view>
+        <text class="sec-title">{{lang === 'en' ? 'Match Scope' : '匹配范围'}}</text>
+        <view class="gender-row">
+          <view class="gender-opt {{settingsMatchMode === 'campus' ? 'active' : ''}}" data-mode="campus" bindtap="onMatchMode">{{lang === 'en' ? 'Same Section' : '精准同班'}}</view>
+          <view class="gender-opt {{settingsMatchMode === 'family' ? 'active' : ''}}" data-mode="family" bindtap="onMatchMode">{{lang === 'en' ? 'Cross Section' : '宽松同课'}}</view>
+        </view>
+        <text class="sec-title">{{lang === 'en' ? 'Join Pool' : '入池匹配'}}</text>
+        <switch checked="{{settingsInPool}}" bindchange="onPoolToggle" color="{{themePrimary}}" />
+        <text class="sec-title">{{lang === 'en' ? 'Same Grade Only' : '仅同年级'}}</text>
+        <switch checked="{{settingsSameGrade}}" bindchange="onSameGrade" color="{{themePrimary}}" />
+      </block>
+
+      <!-- ===== 课程小组设置：精简版 ===== -->
+      <block wx:if="{{mainTab === 'group'}}">
+        <text class="sec-title">{{lang === 'en' ? 'Gender Filter' : '性别筛选'}}</text>
+        <view class="gender-row">
+          <view class="gender-opt {{settingsGender === 'any' ? 'active' : ''}}" data-g="any" bindtap="onSettingsGender">{{lang === 'en' ? 'Any' : '不限'}}</view>
+          <view class="gender-opt {{settingsGender === 'male' ? 'active' : ''}}" data-g="male" bindtap="onSettingsGender">{{lang === 'en' ? 'Male only' : '仅限男'}}</view>
+          <view class="gender-opt {{settingsGender === 'female' ? 'active' : ''}}" data-g="female" bindtap="onSettingsGender">{{lang === 'en' ? 'Female only' : '仅限女'}}</view>
+        </view>
+        <text class="sec-title">{{lang === 'en' ? 'Same Grade Only' : '仅同年级'}}</text>
+        <switch checked="{{settingsSameGrade}}" bindchange="onSameGrade" color="{{themePrimary}}" />
+      </block>
+
+      <button class="save-btn action-btn" bindtap="saveSettings">{{lang === 'en' ? 'Save' : '保存'}}</button>
+    </view>
+  </view>
+
+  <!-- ========== 课程小组 Tab ========== -->
+  <block wx:if="{{mainTab === 'group'}}">
+    <!-- 迷你切换 -->
+    <view class="mini-filter">
+      <view class="mini-chip {{recruitFilter === 'all' ? 'active' : ''}}" data-filter="all" bindtap="toggleRecruitFilter">{{lang === 'en' ? 'All' : '全部'}}</view>
+      <view class="mini-chip {{recruitFilter === 'mine' ? 'active' : ''}}" data-filter="mine" bindtap="toggleRecruitFilter">{{lang === 'en' ? 'Mine' : '我的'}}</view>
+    </view>
+
+    <view wx:if="{{!selectedCourseId}}" class="empty">
+      <image class="empty-book-icon" src="/assets/figma/course-match-book.svg" mode="aspectFit" />
+      <text class="empty-title">{{lang === 'en' ? 'Select a course first' : '请先选择一门课程'}}</text>
+    </view>
+    <view wx:elif="{{postsLoading}}" class="loading">{{lang === 'en' ? 'Loading...' : '加载中...'}}</view>
+
+    <!-- 全部帖子 -->
+    <view wx:elif="{{recruitFilter === 'all'}}">
+      <view wx:if="{{groupPosts.length === 0}}" class="empty">
+        <text class="empty-icon">📋</text>
+        <text class="empty-title">{{lang === 'en' ? 'No groups for this course' : '该课程暂无小组'}}</text>
+        <text class="empty-desc">{{lang === 'en' ? 'Create a group for this course!' : '去创建课程小组吧！'}}</text>
+        <button class="primary-btn" bindtap="openPostEditor">{{lang === 'en' ? 'Create a group' : '去创建小组'}}</button>
+      </view>
+      <view wx:else class="card-list">
+        <view wx:for="{{groupPosts}}" wx:key="id" class="card post-card" data-id="{{item.id}}" bindtap="viewGroupPost">
+          <view class="card-head">
+            <image wx:if="{{item._hasCreatorAvatar}}" class="avatar-sm" src="{{item.creator.avatar}}" mode="aspectFill" data-userid="{{item.creatorUserId}}" catchtap="viewCreatorProfile" />
+            <view wx:else class="avatar-sm placeholder" data-userid="{{item.creatorUserId}}" catchtap="viewCreatorProfile">{{item._creatorInitial}}</view>
+            <view class="head-info">
+              <text class="nickname">{{item.title}}</text>
+              <text class="meta"><text class="creator-name" data-userid="{{item.creatorUserId}}" catchtap="viewCreatorProfile">{{item._creatorName}}</text> · {{item._memberCount}}/{{item.maxMembers}}<block wx:if="{{item.deadline}}"> · {{lang === 'en' ? 'By ' : '截止 '}}{{item.deadline}}</block></text>
+            </view>
+            <text class="post-status {{item.status}}">{{item.status === 'closed' ? (lang === 'en' ? 'Closed' : '已结束') : (lang === 'en' ? 'Open' : '招募中')}}</text>
+          </view>
+          <text class="post-desc">{{item.description}}</text>
+          <view wx:if="{{item.place}}" class="post-meta">
+            <text>📍 {{item.place}}</text>
+          </view>
+        </view>
+        <view class="list-footer-actions">
+          <button class="subtle-link" bindtap="openPostEditor">{{lang === 'en' ? '+ Create a group' : '+ 创建小组'}}</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 我的帖子 -->
+    <view wx:else>
+      <view wx:if="{{myPosts.length === 0}}" class="empty">
+        <text class="empty-icon">📝</text>
+        <text class="empty-title">{{lang === 'en' ? 'No posts yet' : '暂无帖子'}}</text>
+        <text class="empty-desc">{{lang === 'en' ? 'Create your first group post!' : '去发布你的第一个课程小组吧！'}}</text>
+        <button class="primary-btn" bindtap="openPostEditor">{{lang === 'en' ? 'Create a group' : '去创建小组'}}</button>
+      </view>
+      <view wx:else class="card-list">
+        <view wx:for="{{myPosts}}" wx:key="id" class="card post-card" data-id="{{item.id}}" bindtap="viewGroupPost">
+          <view class="card-head">
+            <view class="head-info">
+              <text class="nickname">{{item.title}}</text>
+              <text class="meta">{{item._memberCount}}/{{item.maxMembers}}<block wx:if="{{item.deadline}}"> · {{lang === 'en' ? 'By ' : '截止 '}}{{item.deadline}}</block></text>
+            </view>
+            <text class="post-status {{item.status}}">{{item.status === 'closed' ? (lang === 'en' ? 'Closed' : '已结束') : (lang === 'en' ? 'Open' : '招募中')}}</text>
+          </view>
+          <text class="post-desc">{{item.description}}</text>
+        </view>
+        <view class="list-footer-actions">
+          <button class="subtle-link" bindtap="openPostEditor">{{lang === 'en' ? '+ Create a group' : '+ 创建小组'}}</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 我的小组 -->
+    <view wx:if="{{myGroupsRecruiting.length > 0 || myGroupsJoined.length > 0 || myGroupsEnded.length > 0}}" class="my-groups-section">
+      <!-- 招募中 -->
+      <view wx:if="{{myGroupsRecruiting.length > 0}}" class="my-groups-block">
+        <view class="section-head">
+          <text class="section-title">{{lang === 'en' ? 'Recruiting' : '招募中'}}</text>
+          <text class="section-count">{{myGroupsRecruiting.length}}</text>
+        </view>
+        <view class="card-list">
+          <view wx:for="{{myGroupsRecruiting}}" wx:key="id" class="card post-card" data-id="{{item.id}}" bindtap="viewGroupPost">
+            <view class="card-head">
+              <image wx:if="{{item._hasCreatorAvatar}}" class="avatar-sm" src="{{item.creator.avatar}}" mode="aspectFill" />
+              <view wx:else class="avatar-sm placeholder">{{item._creatorInitial}}</view>
+              <view class="head-info">
+                <text class="nickname">{{item.title}}</text>
+                <text class="meta">
+                  <text wx:if="{{item.courseName}}">📚 {{item.courseName}} · </text>
+                  <text>{{item._creatorName}}</text>
+                  <text> · {{item._memberCount}}/{{item.maxMembers}}</text>
+                </text>
+              </view>
+              <text class="post-status active">{{lang === 'en' ? 'Recruiting' : '招募中'}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 已加入 -->
+      <view wx:if="{{myGroupsJoined.length > 0}}" class="my-groups-block">
+        <view class="section-head">
+          <text class="section-title">{{lang === 'en' ? 'Joined' : '已加入'}}</text>
+          <text class="section-count joined-count">{{myGroupsJoined.length}}</text>
+        </view>
+        <view class="card-list">
+          <view wx:for="{{myGroupsJoined}}" wx:key="id" class="card post-card" data-id="{{item.id}}" bindtap="viewGroupPost">
+            <view class="card-head">
+              <image wx:if="{{item._hasCreatorAvatar}}" class="avatar-sm" src="{{item.creator.avatar}}" mode="aspectFill" />
+              <view wx:else class="avatar-sm placeholder">{{item._creatorInitial}}</view>
+              <view class="head-info">
+                <text class="nickname">{{item.title}}</text>
+                <text class="meta">
+                  <text wx:if="{{item.courseName}}">📚 {{item.courseName}} · </text>
+                  <text>{{item._creatorName}}</text>
+                  <text> · {{item._memberCount}}/{{item.maxMembers}}</text>
+                </text>
+              </view>
+              <text class="post-status closed">{{lang === 'en' ? 'Joined' : '已加入'}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 已结束 -->
+      <view wx:if="{{myGroupsEnded.length > 0}}" class="my-groups-block">
+        <view class="section-head">
+          <text class="section-title">{{lang === 'en' ? 'Ended' : '已结束'}}</text>
+          <text class="section-count ended-count">{{myGroupsEnded.length}}</text>
+        </view>
+        <view class="card-list">
+          <view wx:for="{{myGroupsEnded}}" wx:key="id" class="card post-card ended-card">
+            <view class="card-head" data-id="{{item.id}}" bindtap="viewGroupPost">
+              <image wx:if="{{item._hasCreatorAvatar}}" class="avatar-sm" src="{{item.creator.avatar}}" mode="aspectFill" />
+              <view wx:else class="avatar-sm placeholder">{{item._creatorInitial}}</view>
+              <view class="head-info">
+                <text class="nickname">{{item.title}}</text>
+                <text class="meta">
+                  <text wx:if="{{item.courseName}}">📚 {{item.courseName}} · </text>
+                  <text>{{item._creatorName}}</text>
+                  <text> · {{item._memberCount}}/{{item.maxMembers}}</text>
+                </text>
+              </view>
+              <text class="post-status ended">{{lang === 'en' ? 'Ended' : '已结束'}}</text>
+            </view>
+            <button class="delete-record-btn" data-id="{{item.id}}" catchtap="deleteEndedRecord">{{lang === 'en' ? 'Delete' : '删除'}}</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <post-editor id="postEditor" visible="{{postEditorOpen}}" postType="course" courseId="{{selectedCourseId}}" courseName="{{courses[courseIndex].title || ''}}" lang="{{lang}}" bind:close="closePostEditor" bind:published="onPostPublished" />
+
+  <guide-overlay
+    id="guideOverlay"
+    visible="{{guideVisible}}"
+    steps="{{guideSteps}}"
+    storageKey="has_seen_guide_findCourseBuddy"
+    bind:complete="onGuideComplete"
+    bind:exit="onGuideExit"
+  />
+</view>

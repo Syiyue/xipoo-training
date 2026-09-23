@@ -1,0 +1,102 @@
+<view style="{{themeVars}}" class="page match-page {{darkMode ? 'dark-mode' : ''}}">
+  <!-- 页面背景图（fixed 垫底，铺满整屏） -->
+  <image class="page-bg-image" src="/packages/schedule/images/match-background.jpg" mode="aspectFill" />
+  <view class="page-content">
+  <view class="match-section-tab">{{lang === 'en' ? 'Shared free time' : '多人共同空闲'}}</view>
+
+  <view wx:if="{{!hasFriends && !loadingFriends}}" class="match-empty-state">
+    <view class="empty-illustration">👥</view>
+    <text class="empty-title">{{lang === 'en' ? 'No schedule contacts yet' : '暂无日程联系人'}}</text>
+    <text class="empty-desc">{{lang === 'en' ? 'Invite classmates you already know to share schedules, then come back to find shared free time.' : '先邀请已经认识的同学建立日程共享，再回来计算共同空闲时间。'}}</text>
+    <button class="primary-btn" bindtap="goToFindBuddy">{{lang === 'en' ? 'Invite classmate to share schedule' : '邀请同学共享日程'}}</button>
+  </view>
+
+  <view class="setup-section" wx:if="{{(hasFriends || loadingFriends) && (!preview || setupOpen)}}">
+    <view class="section-head"><text>{{lang === 'en' ? 'Select participants' : '选择参与者'}}</text><text>{{lang === 'en' ? 'Selected' : '已选'}} {{(selfIncluded ? 1 : 0) + selectedFriendIds.length}}/{{friends.length + 1}}</text></view>
+    <text class="rule-note">{{lang === 'en' ? 'Select yourself and/or schedule contacts. Contacts must share schedules mutually and allow free time calculation.' : '可选择自己或日程联系人作为参与者。联系人需互相开放日程并允许参与计算。'}}</text>
+    <view class="friend-grid">
+      <button bindtap="toggleSelf" class="{{selfIncluded ? 'friend-option active self-card' : 'friend-option self-card'}}">
+        <view class="avatar self-avatar">{{selfInfo.avatar || '我'}}</view>
+        <view><text>{{selfInfo.name || '我'}}</text><text>{{lang === 'en' ? 'Myself' : '我自己'}}</text></view>
+      </button>
+      <button wx:for="{{friends}}" wx:key="id" data-id="{{item.friend.id}}" bindtap="toggleFriend" class="{{item.selected ? 'friend-option active' : 'friend-option'}} {{item.eligible ? '' : 'ineligible'}}">
+        <view class="avatar">{{item.friend.avatar}}</view>
+        <view><text>{{item.friend.name}}</text><text>{{item.eligible ? (lang === 'en' ? 'Available for free-time calculation' : '可参与空闲计算') : (item.ineligibleReason === 'notMutual' ? (lang === 'en' ? 'Schedules not shared mutually' : '未双向共享日程') : (lang === 'en' ? 'Free-time calculation not enabled' : '未开启空闲计算'))}}</text></view>
+      </button>
+    </view>
+
+    <view class="date-grid">
+      <view><text>{{lang === 'en' ? 'Start date' : '开始日期'}}</text><picker mode="date" value="{{startDate}}" bindchange="onStartDate"><view>{{startDate}}</view></picker></view>
+      <view><text>{{lang === 'en' ? 'End date' : '结束日期'}}</text><picker mode="date" value="{{endDate}}" bindchange="onEndDate"><view>{{endDate}}</view></picker></view>
+    </view>
+    <text class="range-note">{{lang === 'en' ? 'The shared-time range is fixed at 09:00–20:00.' : '共同时间统一按 09:00–20:00 计算。'}}</text>
+
+    <view class="exclude-section" wx:if="{{hasOwnCourses}}">
+      <view class="exclude-head" bindtap="toggleExcludeOpen">
+        <text>{{lang === 'en' ? 'Courses I will skip' : '排除我不去的课程'}}</text>
+        <text>{{excludedCount ? (lang === 'en' ? excludedCount + ' excluded ' : '已排除 ' + excludedCount + '门 ') : ''}}{{excludeOpen ? '▲' : '▼'}}</text>
+      </view>
+      <block wx:if="{{excludeOpen}}">
+        <text class="rule-note">{{lang === 'en' ? 'One switch covers all sessions of the same course and time slot. Contacts manage their own course exclusions.' : '同一门课同一时段共用一个开关；好友的课程由他们自己管理。'}}</text>
+        <view class="exclude-search"><input value="{{excludeKeyword}}" bindinput="onExcludeSearch" placeholder="{{lang === 'en' ? 'Search course code / name' : '搜索课程代码或名称，如 CCT009'}}" /></view>
+        <scroll-view scroll-y class="exclude-list">
+          <view wx:for="{{ownCourseSections}}" wx:key="key" wx:for-item="section">
+            <view class="exclude-weekday">{{section.label}}</view>
+            <view wx:for="{{section.groups}}" wx:key="key" wx:for-item="group" class="exclude-row">
+              <view class="exclude-info"><text>{{group.title}}{{group.count > 1 ? (lang === 'en' ? ' · ' + group.count + ' sessions' : ' · 共' + group.count + '节') : ''}}</text><text>{{group.timeText}}{{group.place ? ' · ' + group.place : ''}}</text></view>
+              <switch checked="{{group.excluded}}" data-key="{{group.key}}" bindchange="toggleCourseExclude" color="{{themePrimary}}" />
+            </view>
+          </view>
+          <view wx:if="{{!ownCourseSections.length}}" class="exclude-empty">{{lang === 'en' ? 'No matching courses' : '没有匹配的课程'}}</view>
+        </scroll-view>
+      </block>
+    </view>
+    <button class="primary-btn calculate" loading="{{loading}}" bindtap="previewMatch">{{lang === 'en' ? 'Calculate shared free time' : '计算共同空闲'}}</button>
+  </view>
+
+  <block wx:if="{{preview}}">
+    <view class="period-head">
+      <view class="period-heading"><text class="period-title">共同空闲</text><button class="period-edit" bindtap="toggleSetup">{{setupOpen ? '收起' : '自定义周期'}}</button></view>
+      <text class="period-subtitle">{{preview.startDate}} 至 {{preview.endDate}} · 每日 09:00–20:00</text>
+    </view>
+
+    <view class="calendar-section v2-calendar">
+      <view class="calendar-head"><button data-step="-1" bindtap="shiftMonth">‹</button><text>{{calendarTitle}}</text><button data-step="1" bindtap="shiftMonth">›</button></view>
+      <view class="weekdays"><text wx:for="{{weekdays}}" wx:key="*this">{{item}}</text></view>
+      <view class="calendar-grid v2-calendar-grid">
+        <view wx:for="{{calendarCells}}" wx:key="date" data-date="{{item.date}}" bindtap="selectDay" class="calendar-day dot-{{item.level}} {{item.inMonth ? '' : 'muted'}} {{item.inRange ? '' : 'outside'}} {{item.selected ? 'selected' : ''}}">
+          <text class="day-number">{{item.dayNumber}}</text>
+          <view wx:if="{{item.inRange && (item.level === 'fullDay' || item.level === 'long' || item.level === 'medium')}}" class="day-dot dot-{{item.level}}"></view>
+        </view>
+      </view>
+      <view class="calendar-legend">
+        <view><text class="legend-dot dot-fullDay"></text><text>{{lang === 'en' ? 'Full day free' : '全天有空'}}</text></view>
+        <view><text class="legend-dot dot-long"></text><text>{{lang === 'en' ? 'Large free block' : '大段空闲'}}</text></view>
+        <view><text class="legend-dot dot-medium"></text><text>{{lang === 'en' ? 'Half day free' : '半天有空'}}</text></view>
+      </view>
+    </view>
+
+    <view wx:if="{{selectedDay}}" class="day-section v2-day-section">
+      <view class="selected-day-head"><view><text>{{selectedDay.date}} · 周{{selectedDay.weekday}}</text><text>09:00–20:00</text></view><text>{{monthStats.participantCount}}人共同时间</text></view>
+      <view wx:if="{{timeline.sharedFreeSlots.length}}" class="shared-timeline">
+        <view class="timeline-axis"><text wx:for="{{timeline.ticks}}" wx:key="label" class="timeline-tick" style="{{item.style}}">{{item.label}}</text></view>
+        <view class="timeline-track"><view wx:for="{{timeline.sharedFreeSlots}}" wx:key="start" class="shared-free-bar" style="{{item.style}}"></view></view>
+        <view class="shared-slot-list"><text wx:for="{{timeline.sharedFreeSlots}}" wx:key="start">{{item.start}}–{{item.end}}</text></view>
+        <view class="longest-line"><text>最长连续共同时间</text><text>{{timeline.longestText}}</text></view>
+      </view>
+      <view wx:else class="day-empty">当天暂无共同空闲时间</view>
+    </view>
+
+    <view class="activity-section">
+      <view class="activity-head"><view><text>活动参考</text><text>根据当天的共同时间生成</text></view><button bindtap="refreshActivities" loading="{{activitiesLoading}}" disabled="{{!timeline.sharedFreeSlots.length}}">换一批</button></view>
+      <view wx:if="{{activitiesLoading}}" class="activity-loading"><view></view><view></view><view></view></view>
+      <view wx:elif="{{activitySuggestions.length}}" class="activity-list">
+        <view wx:for="{{activitySuggestions}}" wx:key="id" class="activity-card"><view><text>{{item.title}}</text><text>{{item.reason}}</text></view><text class="activity-duration">约{{item.estimatedMinutes}}分钟</text></view>
+      </view>
+      <view wx:else class="activity-empty">选择有共同时间的日期后，这里会给出活动参考。</view>
+    </view>
+
+    <button class="primary-btn save-result" loading="{{saving}}" bindtap="saveResult">生成分享图</button>
+  </block>
+  </view>
+</view>

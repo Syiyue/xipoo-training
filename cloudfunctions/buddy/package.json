@@ -1,0 +1,9 @@
+{
+  "name": "buddy",
+  "version": "1.0.0",
+  "description": "Xipoo buddy / course-team / buddy-post cloud function",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

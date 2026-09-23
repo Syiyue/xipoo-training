@@ -1,0 +1,9 @@
+{
+  "name": "xipoo-miniprogram",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Xipoo 吸噗 — 校园日程/活动/找搭子微信小程序（原生小程序 + 微信云开发）",
+  "scripts": {
+    "test": "node scripts/run-tests.js"
+  }
+}

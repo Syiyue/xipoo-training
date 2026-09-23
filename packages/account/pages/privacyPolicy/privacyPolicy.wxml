@@ -1,0 +1,12 @@
+<view style="{{themeVars}}" class="page policy-page {{darkMode ? 'dark-mode' : ''}}">
+  <view class="policy-header">
+    <view class="policy-back" bindtap="goBack">←</view>
+    <text class="policy-title">{{t.privacyPolicy || '隐私政策'}}</text>
+    <view class="policy-back"></view>
+  </view>
+  <scroll-view class="policy-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="card policy-card">
+      <text class="policy-content">{{content}}</text>
+    </view>
+  </scroll-view>
+</view>

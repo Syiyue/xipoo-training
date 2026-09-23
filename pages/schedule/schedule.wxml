@@ -1,0 +1,642 @@
+<view style="{{themeVars}}" class="page schedule-page {{darkMode ? 'dark-mode' : ''}} {{scheduleKind === 'course' && reviewCourses.length ? 'has-review-entry' : ''}} {{scheduleKind === 'course' && viewMode === 'day' ? 'day-bg-mode' : ''}}" bindtap="closeFab">
+  <view class="main-page-nav" style="padding-top: {{statusBarHeight}}px;">
+    <text class="main-page-nav-title">{{lang === 'en' ? 'Schedule' : '日程'}}</text>
+  </view>
+
+  <view class="date-card">
+    <button class="date-nav-btn" data-step="-1" bindtap="shiftSelectedDate" aria-label="{{lang === 'en' ? 'Previous day' : '前一天'}}">‹</button>
+    <picker mode="date" value="{{selectedDate}}" bindchange="onDatePickerChange" class="date-picker">
+      <view class="date-picker-content">
+        <view>
+          <text class="date-label">{{t.selectedDate}}</text>
+          <text class="date-value">{{selectedDate}}</text>
+        </view>
+        <view class="date-side">
+          <text class="date-weekday">{{selectedWeekdayLabel}}</text>
+          <text class="date-hint">{{t.monthTapHint}}</text>
+        </view>
+      </view>
+    </picker>
+    <button class="date-nav-btn" data-step="1" bindtap="shiftSelectedDate" aria-label="{{lang === 'en' ? 'Next day' : '后一天'}}">›</button>
+  </view>
+
+  <!-- 游客提示：登录后同步课表 -->
+  <empty-state wx:if="{{isGuest}}" title="{{t.guestScheduleTitle}}" desc="{{t.guestScheduleDesc}}" actionText="{{t.goLogin}}" bind:action="onGuestLogin" />
+
+  <!-- 课程表/匹配切换已下线：匹配功能隐藏，页面固定为课程表 -->
+
+  <!-- 时间范围：只作用于课程日程，和内容类型切换分开，避免概念混淆。 -->
+  <view wx:if="{{scheduleKind === 'course'}}" class="range-switch" aria-label="{{lang === 'en' ? 'Schedule view' : '日程视图'}}">
+    <button data-mode="day" bindtap="switchView" class="range-btn {{viewMode === 'day' ? 'active' : ''}}">{{t.day}}</button>
+    <button data-mode="week" bindtap="switchView" class="range-btn {{viewMode === 'week' ? 'active' : ''}}">{{t.week}}</button>
+    <button data-mode="month" bindtap="switchView" class="range-btn {{viewMode === 'month' ? 'active' : ''}}">{{t.month}}</button>
+  </view>
+
+  <!-- ===== 学期周选择 + 操作区（周视图与月视图共用） ===== -->
+  <view wx:if="{{scheduleKind === 'course' && viewMode !== 'day'}}">
+    <!-- 左侧：第 X 周 + 下拉三角 -->
+    <view class="semester-bar">
+      <view class="semester-left" catchtap="toggleWeekPicker">
+        <text class="semester-week">{{weekLabelText}}</text>
+        <text class="semester-arrow">▼</text>
+      </view>
+      <text class="semester-month">{{currentMonthText}}</text>
+      <!-- 右侧：AI 识别记录 + 分享 + 导出日历 + 设置 -->
+      <view class="semester-actions">
+        <view class="action-wrapper">
+          <button class="icon-btn ai-record-btn" catchtap="openAiImportRecords" aria-label="{{lang === 'en' ? 'AI import history' : 'AI 识别记录'}}">
+            <view class="ico ico-clock"></view>
+          </button>
+        </view>
+        <view class="action-wrapper">
+          <button class="icon-btn share-btn" open-type="share" aria-label="{{lang === 'en' ? 'Share' : '分享'}}">
+            <view class="ico ico-share"></view>
+          </button>
+        </view>
+        <view class="action-wrapper">
+          <button
+            class="icon-btn export-cal-btn {{exportingIcs ? 'exporting' : ''}}"
+            catchtap="exportToSystemCalendar"
+            loading="{{exportingIcs}}"
+            disabled="{{exportingIcs}}"
+            aria-label="{{lang === 'en' ? 'Export courses to system calendar' : '导出课程到系统日历'}}"
+          >
+            <view class="ico ico-calendar" wx:if="{{!exportingIcs}}"></view>
+            <text wx:if="{{exportingIcs}}" class="exporting-text">{{lang === 'en' ? 'Exporting…' : '导出中…'}}</text>
+          </button>
+        </view>
+        <view class="action-wrapper">
+          <button class="icon-btn settings-btn" catchtap="toggleSettingsPopup" aria-label="{{lang === 'en' ? 'Settings' : '设置'}}">
+            <view class="ico ico-settings"></view>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 周选择下拉弹窗 -->
+    <view wx:if="{{weekPickerOpen}}" class="week-picker-mask" catchtap="closeWeekPicker">
+      <view class="week-picker-sheet" catchtap="noop">
+        <view class="week-picker-title">{{lang === 'en' ? 'Select Week' : '选择周数'}}</view>
+        <scroll-view class="week-picker-scroll" scroll-y>
+          <view
+            wx:for="{{weekOptions}}"
+            wx:key="*this"
+            class="week-picker-item {{currentWeek === item ? 'active' : ''}}"
+            data-week="{{item}}"
+            catchtap="selectWeek"
+          >{{lang === 'en' ? 'Week ' + item : '第 ' + item + ' 周'}}</view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 课程表视图 ===== -->
+
+<!--
+            <view class="ico ico-share"></view>
+          </button>
+        </view>
+        <view class="action-wrapper">
+          <button class="icon-btn share-btn" open-type="share" aria-label="{{lang === 'en' ? 'Share' : '分享'}}">
+            <view class="ico ico-share"></view>
+          </button>
+        </view>
+        <view class="action-wrapper">
+          <button class="icon-btn settings-btn" catchtap="toggleSettingsPopup" aria-label="{{lang === 'en' ? 'Settings' : '设置'}}">
+            <view class="ico ico-settings"></view>
+          </button>
+        </view>
+      </view>
+    </view>
+
+
+  <view wx:if="{{scheduleKind === 'course' && viewMode === 'week'}}" class="course-view" bindtouchstart="onCalendarTouchStart" bindtouchend="onCalendarTouchEnd">
+    <view wx:if="{{weekPickerOpen}}" class="week-picker-mask" catchtap="closeWeekPicker">
+      <view class="week-picker-sheet" catchtap="noop">
+        <view class="week-picker-title">{{lang === 'en' ? 'Select Week' : '选择周数'}}</view>
+        <scroll-view class="week-picker-scroll" scroll-y>
+          <view
+            wx:for="{{weekOptions}}"
+            wx:key="*this"
+            class="week-picker-item {{currentWeek === item ? 'active' : ''}}"
+            data-week="{{item}}"
+            catchtap="selectWeek"
+          >{{lang === 'en' ? 'Week ' + item : '第 ' + item + ' 周'}}</view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 课程表视图 ===== -->
+  <view wx:if="{{scheduleKind === 'course' && viewMode === 'week'}}" class="course-view week-view-bg" bindtouchstart="onCalendarTouchStart" bindtouchend="onCalendarTouchEnd">
+
+    <!-- 周视图背景图（小程序 WXSS 不支持本地背景图，用 image 垫底） -->
+    <image class="week-bg-image" src="/images/schedule/week_bg.jpg" mode="aspectFill" />
+
+    <!-- 课表网格 -->
+    <view class="timetable-wrapper" style="--hh: {{hourHeight}}rpx;">
+      <!-- 日期行：仅日期数字 -->
+      <view class="grid-date-row">
+        <view class="grid-date-cell month-cell"></view>
+        <view class="grid-date-cell {{dayCols[index].calendarMark ? 'calendar-' + dayCols[index].calendarMark.type : ''}}" wx:for="{{dateHeaders}}" wx:key="*this">{{item}}{{dayCols[index].calendarMark ? ' · ' + dayCols[index].calendarMark.label : ''}}</view>
+      </view>
+      <!-- 星期表头 -->
+      <view class="grid-header">
+        <view class="grid-header-cell time-cell"></view>
+        <view class="grid-header-cell" wx:for="{{weekDayHeaders}}" wx:key="*this">{{item}}</view>
+      </view>
+
+      <!-- 网格滚动体 -->
+      <scroll-view class="grid-scroll" style="height: {{gridScrollHeight}}rpx;" scroll-y enhanced show-scrollbar="{{false}}" scroll-into-view="{{weekScrollTarget}}" bindscroll="onGridScroll">
+        <view class="grid-body">
+          <!-- 时间列 -->
+          <view class="time-col">
+            <view id="{{item.scrollId}}" class="time-slot {{item.terminal ? 'terminal' : ''}}" wx:for="{{timeSlots}}" wx:key="label">
+              <text class="time-slot-label">{{item.label}}</text>
+            </view>
+          </view>
+          <!-- 每日列 -->
+          <view class="days-row">
+            <view class="day-col" wx:for="{{dayCols}}" wx:key="index" data-day="{{index}}" bindtap="onDayColTap">
+              <view
+                wx:for="{{item.courses}}"
+                wx:for-item="course"
+                wx:key="id"
+                class="course-block {{course.needsReview ? 'needs-review' : ''}} {{course.calendarMark ? 'calendar-' + course.calendarMark.type : ''}}"
+                style="top: {{course.top}}rpx; height: {{course.height}}rpx; background: {{course.colorHex}};"
+                data-id="{{course.id}}"
+                catchtap="viewCourseDetail"
+              >
+                <text wx:if="{{course.calendarMark}}" class="course-holiday-mark">{{course.calendarMark.label}}</text>
+                <text wx:if="{{course.needsReview}}" class="course-review-mark">待补</text>
+                <text class="block-code">{{course.courseCode || ''}}</text>
+                <text class="block-name">{{course.type || course.title}}</text>
+                <text class="block-place">{{course.place || ''}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+  </view>
+
+  <!-- ===== 日视图 ===== -->
+  <view wx:elif="{{scheduleKind === 'course' && viewMode === 'day'}}" class="day-view" bindtouchstart="onCalendarTouchStart" bindtouchend="onCalendarTouchEnd">
+    <!-- 日视图背景图（fixed 垫底，铺满整屏） -->
+    <image class="day-bg-image" src="/images/schedule/day_bg.jpg" mode="aspectFill" />
+    <view class="day-bg-mask"></view>
+    <view wx:if="{{selectedDateCalendarMark}}" class="holiday-notice">{{selectedDateCalendarMark.label}} · 课程仍按课表显示，请以学校通知为准</view>
+    <view wx:if="{{todayCourses.length}}">
+      <view wx:for="{{todayCourses}}" wx:key="id" class="course-item card {{item.needsReview ? 'needs-review' : ''}}" style="border-left: 8rpx solid {{item.colorHex}};" data-id="{{item.id}}" bindtap="viewCourseDetail">
+        <view class="course-time">
+          <text>{{item.start}}</text>
+          <text>{{item.end}}</text>
+        </view>
+        <view class="course-main">
+          <view class="course-title-row">
+            <text class="course-title">{{item.title}}</text>
+            <text wx:if="{{item.needsReview}}" class="course-review-badge">待补全</text>
+          </view>
+          <text wx:if="{{item.needsReview}}" class="course-review-text">缺少：{{item.missingInfoText}}</text>
+          <text class="course-meta" wx:if="{{item.place}}">{{item.place}}</text>
+          <text class="course-meta" wx:if="{{item.teacher}}">{{t.courseTeacher}}: {{item.teacher}}</text>
+        </view>
+      </view>
+    </view>
+    <empty-state wx:else title="{{t.emptyTitle}}" desc="{{t.emptyDesc}}" actionText="{{t.addSchedule}}" bind:action="openAddCourse" />
+  </view>
+
+  <!-- ===== 月视图 ===== -->
+  <view wx:elif="{{scheduleKind === 'course' && viewMode === 'month'}}" class="month-view card" bindtouchstart="onCalendarTouchStart" bindtouchend="onCalendarTouchEnd">
+    <!-- 右上角装饰：噗噗今天要干啥（镜像小贴纸，不遮挡操作） -->
+    <image class="month-corner-deco" src="/images/schedule/month_deco_flip.jpg" mode="heightFix" />
+    <view class="month-header">
+      <text class="month-title">{{monthTitle}}</text>
+      <view
+        class="month-ai-record-btn"
+        catchtap="openAiImportRecords"
+        role="button"
+        aria-label="{{lang === 'en' ? 'AI import history' : 'AI 识别记录'}}"
+      >
+        <text class="month-ai-record-icon">↻</text>
+      </view>
+    </view>
+    <view class="month-weekdays">
+      <text wx:for="{{monthWeekdays}}" wx:key="*this">{{item}}</text>
+    </view>
+    <view class="month-grid">
+      <view
+        class="{{item.inMonth ? 'month-day' : 'month-day muted'}} {{item.isToday ? 'today' : ''}} {{item.selected ? 'selected' : ''}} {{item.weekSelected ? 'week-selected' : ''}} {{item.calendarMark ? 'calendar-' + item.calendarMark.type : ''}}"
+        wx:for="{{monthCells}}"
+        wx:key="date"
+        data-date="{{item.date}}"
+        bindtap="onMonthCellTap"
+      >
+        <text class="day-number">{{item.day}}</text>
+        <text wx:if="{{item.calendarMark}}" class="holiday-label">{{item.calendarMark.label}}</text>
+        <view class="month-event {{entry.needsReview ? 'needs-review' : ''}}" style="{{entry.needsReview ? '' : 'background:' + entry.colorHex + ';color:#fff'}}" wx:for="{{item.items}}" wx:for-item="entry" wx:key="id">
+          <view class="month-event-main"><text class="month-event-dot">●</text><text>{{entry.start}} {{entry.title}}<text wx:if="{{entry.type}}"> · {{entry.type}}</text></text></view>
+          <text wx:if="{{entry.weekText}}" class="month-week-text">W{{entry.weekText}}</text>
+          <text wx:if="{{entry.needsReview}}" class="month-review-mark">!</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 匹配视图已随顶部切换一并隐藏（找搭子/找课友/约时间入口代码保留在仓库，不再渲染） -->
+
+  <!-- ===== 待补全课程浮动提示（悬浮在标签栏上方，不随视图滚动） ===== -->
+  <view
+    wx:if="{{scheduleKind === 'course' && reviewCourses.length}}"
+    class="review-entry"
+    bindtap="openReviewModal"
+    role="button"
+    aria-label="{{lang === 'en' ? 'Open courses needing review' : '打开待补全课程'}}"
+  >
+    <view class="review-entry-mark">!</view>
+    <view class="review-entry-copy">
+      <text>{{lang === 'en' ? 'Courses need review' : '有课程信息待补全'}}</text>
+      <text>{{lang === 'en' ? reviewCourses.length + ' course(s)' : reviewCourses.length + ' 门课程缺少关键信息'}}</text>
+    </view>
+    <text class="review-entry-action">{{lang === 'en' ? 'Review' : '去处理'}} ›</text>
+  </view>
+
+  <!-- ===== AI 课表录入进度 ===== -->
+  <view wx:if="{{importing}}" class="ai-import-mask" catchtouchmove="noop">
+    <view class="ai-import-panel" catchtap="noop" role="dialog" aria-label="{{lang === 'en' ? 'AI timetable import in progress' : 'AI 课表录入进行中'}}">
+      <view class="ai-import-orbit">
+        <view class="ai-import-core">AI</view>
+      </view>
+      <view class="ai-import-copy">
+        <text class="ai-import-title">{{lang === 'en' ? 'AI is adding your timetable' : 'AI 正在录入课表'}}</text>
+        <text class="ai-import-status">{{importStatus}}</text>
+      </view>
+
+      <view class="ai-import-progress-wrap" aria-label="{{lang === 'en' ? 'Import progress' : '录入进度'}}">
+        <view class="ai-import-progress-track">
+          <view class="ai-import-progress-fill" style="{{'width:' + importProgress + '%;'}}"></view>
+        </view>
+        <text wx:if="{{importProgressDetail}}" class="ai-import-progress-detail">{{importProgressDetail}}</text>
+        <text class="ai-import-progress-value">{{importProgress}}%</text>
+      </view>
+
+      <!-- 录入提醒：请勿退出 -->
+      <view class="ai-import-warning">
+        <text>⚠️ {{lang === 'en' ? 'Please do not exit the app during import, or it will be interrupted.' : '录入时请勿退出小程序，否则会中断'}}</text>
+      </view>
+
+      <view class="ai-import-time">
+        <text class="ai-import-duration">{{importDurationHint}}</text>
+        <text class="ai-import-time-hint">{{importTimeHint}}</text>
+      </view>
+
+      <view class="ai-import-stages">
+        <view wx:for="{{importStages}}" wx:key="order" class="ai-import-stage {{item.state}}">
+          <view class="ai-import-stage-mark">{{item.state === 'done' ? '✓' : item.order}}</view>
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 关键课程信息待补全 ===== -->
+  <view wx:if="{{reviewModalOpen}}" class="review-modal-mask" catchtap="closeReviewModal" catchtouchmove="noop">
+    <view class="review-modal-panel" catchtap="noop" role="dialog" aria-label="{{lang === 'en' ? 'Courses needing review' : '待补全课程'}}">
+      <view class="review-modal-head">
+        <view>
+          <text class="review-modal-title">{{lang === 'en' ? 'Complete course details' : '待补全课程'}}</text>
+          <text class="review-modal-desc">{{lang === 'en' ? 'Only essential information is listed.' : '这里只显示影响上课安排的关键信息'}}</text>
+        </view>
+        <button class="review-modal-close" catchtap="closeReviewModal" aria-label="{{lang === 'en' ? 'Close' : '关闭'}}">×</button>
+      </view>
+
+      <scroll-view class="review-course-list" scroll-y enhanced show-scrollbar="{{false}}">
+        <view class="review-course-row" wx:for="{{reviewCourses}}" wx:key="id">
+          <view class="review-course-copy">
+            <text class="review-course-title">{{item.title || (lang === 'en' ? 'Unnamed course' : '未命名课程')}}</text>
+            <text wx:if="{{item.reviewSeriesText}}" class="review-course-series">{{item.reviewSeriesText}}</text>
+            <text class="review-course-missing">{{lang === 'en' ? 'Missing: ' : '缺少：'}}{{item.missingInfoText}}</text>
+          </view>
+          <button class="review-course-edit" data-id="{{item.id}}" catchtap="editCourseFromReview">{{lang === 'en' ? 'Complete' : '去补全'}}</button>
+        </view>
+      </scroll-view>
+
+      <button class="review-later-btn" catchtap="closeReviewModal">{{lang === 'en' ? 'Review later' : '稍后处理'}}</button>
+    </view>
+  </view>
+
+  <view wx:if="{{importTimingText}}" class="ai-import-timing card">
+    <text>{{importTimingText}}</text>
+  </view>
+
+  <!-- ===== 标签选择弹窗 ===== -->
+  <view wx:if="{{tagPickerOpen}}" class="modal-mask" catchtap="closeTagPicker">
+    <view class="tag-sheet" catchtap="noop">
+      <view class="sheet-head">
+        <text>{{lang === 'en' ? 'Select Tags' : '选择个人标签'}} ({{tagSelected.length}}/10)</text>
+        <button class="action-btn save-tags-btn" bindtap="saveTags">{{lang === 'en' ? 'Save' : '保存'}}</button>
+      </view>
+      <view wx:for="{{tagGroups}}" wx:key="category" class="tag-group">
+        <text class="tag-cat-label">{{item.label}}</text>
+        <view class="tag-grid">
+          <view wx:for="{{item.tags}}" wx:key="id" data-id="{{item.id}}" catchtap="toggleTag" class="tag-chip {{item.selected ? 'active' : ''}}">{{lang === 'en' ? item.en : item.zh}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 课程快捷面板（点按课程块弹出，可快速调色） ===== -->
+  <view wx:if="{{detailPopup.show}}" class="modal-mask" catchtap="closeDetailPopup" catchtouchmove="noop">
+    <view class="quick-panel" catchtap="noop" role="dialog" aria-label="{{lang === 'en' ? 'Course quick actions' : '课程快捷操作'}}">
+      <view class="quick-panel-head">
+        <view class="quick-panel-info">
+          <text class="quick-panel-title">{{detailPopup.course.title || (lang === 'en' ? 'Unnamed course' : '未命名课程')}}</text>
+          <text class="quick-panel-meta">{{detailPopup.course.date}} · {{detailPopup.course.start}}-{{detailPopup.course.end}}</text>
+          <text wx:if="{{detailPopup.course.place}}" class="quick-panel-meta">{{detailPopup.course.place}}</text>
+        </view>
+        <button class="quick-panel-close" catchtap="closeDetailPopup" aria-label="{{lang === 'en' ? 'Close' : '关闭'}}">×</button>
+      </view>
+
+      <view class="quick-panel-colors">
+        <text class="quick-panel-label">{{t.courseColor}}</text>
+        <view class="color-swatches">
+          <view
+            wx:for="{{courseColorOptions}}"
+            wx:key="idx"
+            data-idx="{{item.idx}}"
+            catchtap="onQuickColorPick"
+            class="color-swatch {{detailPopup.course.colorIdx === item.idx ? 'active' : ''}}"
+            style="background: {{item.bg}};"
+          ></view>
+          <view
+            data-idx="-1"
+            catchtap="onQuickColorPick"
+            class="color-swatch color-swatch-auto {{!(detailPopup.course.colorIdx >= 0) ? 'active' : ''}}"
+          >{{t.colorAuto}}</view>
+        </view>
+      </view>
+
+      <view class="quick-panel-actions">
+        <button class="quick-panel-btn" catchtap="viewDetailFromPopup">{{lang === 'en' ? 'Details' : '查看详情'}}</button>
+        <button class="quick-panel-btn primary" catchtap="editFromDetail">{{lang === 'en' ? 'Edit' : '编辑'}}</button>
+      </view>
+    </view>
+  </view>
+
+  <app-tabbar active="schedule" />
+
+  <!-- AI 小章鱼助手：点击 = AI 上传课表 / 手动添加（取代原 FAB）；class 供新手引导挖洞定位 -->
+  <ai-companion class="ai-companion-entry" page="schedule" bind:aiimport="openAiImport" bind:addcourse="openAddCourse" bind:voiceimport="openVoiceImport" />
+
+  <!-- 关闭噗噗助手后恢复的旧 FAB「+」：与小章鱼点击入口一致 -->
+  <view wx:if="{{!companionOn && !isGuest}}" class="fab-wrapper" bindtap="onFabTap">
+    <view class="fab-btn">
+      <text class="fab-icon">+</text>
+    </view>
+  </view>
+
+  <!-- ===== 课程编辑器 ===== -->
+  <view wx:if="{{courseEditorOpen}}" class="modal-mask">
+    <view class="course-editor card">
+      <view class="editor-head editor-head-titlebar">
+        <button class="editor-back-btn" catchtap="goToScheduleMainFromEditor" aria-label="返回">‹</button>
+        <view class="editor-head-titles">
+          <text class="editor-title">{{editingCourse.id ? t.editTitle : t.addTitle}}</text>
+          <text class="editor-subtitle">{{editingCourse.date}} · {{editorWeekdayLabel}} · {{editingCourse.start}}-{{editingCourse.end}}</text>
+        </view>
+      </view>
+
+      <view class="editor-calendar card">
+        <view class="calendar-head">
+          <button data-step="-1" bindtap="shiftEditorMonth">‹</button>
+          <view>
+            <text class="calendar-title">{{editorMonthTitle}}</text>
+            <text class="calendar-subtitle">{{t.addSubtitle}}</text>
+          </view>
+          <button data-step="1" bindtap="shiftEditorMonth">›</button>
+        </view>
+        <view class="calendar-weekdays">
+          <text wx:for="{{monthWeekdays}}" wx:key="*this">{{item}}</text>
+        </view>
+        <view class="calendar-grid">
+          <view
+            wx:for="{{editorMonthCells}}"
+            wx:key="date"
+            data-date="{{item.date}}"
+            bindtap="pickEditorDate"
+            class="{{item.inMonth ? 'calendar-day' : 'calendar-day muted'}} {{item.selected ? 'selected' : ''}} {{item.covered && item.inMonth ? 'covered' : ''}}"
+          >
+            <text>{{item.day}}</text>
+            <view wx:if="{{item.items.length}}" class="editor-course-marker">{{item.items[0].type || item.items[0].title}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="editor-preview">
+        <view class="preview-dot"></view>
+        <view>
+          <text>{{editingCourse.title || t.courseTitle}}</text>
+          <text>{{editingCourse.place || t.coursePlace}}</text>
+        </view>
+      </view>
+
+      <view wx:if="{{editingCourse.needsReview}}" class="editor-review-hint">
+        <text>AI 识别信息待补全：{{editingCourse.reviewReasons.join('、')}}</text>
+      </view>
+
+      <view class="form-row">
+        <text>{{t.courseTitle}}<text wx:if="{{editingCourse.titleError}}" class="field-required-hint">（必填）</text></text>
+        <input value="{{editingCourse.title}}" class="{{editingCourse.titleError ? 'input-error' : ''}}" data-field="title" bindinput="onCourseInput" />
+      </view>
+
+      <view class="form-row color-picker-row">
+        <text>{{t.courseColor}}</text>
+        <view class="color-swatches">
+          <view
+            wx:for="{{courseColorOptions}}"
+            wx:key="idx"
+            data-idx="{{item.idx}}"
+            catchtap="onCourseColorPick"
+            class="color-swatch {{editingCourse.colorIdx === item.idx ? 'active' : ''}}"
+            style="background: {{item.bg}};"
+          ></view>
+          <view
+            data-idx="-1"
+            catchtap="onCourseColorPick"
+            class="color-swatch color-swatch-auto {{!(editingCourse.colorIdx >= 0) ? 'active' : ''}}"
+          >{{t.colorAuto}}</view>
+        </view>
+      </view>
+
+      <view class="form-grid">
+        <view class="form-row">
+          <text>标准课程代码</text>
+          <input value="{{editingCourse.courseCode}}" data-field="courseCode" bindinput="onCourseInput" placeholder="例如 CCT007" />
+        </view>
+        <view class="form-row">
+          <text>教学班</text>
+          <input value="{{editingCourse.section}}" data-field="section" bindinput="onCourseInput" placeholder="例如 T01" />
+        </view>
+      </view>
+
+      <view class="form-row">
+        <text>学期</text>
+        <input value="{{editingCourse.term}}" data-field="term" bindinput="onCourseInput" placeholder="2025-26-S2" />
+      </view>
+
+      <view class="form-row week-picker-row">
+        <text>教学周（选择 1-13 周）</text>
+        <view class="week-chip-list">
+          <view wx:for="{{editingCourse.editorWeekOptions}}" wx:key="week" data-week="{{item.week}}" catchtap="toggleEditorWeek" class="week-chip {{item.selected ? 'selected' : ''}}">{{item.week}}</view>
+        </view>
+      </view>
+
+      <view class="form-grid">
+        <view class="form-row">
+          <text>{{t.courseType}}</text>
+          <input value="{{editingCourse.type}}" data-field="type" bindinput="onCourseInput" />
+        </view>
+        <view class="form-row">
+          <text>{{t.coursePlace}}</text>
+          <input value="{{editingCourse.place}}" data-field="place" bindinput="onCourseInput" />
+        </view>
+      </view>
+
+      <view class="form-grid">
+        <view class="form-row">
+          <text>{{t.courseStart}}</text>
+          <picker mode="time" value="{{editingCourse.start}}" bindchange="onCourseStart">
+            <view class="picker-value">{{editingCourse.start}}</view>
+          </picker>
+        </view>
+        <view class="form-row">
+          <text>{{t.courseEnd}}</text>
+          <picker mode="time" value="{{editingCourse.end}}" bindchange="onCourseEnd">
+            <view class="picker-value">{{editingCourse.end}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="form-row">
+        <text>{{t.courseTeacher}}</text>
+        <input value="{{editingCourse.teacher}}" data-field="teacher" bindinput="onCourseInput" />
+      </view>
+
+      <view class="editor-actions">
+        <button class="ghost-btn danger" wx:if="{{editingCourse.id}}" bindtap="confirmDeleteCourse">{{t.courseDelete}}</button>
+        <button class="ghost-btn" bindtap="closeCourseEditor">{{t.cancel}}</button>
+        <button class="primary-btn" loading="{{courseSaving}}" disabled="{{courseSaving}}" bindtap="saveCourse">{{courseSaving ? (lang === 'en' ? 'Saving…' : '保存中…') : t.courseSave}}</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== AI 录入参考图弹窗 ===== -->
+  <view wx:if="{{aiGuideOpen}}" class="modal-mask" catchtap="cancelAiGuide">
+    <view class="ai-guide-sheet card" catchtap="noop">
+      <view class="editor-head">
+        <view>
+          <text class="editor-title">{{t.aiGuideTitle}}</text>
+          <text class="editor-subtitle">{{t.importReady}}</text>
+        </view>
+        <button catchtap="cancelAiGuide">{{t.close}}</button>
+      </view>
+      <image class="ai-guide-image" src="/assets/schedule/ebridge-sample.jpg" mode="aspectFit" show-menu-by-longpress bindtap="previewAiGuideImage" />
+      <view class="ai-guide-tips">
+        <view wx:for="{{t.aiGuideTips}}" wx:key="index" class="ai-guide-tip">· {{item}}</view>
+      </view>
+      <view class="editor-actions">
+        <button class="ghost-btn" catchtap="cancelAiGuide">{{t.cancel}}</button>
+        <button class="primary-btn" catchtap="confirmAiGuide">{{t.aiGuideConfirm}}</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 语音录入日程弹窗：话术模板 → 实时转写 → 可编辑文本 → AI 整理 ===== -->
+  <view wx:if="{{voiceImportOpen}}" class="modal-mask" catchtap="closeVoiceImport">
+    <view class="ai-guide-sheet card" catchtap="noop">
+      <view class="editor-head">
+        <view>
+          <text class="editor-title">{{t.voiceTitle}}</text>
+          <text class="editor-subtitle">{{t.voiceHint}}</text>
+        </view>
+        <button catchtap="closeVoiceImport">{{t.close}}</button>
+      </view>
+      <view class="voice-template">
+        <text class="voice-template-text">{{t.voiceTemplate}}</text>
+      </view>
+      <textarea
+        class="voice-textarea"
+        value="{{voiceText}}"
+        bindinput="onVoiceTextInput"
+        placeholder="{{t.voicePlaceholder}}"
+        maxlength="2000"
+        auto-height
+        disabled="{{voiceParsing}}"
+      />
+      <view class="voice-record-row">
+        <button
+          wx:if="{{voiceAvailable}}"
+          class="voice-record-btn {{voiceRecording ? 'recording' : ''}}"
+          hover-class="none"
+          catchtouchstart="startVoiceRecord"
+          catchtouchend="stopVoiceRecord"
+          catchtouchcancel="stopVoiceRecord"
+          disabled="{{voiceParsing}}"
+        >{{voiceRecording ? t.voiceRelease : t.voiceHold}}</button>
+        <text wx:else class="voice-unavailable">{{t.voiceUnavailable}}</text>
+      </view>
+      <view class="editor-actions">
+        <button class="ghost-btn" catchtap="closeVoiceImport">{{t.cancel}}</button>
+        <button class="primary-btn" loading="{{voiceParsing}}" disabled="{{voiceParsing || !voiceText}}" catchtap="submitVoiceImport">{{t.voiceSubmit}}</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== AI 识别结果弹窗：检测图（仅拍照导入）+ 逐门课程识别状态 ===== -->
+  <view wx:if="{{aiResultOpen}}" class="modal-mask" catchtap="closeAiResult">
+    <view class="ai-guide-sheet card" catchtap="noop">
+      <view class="editor-head editor-head-titlebar">
+        <button class="editor-back-btn" catchtap="goToScheduleMain" aria-label="返回">‹</button>
+        <view class="editor-head-titles">
+          <text class="editor-title">{{t.aiResultTitle}}</text>
+          <text class="editor-subtitle">{{t.aiResultLegendOk}} · {{t.aiResultLegendFix}}</text>
+        </view>
+      </view>
+      <view wx:if="{{verificationImagePath || verificationNotice}}" class="verification-section">
+        <text class="verification-title">识别核验图</text>
+        <text wx:if="{{verificationNotice}}" class="verification-notice">{{verificationNotice}}</text>
+        <image wx:if="{{verificationImagePath}}" class="verification-image" src="{{verificationImagePath}}" mode="widthFix" show-menu-by-longpress bindtap="previewAiResultImage" />
+      </view>
+      <scroll-view class="ai-result-list" scroll-y enhanced show-scrollbar="{{false}}">
+        <view wx:for="{{aiResultCourses}}" wx:key="index" class="ai-result-row {{item.status}}">
+          <view class="ai-result-badge {{item.status}}">{{item.statusText}}</view>
+          <view class="ai-result-info">
+            <text class="ai-result-title">{{item.index}}. {{item.title}} · {{item.activityType}}</text>
+            <text class="ai-result-meta">{{item.date}} {{item.weekdayText}} · {{item.time}} · {{item.place}}</text>
+            <text class="ai-result-weeks">{{item.weeksText}}</text>
+            <text wx:if="{{item.reasons}}" class="ai-result-reasons">{{item.reasons}}</text>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="editor-actions">
+        <button class="ghost-btn" catchtap="closeAiResult">{{t.aiResultDone}}</button>
+        <button wx:if="{{aiResultIncomplete > 0}}" class="primary-btn" catchtap="openReviewFromAiResult">{{t.aiResultReview}} ({{aiResultIncomplete}})</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 新手引导 ===== -->
+  <intro-guide
+    visible="{{introGuideVisible}}"
+    steps="{{introSteps}}"
+    lang="{{lang}}"
+    themePrimary="{{themePrimary || '#7c83c7'}}"
+    darkMode="{{darkMode}}"
+    storageKey="introGuideScheduleDone"
+    bind:complete="onIntroComplete"
+    bind:exit="onIntroExit"
+    bind:gotoProfile="onIntroGotoProfile"
+  />
+
+</view>

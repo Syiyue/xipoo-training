@@ -1,0 +1,374 @@
+/* ============================================
+   学期切换页
+   ============================================ */
+
+.sem-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #e8f4fd, #f5f7fa 40%);
+  padding-bottom: 160rpx;
+}
+
+/* ----- 导航栏 ----- */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28rpx;
+  min-height: 88rpx;
+  z-index: 99;
+}
+
+.nav-back-icon {
+  font-size: 48rpx;
+  color: #1c1c1e;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.nav-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1c1c1e;
+}
+
+.nav-done-text {
+  font-size: 28rpx;
+  color: #007aff;
+  font-weight: 600;
+}
+
+/* ----- 当前学期栏 ----- */
+.current-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8rpx 28rpx;
+  padding: 24rpx 24rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+}
+
+.current-label {
+  font-size: 22rpx;
+  color: #8e8e93;
+  display: block;
+}
+
+.current-name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1c1c1e;
+  display: block;
+  margin-top: 6rpx;
+}
+
+.current-manage {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.manage-edit {
+  font-size: 26rpx;
+  color: #007aff;
+}
+
+.manage-text {
+  font-size: 26rpx;
+  color: #007aff;
+  font-weight: 500;
+}
+
+/* ----- 时间轴 ----- */
+.timeline {
+  padding: 20rpx 28rpx 0;
+}
+
+.tl-item {
+  position: relative;
+  padding-left: 44rpx;
+  margin-bottom: 32rpx;
+}
+
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: 13rpx;
+  top: 36rpx;
+  bottom: -32rpx;
+  width: 2rpx;
+  border-left: 2rpx dashed #d1d1d6;
+}
+
+.tl-item:last-child::before {
+  display: none;
+}
+
+/* 学年行 */
+.tl-year-row {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  margin-bottom: 16rpx;
+}
+
+.tl-dot {
+  position: absolute;
+  left: 4rpx;
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  border: 2rpx solid #c7c7cc;
+  background: #ffffff;
+  z-index: 1;
+}
+
+.tl-dot.solid {
+  border-color: #007aff;
+  background: #007aff;
+}
+
+.tl-year {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1c1c1e;
+}
+
+/* 卡片区 */
+.tl-cards {
+  display: flex;
+  gap: 14rpx;
+}
+
+.tl-card {
+  flex: 1;
+  padding: 20rpx 18rpx 16rpx;
+  border-radius: 16rpx;
+  background: #ffffff;
+  border: 2rpx solid #e8e8ed;
+  position: relative;
+}
+
+.tl-card.highlight {
+  border-color: #007aff;
+  background: #f5f9ff;
+}
+
+.tl-card-tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 6rpx 14rpx;
+  border-radius: 0 14rpx 0 12rpx;
+  background: #007aff;
+  font-size: 18rpx;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.tl-card-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1c1c1e;
+  display: block;
+}
+
+.tl-card-count {
+  font-size: 22rpx;
+  color: #aeaeb2;
+  display: block;
+  margin-top: 10rpx;
+}
+
+/* 删除按钮 */
+.tl-card-del {
+  position: absolute;
+  top: -12rpx;
+  right: -12rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b6b, #ff4444);
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+/* ----- 确认弹窗 ----- */
+.dialog-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6rpx);
+  -webkit-backdrop-filter: blur(6rpx);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog-box {
+  width: 580rpx;
+  padding: 40rpx 36rpx 30rpx;
+  border-radius: 28rpx;
+  background: #ffffff;
+  text-align: center;
+}
+
+.dialog-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1c1c1e;
+  display: block;
+  margin-bottom: 18rpx;
+}
+
+.dialog-body {
+  font-size: 26rpx;
+  color: #6e6e73;
+  display: block;
+  line-height: 1.6;
+  margin-bottom: 32rpx;
+}
+
+.dialog-btns {
+  display: flex;
+  gap: 18rpx;
+}
+
+.dialog-btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog-btn.cancel {
+  background: #ffffff;
+  border: 2rpx solid #007aff;
+  color: #007aff;
+}
+
+.dialog-btn.confirm {
+  background: #007aff;
+  color: #ffffff;
+}
+
+.dialog-btn.danger {
+  background: #007aff;
+  color: #ffffff;
+}
+
+/* ----- 创建新学期选择器 ----- */
+.picker-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6rpx);
+  -webkit-backdrop-filter: blur(6rpx);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.picker-sheet {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 32rpx 32rpx 0 0;
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+}
+
+.picker-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid #f0f0f3;
+}
+
+.picker-cancel {
+  font-size: 28rpx;
+  color: #007aff;
+}
+
+.picker-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1c1c1e;
+}
+
+.picker-confirm {
+  font-size: 28rpx;
+  color: #007aff;
+  font-weight: 600;
+}
+
+.picker-body {
+  display: flex;
+  height: 420rpx;
+  position: relative;
+}
+
+.picker-col {
+  flex: 1;
+  height: 420rpx;
+}
+
+.picker-col-inner {
+  padding: 170rpx 0;
+}
+
+.picker-item {
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  color: #aeaeb2;
+  transition: all 150ms ease;
+}
+
+.picker-item.active {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1c1c1e;
+  background: rgba(0, 122, 255, 0.06);
+}
+
+/* ----- 底部按钮 ----- */
+.bottom-btn-wrap {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 28rpx calc(40rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, transparent, #f5f7fa 30%);
+}
+
+.create-btn {
+  width: 100%;
+  height: 88rpx;
+  border-radius: 44rpx;
+  background: #007aff;
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

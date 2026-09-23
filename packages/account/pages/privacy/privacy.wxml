@@ -1,0 +1,10 @@
+<view style="{{themeVars}}" class="page privacy-page">
+  <view class="card">
+    <view class="privacy-item" wx:for="{{items}}" wx:key="key">
+      <view class="privacy-left">
+        <text class="privacy-label">{{lang === 'en' ? item.labelEn : item.label}}</text>
+      </view>
+      <switch checked="{{item.enabled}}" data-key="{{item.key}}" bindchange="onSwitch" color="{{themePrimary}}" />
+    </view>
+  </view>
+</view>

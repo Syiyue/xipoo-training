@@ -1,0 +1,329 @@
+/* ========== 全局页面 ========== */
+.add-schedule-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+/* ========== 顶部导航栏 ========== */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 88rpx;
+  padding: 0 24rpx;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.nav-left {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-back-icon {
+  font-size: 48rpx;
+  color: #333;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.nav-title {
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #1a1a1a;
+  letter-spacing: 0.5rpx;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 32rpx;
+  flex-shrink: 0;
+}
+
+.nav-icon-btn {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.nav-icon {
+  font-size: 38rpx;
+  color: #888;
+  line-height: 1;
+}
+
+.nav-icon.active {
+  color: #f5a623;
+}
+
+/* ========== 表单主体 ========== */
+.form-body {
+  padding: 24rpx 24rpx 0;
+}
+
+/* ========== 表单卡片容器 ========== */
+.form-card {
+  background: #fff;
+  border-radius: 24rpx;
+  margin-bottom: 24rpx;
+  overflow: hidden;
+}
+
+/* Figma：日程名称输入框为深色描边大框。 */
+.form-card:first-child {
+  border: 2rpx solid #212121;
+  border-radius: 16rpx;
+}
+
+/* ========== 日程名称输入 ========== */
+.name-input {
+  height: 96rpx;
+  padding: 0 32rpx;
+  font-size: 30rpx;
+  color: #1a1a1a;
+  font-weight: 400;
+}
+
+.placeholder {
+  color: #bbb;
+}
+
+/* ========== 表单行 ========== */
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 96rpx;
+  padding: 0 32rpx;
+}
+
+.row-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 400;
+  flex-shrink: 0;
+}
+
+.row-right {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex-shrink: 0;
+}
+
+.row-value {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.row-value.placeholder {
+  color: #bbb;
+}
+
+.row-arrow {
+  font-size: 34rpx;
+  color: #ccc;
+  font-weight: 300;
+}
+
+/* ========== 分割线 ========== */
+.row-divider {
+  height: 1rpx;
+  margin: 0 32rpx;
+  background: #f0f0f0;
+}
+
+/* ========== 描述文本框 ========== */
+.desc-card {
+  position: relative;
+  padding: 24rpx 32rpx 40rpx;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 440rpx;
+  font-size: 28rpx;
+  color: #1a1a1a;
+  line-height: 1.6;
+}
+
+.desc-counter {
+  position: absolute;
+  right: 32rpx;
+  bottom: 20rpx;
+  font-size: 22rpx;
+  color: #bbb;
+}
+
+/* ========== 底部保存按钮 ========== */
+.bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 24rpx 32rpx;
+  padding-bottom: calc(48rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(248,249,250,0) 0%, #f8f9fa 40%);
+}
+
+.save-btn {
+  display: block;
+  width: 480rpx;
+  height: 96rpx;
+  margin: 0 auto;
+  border: 2rpx solid #212121;
+  border-radius: 48rpx;
+  background: var(--brand-primary);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 500;
+  letter-spacing: 2rpx;
+  transition: opacity 0.2s ease;
+}
+
+.save-btn:active {
+  opacity: 0.85;
+}
+
+/* ========== 弹窗遮罩 ========== */
+.modal-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(0,0,0,0.4);
+}
+
+/* ========== 时间选择器弹窗 ========== */
+.time-picker-sheet {
+  width: 100%;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  border-radius: 32rpx 32rpx 0 0;
+  background: #fff;
+}
+
+.picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 96rpx;
+  padding: 0 32rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.picker-cancel {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.picker-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.picker-confirm {
+  font-size: 28rpx;
+  color: var(--brand-primary);
+  font-weight: 500;
+}
+
+.picker-body {
+  display: flex;
+  gap: 0;
+  padding: 32rpx 0;
+}
+
+.time-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-col-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+}
+
+.time-picker-view {
+  width: 100%;
+  height: 400rpx;
+}
+
+.picker-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: #333;
+}
+
+/* ========== 通用选项弹窗 ========== */
+.picker-sheet {
+  width: 100%;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  border-radius: 32rpx 32rpx 0 0;
+  background: #fff;
+}
+
+.picker-list {
+  padding: 8rpx 0;
+}
+
+.picker-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 96rpx;
+  padding: 0 32rpx;
+}
+
+.picker-option text:first-child {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.picker-option.selected text:first-child {
+  color: var(--brand-primary);
+  font-weight: 500;
+}
+
+.option-check {
+  font-size: 28rpx;
+  color: var(--brand-primary);
+}
+
+/* ========== 地点手动输入弹窗 ========== */
+.location-input-sheet {
+  width: 100%;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  border-radius: 32rpx 32rpx 0 0;
+  background: #fff;
+}
+.location-input-body {
+  padding: 32rpx;
+}
+.location-input-field {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 20rpx;
+  border-radius: 14rpx;
+  background: #f5f7f6;
+  font-size: 28rpx;
+  color: #333;
+}

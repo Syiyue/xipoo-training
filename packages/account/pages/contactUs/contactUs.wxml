@@ -1,0 +1,7 @@
+<view style="{{themeVars}}" class="page contact-page {{darkMode ? 'dark-mode' : ''}}">
+  <view class="card contact-card">
+    <text class="contact-label">{{t.contactUsDesc || '官方客服邮箱'}}</text>
+    <text class="contact-email">{{t.contactEmail || '268182534@139.com'}}</text>
+    <button class="copy-contact-btn" catchtap="copyEmail">{{t.copyId || '复制'}}</button>
+  </view>
+</view>

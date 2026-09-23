@@ -1,0 +1,80 @@
+/* 自研预约（模块 3）我的预约列表 */
+.myresv-page {
+  min-height: 100vh;
+  padding: 32rpx 28rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.myresv-empty {
+  padding: 120rpx 0;
+  text-align: center;
+  font-size: 28rpx;
+  color: #999999;
+}
+
+.myresv-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(36, 42, 98, 0.06);
+}
+
+.myresv-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.myresv-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--brand-ink, #242a62);
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.myresv-status {
+  margin-left: 16rpx;
+  height: 40rpx;
+  line-height: 40rpx;
+  padding: 0 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.myresv-status.booked {
+  color: #07c160;
+  background: rgba(7, 193, 96, 0.12);
+}
+.myresv-status.cancelled {
+  color: #999999;
+  background: rgba(153, 153, 153, 0.14);
+}
+
+.myresv-slot {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #4a5568;
+}
+
+.myresv-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: #79857e;
+}
+
+.myresv-cancel-btn {
+  margin-top: 20rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 999rpx;
+  background: #ffffff;
+  border: 2rpx solid #e64340;
+  color: #e64340;
+  font-size: 26rpx;
+}

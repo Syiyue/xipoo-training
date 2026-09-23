@@ -1,0 +1,411 @@
+.ai-companion {
+  position: fixed;
+  right: 24rpx;
+  bottom: calc(170rpx + env(safe-area-inset-bottom));
+  /* 高于普通日程内容、悬浮提示和 tabbar，低于编辑/识别弹窗，避免遮挡表单操作。 */
+  z-index: 160;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* 日程页 FAB 已并入小章鱼，位置与其他页面一致 */
+
+/* 拖拽：吸附边缘时平滑过渡（位移走 transform，不触发 layout） */
+.ai-companion.snapping {
+  transition: transform 0.25s ease;
+}
+
+/* 入场动画放在 mascot-wrap 上：根节点定位已改用 inline transform，动画会与之冲突 */
+.mascot-wrap {
+  animation: companion-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.mascot-wrap.dragging .mascot {
+  animation: none;
+  transform: scale(1.12) rotate(-4deg);
+}
+
+.mascot-wrap.dragging .mascot-halo {
+  animation: none;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.25);
+}
+
+/* 待机摆动：每 9s 摇摆一次（类由 JS 定时切换） */
+.mascot-wrap.wiggle .mascot {
+  animation: companion-wiggle 1.3s ease-in-out;
+}
+
+@keyframes companion-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-7deg) scale(1.02); }
+  45% { transform: rotate(6deg); }
+  70% { transform: rotate(-4deg) scale(1.04); }
+  90% { transform: rotate(2deg); }
+}
+
+/* 冒泡时跳一下 */
+.mascot-wrap.pop .mascot {
+  animation: companion-hop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes companion-hop {
+  0% { transform: translateY(0) scale(1, 1); }
+  35% { transform: translateY(-16rpx) scale(0.95, 1.08); }
+  70% { transform: translateY(2rpx) scale(1.05, 0.94); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+
+.mascot-caption {
+  margin-top: 2rpx;
+  padding: 2rpx 12rpx;
+  border-radius: 16rpx;
+  color: #ffffff;
+  background: linear-gradient(135deg, #7c6ff0, #5b8ef0);
+  font-size: 16rpx;
+  font-weight: 700;
+  box-shadow: 0 4rpx 10rpx rgba(124, 111, 240, 0.35);
+}
+
+/* 入场：回弹式放大出现（squash-and-stretch） */
+@keyframes companion-pop {
+  0% { transform: scale(0) translateY(30rpx); opacity: 0; }
+  60% { transform: scale(1.08) translateY(-4rpx); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.mascot-wrap {
+  position: relative;
+  width: 110rpx;
+  height: 100rpx;
+}
+
+/* 呼吸光环：让小章鱼在页面上有「活物」感 */
+.mascot-halo {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  width: 120rpx;
+  height: 120rpx;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 111, 240, 0.35) 0%, rgba(124, 111, 240, 0) 70%);
+  animation: companion-halo 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes companion-halo {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+.mascot {
+  position: relative;
+  width: 110rpx;
+  height: 100rpx;
+  animation: companion-bob 3s ease-in-out infinite;
+}
+
+@keyframes companion-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10rpx); }
+}
+
+/* 换肤：快速缩放 + 轻微旋转，制造“变身”感 */
+.mascot-wrap.switching .mascot {
+  animation: mascot-switch 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes mascot-switch {
+  0% { transform: scale(1) rotate(0deg); }
+  40% { transform: scale(0.72) rotate(-10deg); opacity: 0.55; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.mascot-wrap:active .mascot {
+  transform: scale(0.88, 1.05);
+  animation: none;
+}
+
+.dot {
+  position: absolute;
+  top: 0;
+  right: 2rpx;
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  background: #f56565;
+  border: 3rpx solid #fff;
+}
+
+.dot::after {
+  content: '';
+  position: absolute;
+  inset: -6rpx;
+  border-radius: 50%;
+  border: 3rpx solid rgba(245, 101, 101, 0.6);
+  animation: companion-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes companion-ping {
+  0% { transform: scale(0.8); opacity: 1; }
+  80%, 100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* 气泡：从章鱼方向滑入，带小尾巴指向章鱼 */
+.bubble {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10rpx;
+  max-width: 460rpx;
+  margin-bottom: 14rpx;
+  padding: 18rpx 44rpx 18rpx 20rpx;
+  border-radius: 20rpx 20rpx 4rpx 20rpx;
+  background: #ffffff;
+  box-shadow: 0 10rpx 30rpx rgba(80, 70, 160, 0.18);
+  animation: bubble-in 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+@keyframes bubble-in {
+  0% { transform: translateX(40rpx) scale(0.9); opacity: 0; }
+  100% { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+.bubble::after {
+  content: '';
+  position: absolute;
+  right: 26rpx;
+  bottom: -8rpx;
+  width: 20rpx;
+  height: 20rpx;
+  background: #ffffff;
+  transform: rotate(45deg);
+  border-radius: 0 0 4rpx 0;
+}
+
+.bubble-icon {
+  flex: 0 0 auto;
+  font-size: 28rpx;
+  line-height: 1.4;
+}
+
+.bubble-text {
+  color: #333344;
+  font-size: 22rpx;
+  line-height: 1.45;
+}
+
+.ai-badge {
+  margin-left: 6rpx;
+  font-size: 20rpx;
+  animation: badge-twinkle 1.8s ease-in-out infinite;
+}
+
+@keyframes badge-twinkle {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.bubble-close {
+  position: absolute;
+  top: 6rpx;
+  right: 12rpx;
+  padding: 6rpx;
+  color: #9a9ab0;
+  font-size: 26rpx;
+  line-height: 1;
+}
+
+/* 面板：遮罩淡入 + 面板上滑 */
+.panel-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(30, 25, 60, 0.45);
+  animation: mask-fade 0.25s ease-out;
+}
+
+@keyframes mask-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.panel {
+  width: 100%;
+  max-height: 76vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 28rpx 28rpx 0 0;
+  background: #f7f6fb;
+  padding-bottom: env(safe-area-inset-bottom);
+  animation: panel-up 0.38s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+@keyframes panel-up {
+  0% { transform: translateY(80rpx); opacity: 0.4; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 26rpx 28rpx 18rpx;
+}
+
+.panel-avatar {
+  width: 72rpx;
+  height: 66rpx;
+}
+
+.panel-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.panel-title-main {
+  display: block;
+  color: #333344;
+  font-size: 30rpx;
+  font-weight: 900;
+}
+
+.panel-sub {
+  margin-top: 4rpx;
+  color: #8a8aa0 !important;
+  font-size: 20rpx !important;
+  font-weight: 400 !important;
+}
+
+.panel-close {
+  padding: 10rpx;
+  color: #9a9ab0;
+  font-size: 36rpx;
+  line-height: 1;
+}
+
+.panel-body {
+  flex: 1;
+  min-height: 0;
+  padding: 0 28rpx;
+  box-sizing: border-box;
+}
+
+.panel-empty {
+  padding: 48rpx 24rpx;
+  color: #8a8aa0;
+  font-size: 24rpx;
+  text-align: center;
+}
+
+.tip-card {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+  padding: 22rpx 24rpx;
+  border-radius: 20rpx;
+  background: #ffffff;
+  box-shadow: 0 6rpx 18rpx rgba(80, 70, 160, 0.08);
+  transition: transform 0.15s ease;
+}
+
+.tip-card:active {
+  transform: scale(0.97);
+}
+
+.tip-icon {
+  flex: 0 0 auto;
+  font-size: 32rpx;
+}
+
+.tip-text {
+  flex: 1;
+  min-width: 0;
+  color: #333344;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.tip-go {
+  flex: 0 0 auto;
+  color: #7c6ff0;
+  font-size: 32rpx;
+  font-weight: 900;
+}
+
+.panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  margin: 10rpx 28rpx 0;
+  padding: 22rpx;
+  border-radius: 20rpx;
+  color: #ffffff;
+  background: linear-gradient(135deg, #7c6ff0, #5b8ef0);
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.panel-footer:active {
+  opacity: 0.88;
+}
+
+.footer-icon {
+  font-size: 28rpx;
+}
+
+.panel-mute {
+  margin: 18rpx 0 24rpx;
+  color: #a0a0b8;
+  font-size: 20rpx;
+  text-align: center;
+}
+
+.panel-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  margin: 10rpx 28rpx 0;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  color: #1769aa;
+  background: #eaf5ff;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+/* 推广卡片 */
+.tip-ad {
+  background: #fffaf2;
+}
+
+.ad-badge {
+  flex: 0 0 auto;
+  margin-left: 8rpx;
+  padding: 2rpx 10rpx;
+  border-radius: 8rpx;
+  color: #b45309;
+  background: #fef3c7;
+  font-size: 16rpx;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.bubble-text .ad-badge {
+  margin-left: 10rpx;
+}
+
+.ad-close {
+  flex: 0 0 auto;
+  padding: 6rpx 10rpx;
+  color: #c0b8a8;
+  font-size: 28rpx;
+  line-height: 1;
+}

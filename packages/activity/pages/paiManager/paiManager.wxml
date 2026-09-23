@@ -1,0 +1,29 @@
+<view style="{{themeVars}}" class="manager-page">
+  <view wx:if="{{manager}}" class="manager-profile">
+    <image wx:if="{{manager.avatarUrl}}" class="manager-avatar" src="{{manager.avatarUrl}}" mode="aspectFill" />
+    <view wx:else class="manager-avatar manager-avatar-fallback">{{manager.initial}}</view>
+    <view class="manager-copy">
+      <text class="manager-name">{{manager.displayName}}</text>
+      <text class="manager-bio">{{manager.bio || (lang === 'en' ? 'PAI Space host' : 'π空间主理人')}}</text>
+      <view class="manager-tags"><text wx:for="{{manager.tags}}" wx:key="*this">{{item}}</text></view>
+    </view>
+  </view>
+
+  <view wx:if="{{monthGroups.length}}" class="manager-calendar">
+    <view wx:for="{{monthGroups}}" wx:key="month" wx:for-item="monthGroup" class="manager-month">
+      <view class="manager-month-head">
+        <text>{{monthGroup.month}}</text>
+        <text>{{monthGroup.activities.length}} {{lang === 'en' ? 'events' : '场活动'}}</text>
+      </view>
+      <button wx:for="{{monthGroup.activities}}" wx:key="id" wx:for-item="activity" class="manager-activity" data-id="{{activity.id}}" bindtap="openActivity">
+        <image class="manager-activity-cover" src="{{activity.coverUrl}}" mode="aspectFill" />
+        <view class="manager-activity-copy">
+          <text class="manager-activity-title">{{activity.displayTitle}}</text>
+          <text class="manager-activity-meta">{{activity.displayTime}}</text>
+          <view class="manager-activity-tags"><text wx:for="{{activity.tagsZh}}" wx:key="*this" wx:for-item="tag">{{tag}}</text></view>
+        </view>
+      </button>
+    </view>
+  </view>
+  <view wx:elif="{{!loading}}" class="manager-empty">{{lang === 'en' ? 'No events assigned yet' : '该主理人暂未绑定活动'}}</view>
+</view>

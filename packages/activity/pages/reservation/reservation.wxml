@@ -1,0 +1,51 @@
+<view style="{{themeVars}}" class="page reservation-page {{darkMode ? 'dark-mode' : ''}}">
+  <view class="resv-header">
+    <text class="resv-title">{{title}}</text>
+    <text class="resv-subtitle">{{lang === 'en' ? 'Native reservation' : '自研预约'}}</text>
+  </view>
+
+  <view wx:if="{{rules}}" class="resv-card card">
+    <text class="resv-label">{{lang === 'en' ? 'Booking rules' : '预约规则'}}</text>
+    <text class="resv-rules">{{rules}}</text>
+  </view>
+
+  <!-- 已有未取消订单：显示当前预约状态 + 取消入口 -->
+  <view wx:if="{{myOrder}}" class="resv-card card resv-mine">
+    <text class="resv-label">{{lang === 'en' ? 'Your booking' : '我的预约'}}</text>
+    <view class="resv-mine-row">
+      <text class="resv-mine-slot">{{myOrder.slotText}}</text>
+      <text class="resv-status resv-status-booked">{{lang === 'en' ? 'Booked' : '已预约'}}</text>
+    </view>
+    <text class="resv-mine-verify">{{myOrder.verifyStatus === 'verified' ? (lang === 'en' ? 'Verified' : '已核销') : (lang === 'en' ? 'Not verified' : '待核销')}}</text>
+    <button class="resv-cancel-btn" loading="{{cancelling}}" bindtap="cancelMyOrder">{{lang === 'en' ? 'Cancel reservation' : '取消预约'}}</button>
+  </view>
+
+  <!-- 时段选择 -->
+  <block wx:else>
+    <view class="resv-card card">
+      <text class="resv-label">{{lang === 'en' ? 'Select a time slot' : '选择时段'}}</text>
+      <view wx:if="{{!loading && !slots.length}}" class="resv-empty">
+        <text>{{lang === 'en' ? 'No available slots' : '暂无可预约时段'}}</text>
+      </view>
+      <view
+        wx:for="{{slots}}"
+        wx:key="id"
+        class="resv-slot {{selectedSlotId === item.id ? 'selected' : ''}} {{item.full ? 'full' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="selectSlot"
+      >
+        <view class="resv-slot-main">
+          <text class="resv-slot-date">{{item.date}}</text>
+          <text class="resv-slot-time">{{item.start}}-{{item.end}}</text>
+        </view>
+        <text class="resv-slot-quota {{item.full ? 'full' : ''}}">
+          {{item.full ? (lang === 'en' ? 'Full' : '已满') : (lang === 'en' ? item.remaining + '/' + item.capacity + ' left' : '余 ' + item.remaining + '/' + item.capacity)}}
+        </text>
+      </view>
+    </view>
+
+    <button class="resv-submit-btn" loading="{{submitting}}" disabled="{{submitting || !slots.length}}" bindtap="submit">
+      {{lang === 'en' ? 'Submit reservation' : '提交预约'}}
+    </button>
+  </block>
+</view>

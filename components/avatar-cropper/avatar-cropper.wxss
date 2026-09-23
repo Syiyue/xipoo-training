@@ -1,0 +1,157 @@
+.cropper-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cropper-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.cropper-box {
+  position: relative;
+  width: 600rpx;
+  height: 600rpx;
+  z-index: 10;
+  transform-origin: center center;
+}
+
+.crop-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 999rpx;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.crop-grid {
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+  background-size: 100rpx 100rpx;
+}
+
+.image-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  will-change: transform;
+  z-index: 5;
+}
+
+.crop-image {
+  display: block;
+}
+
+.frame-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 4rpx solid #fff;
+  border-radius: 999rpx;
+  box-sizing: border-box;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.cropper-actions {
+  position: absolute;
+  bottom: 200rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 40rpx;
+  z-index: 20;
+}
+
+.action-btn {
+  width: 200rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  line-height: 80rpx;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.confirm-btn {
+  background: var(--brand-primary);
+  color: #fff;
+}
+
+.zoom-controls {
+  position: absolute;
+  right: 40rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10rpx);
+  border-radius: 40rpx;
+  overflow: hidden;
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.zoom-btn {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.zoom-btn:active {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.zoom-icon {
+  font-size: 40rpx;
+  color: #fff;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.zoom-divider {
+  width: 48rpx;
+  height: 2rpx;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.crop-canvas {
+  position: absolute;
+  top: -9999rpx;
+  left: -9999rpx;
+}

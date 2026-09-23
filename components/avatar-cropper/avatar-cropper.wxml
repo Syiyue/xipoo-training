@@ -1,0 +1,42 @@
+<view class="cropper-container" wx:if="{{visible}}">
+  <view class="cropper-mask"></view>
+  
+  <view class="cropper-box">
+    <view class="crop-frame">
+      <view class="crop-grid"></view>
+    </view>
+    
+    <view class="image-container" 
+          style="transform: translate(-50%, -50%) scale({{scale}}) translate({{offsetX}}px, {{offsetY}}px);"
+          bindtouchstart="onTouchStart"
+          bindtouchmove="onTouchMove"
+          bindtouchend="onTouchEnd">
+      <image src="{{imageSrc}}" 
+             mode="aspectFit"
+             class="crop-image"
+             style="width: {{displayWidth}}px; height: {{displayHeight}}px;"
+             bindload="onImageLoad" />
+    </view>
+    
+    <view class="frame-border"></view>
+  </view>
+  
+  <view class="cropper-actions">
+    <button class="action-btn cancel-btn" bindtap="onCancel">{{t.cancel || '取消'}}</button>
+    <button class="action-btn confirm-btn" bindtap="onConfirm">{{t.confirm || '确认'}}</button>
+  </view>
+  
+  <view class="zoom-controls">
+    <view class="zoom-btn zoom-out" catchtap="onZoomOut">
+      <text class="zoom-icon">−</text>
+    </view>
+    <view class="zoom-divider"></view>
+    <view class="zoom-btn zoom-in" catchtap="onZoomIn">
+      <text class="zoom-icon">+</text>
+    </view>
+  </view>
+
+  <canvas canvas-id="cropCanvas"
+          class="crop-canvas"
+          style="width: {{canvasWidth}}px; height: {{canvasHeight}}px;"></canvas>
+</view>

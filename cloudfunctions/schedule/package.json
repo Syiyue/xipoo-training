@@ -1,0 +1,11 @@
+{
+  "name": "xipoo-schedule",
+  "version": "1.0.0",
+  "description": "Xipoo schedule cloud function",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3",
+    "axios": "^1.6.0",
+    "@cloudbase/node-sdk": "^3.16.0"
+  }
+}

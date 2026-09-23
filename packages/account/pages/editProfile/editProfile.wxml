@@ -1,0 +1,229 @@
+<view style="{{themeVars}}" class="page edit-profile-page {{darkMode ? 'dark-mode' : ''}}">
+  <view class="card form-card">
+    <view class="avatar-section" bindtap="chooseAvatar">
+      <view class="avatar-circle">
+        <image wx:if="{{user && user.avatarUrl}}" src="{{user.avatarUrl}}" mode="aspectFill" class="avatar-img" />
+        <text wx:else class="avatar-text">{{user ? user.name.charAt(0) : '?'}}</text>
+      </view>
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">{{t.nickname || '昵称'}}</text>
+      <input class="form-input" value="{{user.name}}" data-field="name" bindinput="onFieldInput" />
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">{{t.school || '学校'}}</text>
+      <view class="school-select" bindtap="showSchoolPicker">
+        <text class="school-value">{{user.school || t.selectSchool || '请选择学校'}}</text>
+        <text class="school-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">{{t.grade || '年级'}}</text>
+      <view class="school-select" bindtap="showGradePicker">
+        <text class="school-value {{user.degree ? '' : 'placeholder'}}">{{user.degree || (lang === 'zh' ? '请选择年级' : 'Select Grade')}}</text>
+        <text class="school-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">{{t.gender || '性别'}}</text>
+      <view class="school-select" bindtap="showGenderPicker">
+        <text class="school-value {{user.gender ? '' : 'placeholder'}}">{{user.gender || (lang === 'zh' ? '请选择性别' : 'Select Gender')}}</text>
+        <text class="school-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">{{t.major || '专业'}}</text>
+      <view class="school-select" bindtap="showMajorPicker">
+        <text class="school-value {{user.major ? '' : 'placeholder'}}">{{user.major || (lang === 'zh' ? '请选择专业' : 'Select Major')}}</text>
+        <text class="school-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">{{t.signature || '个性签名'}}</text>
+      <textarea class="form-textarea signature-textarea" value="{{user.signature}}" data-field="signature" bindinput="onFieldInput" maxlength="50" placeholder="{{lang === 'zh' ? '用一句话介绍一下吧~' : 'Write a signature...'}}" auto-height focus="{{editingField === 'signature'}}" />
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">{{t.bio || '个人介绍'}}</text>
+      <textarea class="form-textarea" value="{{user.bio}}" data-field="bio" bindinput="onFieldInput" maxlength="160" placeholder="{{lang === 'zh' ? '详细介绍一下你自己' : 'About yourself...'}}" focus="{{editingField === 'bio'}}" />
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">{{t.tags || '兴趣标签'}}</text>
+      <view class="tags-edit-area">
+        <view class="tags-display">
+          <view wx:for="{{user.tags || []}}" wx:key="*this" class="tag-chip">
+            <text>{{item}}</text>
+            <text class="tag-x" data-index="{{index}}" catchtap="removeTag">×</text>
+          </view>
+        </view>
+        <view class="tag-add-row">
+          <input class="tag-input" value="{{tagInput}}" bindinput="onTagInput" bindconfirm="addTag" maxlength="10" placeholder="{{lang === 'zh' ? '输入标签后回车' : 'Add tag...'}}" />
+          <button class="tag-add-btn" bindtap="addTag">+</button>
+        </view>
+      </view>
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">{{t.showcase || '照片墙'}}</text>
+      <text class="form-desc">{{lang === 'zh' ? '最多3张，展示在你的个人主页' : 'Up to 3 photos, shown on your profile'}}</text>
+      <view class="photo-grid">
+        <view wx:for="{{showcaseImages}}" wx:key="*this" class="photo-cell">
+          <image src="{{item}}" mode="aspectFill" class="photo-thumb" data-index="{{index}}" catchtap="previewPhoto" />
+          <view class="photo-del" data-index="{{index}}" catchtap="removePhoto">
+            <text class="del-icon">−</text>
+          </view>
+        </view>
+        <view wx:if="{{showcaseImages.length < 3}}" class="photo-add-box" bindtap="addPhoto">
+          <text class="add-icon">+</text>
+        </view>
+      </view>
+    </view>
+
+    <button class="primary-btn save-btn" bindtap="saveProfile">{{t.save || '保存'}}</button>
+  </view>
+</view>
+
+<avatar-cropper 
+  visible="{{showCropper}}" 
+  image-src="{{cropImageSrc}}" 
+  lang="{{lang}}"
+  bind:cancel="onCropCancel"
+  bind:confirm="onCropConfirm" />
+
+<view class="preview-modal" style="{{themeVars}}" wx:if="{{showPreview}}" bindtap="onPreviewClose">
+  <view class="preview-content" catchtap="stopPropagation">
+    <view class="preview-header">
+      <text class="preview-title">{{t.preview || '预览'}}</text>
+      <text class="preview-close" bindtap="onPreviewClose">✕</text>
+    </view>
+    <view class="preview-image-wrapper">
+      <image src="{{previewImageSrc}}" mode="aspectFit" class="preview-image" />
+    </view>
+    <view class="preview-actions">
+      <button class="preview-btn cancel" bindtap="onPreviewClose">{{t.cancel || '取消'}}</button>
+      <button class="preview-btn confirm" bindtap="onPreviewConfirm">{{t.confirm || '确认上传'}}</button>
+    </view>
+  </view>
+</view>
+
+<view class="upload-progress-modal" style="{{themeVars}}" wx:if="{{showUploadProgress}}">
+  <view class="progress-content">
+    <view class="progress-icon">
+      <svg class="progress-ring" viewBox="0 0 100 100">
+        <circle class="progress-bg" cx="50" cy="50" r="45" fill="none" stroke="#e2e8f0" stroke-width="6" />
+        <circle class="progress-circle" cx="50" cy="50" r="45" fill="none" stroke-width="6" stroke-linecap="round" transform="rotate(-90 50 50)" style="stroke: var(--brand-primary); stroke-dasharray: 283; stroke-dashoffset: {{283 - (283 * uploadProgress) / 100}};" />
+      </svg>
+      <text class="progress-text">{{uploadProgress}}%</text>
+    </view>
+    <text class="progress-message">{{uploadMessage}}</text>
+  </view>
+</view>
+
+<view class="picker-modal" style="{{themeVars}}" wx:if="{{showSchoolPicker}}" bindtap="hideSchoolPicker">
+  <view class="picker-content" catchtap="stopPropagation">
+    <view class="picker-header">
+      <text class="picker-cancel" bindtap="hideSchoolPicker">{{t.cancel || '取消'}}</text>
+      <text class="picker-title">{{t.selectSchool || '选择学校'}}</text>
+      <text class="picker-confirm" bindtap="confirmSchool">{{t.confirm || '确定'}}</text>
+    </view>
+    <view class="picker-options">
+      <view
+        class="picker-option {{tempSchool === 'XJTLU' ? 'selected' : ''}}"
+        bindtap="selectSchool"
+        data-school="XJTLU">
+        <text class="option-text">XJTLU</text>
+        <view class="option-check" wx:if="{{tempSchool === 'XJTLU'}}">✓</view>
+      </view>
+      <view
+        class="picker-option {{tempSchool === '其他' ? 'selected' : ''}}"
+        bindtap="selectSchool"
+        data-school="其他">
+        <text class="option-text">{{t.other || '其他'}}</text>
+        <view class="option-check" wx:if="{{tempSchool === '其他'}}">✓</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="picker-modal" style="{{themeVars}}" wx:if="{{showGradePicker}}" bindtap="hideGradePicker">
+  <view class="picker-content" catchtap="stopPropagation">
+    <view class="picker-header">
+      <text class="picker-cancel" bindtap="hideGradePicker">{{t.cancel || '取消'}}</text>
+      <text class="picker-title">{{lang === 'zh' ? '选择年级' : 'Select Grade'}}</text>
+      <text class="picker-confirm" bindtap="confirmGrade">{{t.confirm || '确定'}}</text>
+    </view>
+    <view class="picker-options">
+      <view
+        wx:for="{{gradeOptions}}" wx:key="value"
+        class="picker-option {{tempGrade === item.value ? 'selected' : ''}}"
+        bindtap="selectGrade"
+        data-grade="{{item.value}}">
+        <text class="option-text">{{lang === 'zh' ? item.zh : item.en}}</text>
+        <view class="option-check" wx:if="{{tempGrade === item.value}}">✓</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="picker-modal" style="{{themeVars}}" wx:if="{{showGenderPicker}}" bindtap="hideGenderPicker">
+  <view class="picker-content" catchtap="stopPropagation">
+    <view class="picker-header">
+      <text class="picker-cancel" bindtap="hideGenderPicker">{{t.cancel || '取消'}}</text>
+      <text class="picker-title">{{lang === 'zh' ? '选择性别' : 'Select Gender'}}</text>
+      <text class="picker-confirm" bindtap="confirmGender">{{t.confirm || '确定'}}</text>
+    </view>
+    <view class="picker-options">
+      <view
+        wx:for="{{genderOptions}}" wx:key="value"
+        class="picker-option {{tempGender === item.value ? 'selected' : ''}}"
+        bindtap="selectGender"
+        data-gender="{{item.value}}">
+        <text class="option-text">{{lang === 'zh' ? item.zh : item.en}}</text>
+        <view class="option-check" wx:if="{{tempGender === item.value}}">✓</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="picker-modal" style="{{themeVars}}" wx:if="{{showMajorPicker}}" bindtap="hideMajorPicker">
+  <view class="picker-content" catchtap="stopPropagation">
+    <view class="picker-header">
+      <text class="picker-cancel" bindtap="hideMajorPicker">{{t.cancel || '取消'}}</text>
+      <text class="picker-title">{{lang === 'zh' ? '选择专业' : 'Select Major'}}</text>
+      <text class="picker-confirm" bindtap="confirmMajor">{{t.confirm || '确定'}}</text>
+    </view>
+    <scroll-view class="picker-scroll" scroll-y enhanced show-scrollbar="{{false}}" scroll-into-view="{{scrollToMajor}}">
+      <view class="picker-options">
+        <block wx:for="{{majorGroups}}" wx:key="letter">
+          <view class="major-group-title" id="major-group-{{item.letter}}">{{item.letter}}</view>
+          <view
+            wx:for="{{majorOptions}}" wx:for-item="m" wx:for-index="j" wx:key="value"
+            wx:if="{{j >= item.startIndex && (index === majorGroups.length - 1 || j < majorGroups[index + 1].startIndex)}}"
+            class="picker-option {{tempMajor === m.value ? 'selected' : ''}}"
+            bindtap="selectMajor"
+            data-major="{{m.value}}">
+            <text class="option-text">{{lang === 'zh' ? m.zh : m.en}}</text>
+            <view class="option-check" wx:if="{{tempMajor === m.value}}">✓</view>
+          </view>
+        </block>
+      </view>
+    </scroll-view>
+    <view class="major-index-bar">
+      <text wx:for="{{majorIndexList}}" wx:key="*this" class="index-letter" data-letter="{{item}}" bindtap="onMajorIndexTap">{{item}}</text>
+    </view>
+  </view>
+</view>
+
+<canvas canvas-id="compressCanvas" 
+        class="hidden-canvas"
+        style="width: {{compressCanvasWidth}}px; height: {{compressCanvasHeight}}px;"></canvas>
+
+  <!-- 头像选择弹窗 -->
+  <avatarPicker visible="{{showAvatarPicker}}" lang="{{lang}}" currentAvatarUrl="{{user && user.avatarUrl ? user.avatarUrl : ''}}" bind:close="onAvatarPickerClose" bind:avatarpreview="onAvatarPreview" bind:avatarupdated="onAvatarUpdated" />

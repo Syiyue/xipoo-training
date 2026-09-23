@@ -1,0 +1,115 @@
+<view style="{{themeVars}}" class="page sem-page">
+  <!-- 导航栏 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-back" bindtap="goBack">
+      <text class="nav-back-icon">‹</text>
+    </view>
+    <text class="nav-title">学期切换</text>
+    <view class="nav-done"></view>
+  </view>
+
+  <!-- 当前学期栏 -->
+  <view class="current-bar">
+    <view class="current-left">
+      <text class="current-label">当前学期</text>
+      <text class="current-name">2026-2027 第一学期</text>
+    </view>
+    <view class="current-manage" bindtap="toggleDeleteMode">
+      <text class="manage-edit" wx:if="{{!deleteMode}}">✎</text>
+      <text class="manage-text">{{deleteMode ? '完成' : '管理'}}</text>
+    </view>
+  </view>
+
+  <!-- 时间轴列表 -->
+  <view class="timeline">
+    <view class="tl-item" wx:for="{{semesters}}" wx:key="year" wx:for-index="yi" wx:for-item="sem">
+      <view class="tl-year-row">
+        <view class="tl-dot {{sem.active ? 'solid' : ''}}"></view>
+        <text class="tl-year">{{sem.year}}学年</text>
+      </view>
+      <view class="tl-cards">
+        <view
+          class="tl-card {{term.current ? 'highlight' : ''}}"
+          wx:for="{{sem.terms}}"
+          wx:key="name"
+          wx:for-index="ti"
+          wx:for-item="term"
+          data-year="{{sem.year}}"
+          data-term="{{term.name}}"
+          data-yearidx="{{yi}}"
+          data-termidx="{{ti}}"
+          bindtap="selectTerm"
+        >
+          <view class="tl-card-del" wx:if="{{deleteMode}}" data-year="{{sem.year}}" data-term="{{term.name}}" data-yearidx="{{yi}}" data-termidx="{{ti}}" catchtap="confirmDeleteTerm">−</view>
+          <view class="tl-card-tag" wx:if="{{term.current && !deleteMode}}">当前学期</view>
+          <text class="tl-card-name">{{term.name}}</text>
+          <text class="tl-card-count">{{term.courseCount > 0 ? '共' + term.courseCount + '节课' : '暂无课程'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-btn-wrap">
+    <view class="create-btn" bindtap="createSemester">创建新学期</view>
+  </view>
+
+  <!-- 确认弹窗 -->
+  <view wx:if="{{dialogOpen}}" class="dialog-mask" catchtap="closeDialog">
+    <view class="dialog-box" catchtap="noop">
+      <!-- 切换学期弹窗 -->
+      <block wx:if="{{dialogType === 'switch'}}">
+        <text class="dialog-title">切换学期</text>
+        <text class="dialog-body">确认切换至{{dialogTarget.year}}{{-dialogTarget.name}}？切换后将展示该学期课表</text>
+        <view class="dialog-btns">
+          <view class="dialog-btn cancel" catchtap="closeDialog">不切换了</view>
+          <view class="dialog-btn confirm" catchtap="doSwitch">确认切换</view>
+        </view>
+      </block>
+      <!-- 删除学期弹窗 -->
+      <block wx:elif="{{dialogType === 'delete'}}">
+        <text class="dialog-title">删除学期</text>
+        <text class="dialog-body">确认删除后该学期所有数据包含课程也会一并清空 是否删除？</text>
+        <view class="dialog-btns">
+          <view class="dialog-btn cancel" catchtap="closeDialog">取消</view>
+          <view class="dialog-btn danger" catchtap="doDelete">删除</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 创建新学期选择器 -->
+  <view wx:if="{{pickerOpen}}" class="picker-mask" catchtap="closePicker">
+    <view class="picker-sheet" catchtap="noop">
+      <view class="picker-top">
+        <text class="picker-cancel" catchtap="closePicker">取消</text>
+        <text class="picker-title">选择学年学期</text>
+        <text class="picker-confirm" catchtap="confirmPicker">确定</text>
+      </view>
+      <view class="picker-body">
+        <scroll-view class="picker-col" scroll-y enhanced show-scrollbar="{{false}}">
+          <view class="picker-col-inner">
+            <view
+              class="picker-item {{pickerYear === item ? 'active' : ''}}"
+              wx:for="{{yearOptions}}"
+              wx:key="*this"
+              data-val="{{item}}"
+              bindtap="selectPickerYear"
+            >{{item}}</view>
+          </view>
+        </scroll-view>
+        <scroll-view class="picker-col" scroll-y enhanced show-scrollbar="{{false}}">
+          <view class="picker-col-inner">
+            <view
+              class="picker-item {{pickerTerm === item ? 'active' : ''}}"
+              wx:for="{{termOptions}}"
+              wx:key="*this"
+              data-val="{{item}}"
+              bindtap="selectPickerTerm"
+            >{{item}}</view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+</view>

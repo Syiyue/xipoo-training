@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "post-editor": "/components/post-editor/post-editor",
+    "guide-overlay": "/components/guide-overlay/guide-overlay"
+  },
+  "navigationBarTitleText": "找搭子"
+}

@@ -1,0 +1,79 @@
+/**
+ * 活动卡片统一规范（模块 5）：状态标签 + 文字基线 + 右侧数据对齐。
+ * 各活动相关页面 wxss 顶部 @import 本文件，保持全站一致。
+ * 色值规范：报名中 #07c160 / 已满员 #e64340 / 即将开始 #ff9c00 / 已结束 #e04343。
+ */
+
+/* 状态标签：固定高度/字号/圆角，仅背景色+文字色区分状态 */
+.ac-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36rpx;
+  padding: 0 14rpx;
+  border-radius: 8rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+  line-height: 36rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ac-status-open { color: #07c160; background: rgba(7, 193, 96, 0.12); }
+.ac-status-full { color: #e64340; background: rgba(230, 67, 64, 0.12); }
+.ac-status-soon { color: #ff9c00; background: rgba(255, 156, 0, 0.14); }
+.ac-status-ended { color: #e04343; background: rgba(224, 67, 67, 0.14); }
+
+/* 封面卡：状态标签悬浮右上角（卡片需 position: relative） */
+.ac-status-floating {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  z-index: 2;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+}
+
+/* 标题/分类/数据文案统一行高 */
+.ac-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  line-height: 36rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ac-meta {
+  font-size: 20rpx;
+  line-height: 28rpx;
+  color: #79857e;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 右侧数据（点击量/预约数）统一右对齐 */
+.ac-count {
+  margin-left: auto;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 20rpx;
+  line-height: 28rpx;
+  color: #999999;
+}
+
+/* 自研预约（模块 3）：jumpType=nativeReservation 卡片的「预约」徽章，主题色底白字胶囊 */
+.ac-badge-native {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32rpx;
+  padding: 0 14rpx;
+  margin-left: 10rpx;
+  border-radius: 999rpx;
+  background: var(--brand-primary, #7c83c7);
+  color: #ffffff;
+  font-size: 20rpx;
+  font-weight: 600;
+  line-height: 32rpx;
+  white-space: nowrap;
+  vertical-align: middle;
+}

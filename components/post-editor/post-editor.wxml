@@ -1,0 +1,59 @@
+<view wx:if="{{visible}}" class="post-editor-mask" bindtap="close">
+  <view class="post-editor-sheet" catchtap="noop">
+    <view class="post-editor-head">
+      <text class="post-editor-title">{{lang === 'en' ? 'Create Post' : '发布招募'}}</text>
+      <text class="post-editor-type">{{postType === 'course' ? (lang === 'en' ? 'Course Group' : '课程小组') : (lang === 'en' ? 'General' : '通用招募')}}</text>
+      <button class="post-editor-close" bindtap="close">×</button>
+    </view>
+
+    <scroll-view class="post-editor-body" scroll-y enhanced show-scrollbar="{{false}}">
+      <view wx:if="{{courseName}}" class="bound-course">
+        <text class="bound-course-text">{{courseName}}</text>
+      </view>
+
+      <view class="form-row">
+        <text class="form-label">{{lang === 'en' ? 'Title' : '标题'}} *</text>
+        <input class="form-input" value="{{title}}" bindinput="onTitleInput" placeholder="{{lang === 'en' ? 'e.g. Looking for badminton buddies' : '例如：找羽毛球搭子'}}" />
+      </view>
+
+      <view class="form-row">
+        <text class="form-label">{{lang === 'en' ? 'Description' : '描述'}} *</text>
+        <textarea class="form-textarea" value="{{description}}" bindinput="onDescInput" placeholder="{{lang === 'en' ? 'Describe what you are looking for...' : '描述一下你的需求...'}}" auto-height />
+      </view>
+
+      <view class="form-row">
+        <text class="form-label">{{lang === 'en' ? 'Max members' : '最大人数'}}</text>
+        <input class="form-input" type="number" value="{{maxMembers}}" bindinput="onMaxMembers" />
+      </view>
+
+      <view class="form-row">
+        <text class="form-label">{{lang === 'en' ? 'Gender filter' : '性别限制'}}</text>
+        <picker mode="selector" range="{{genderOptions}}" value="{{genderIndex}}" bindchange="onGenderChange">
+          <view class="picker-value">{{genderFilter === 'male' ? (lang === 'en' ? 'Male only' : '仅男生') : (genderFilter === 'female' ? (lang === 'en' ? 'Female only' : '仅女生') : (lang === 'en' ? 'Anyone' : '不限'))}}</view>
+        </picker>
+      </view>
+
+      <view class="form-row">
+        <text class="form-label">{{lang === 'en' ? 'Deadline' : '截止时间'}} *</text>
+        <view class="deadline-row">
+          <picker class="deadline-picker" mode="date" value="{{deadlineDate}}" bindchange="onDeadlineDateChange">
+            <view class="picker-value">{{deadlineDate || (lang === 'en' ? 'Select date' : '日期')}}</view>
+          </picker>
+          <picker class="deadline-picker" mode="time" value="{{deadlineTime}}" bindchange="onDeadlineTimeChange">
+            <view class="picker-value">{{deadlineTime || (lang === 'en' ? 'Time' : '时间')}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="form-row">
+        <text class="form-label">{{lang === 'en' ? 'Place (optional)' : '地点（选填）'}}</text>
+        <input class="form-input" value="{{place}}" bindinput="onPlaceInput" placeholder="{{lang === 'en' ? 'e.g. Library 3F' : '例如：图书馆三楼'}}" />
+      </view>
+    </scroll-view>
+
+    <view class="post-editor-actions">
+      <button class="ghost-btn" bindtap="close">{{lang === 'en' ? 'Cancel' : '取消'}}</button>
+      <button class="primary-btn" loading="{{submitting}}" bindtap="submit">{{lang === 'en' ? 'Publish' : '发布'}}</button>
+    </view>
+  </view>
+</view>

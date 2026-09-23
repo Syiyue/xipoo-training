@@ -1,0 +1,100 @@
+<view style="{{themeVars}}" class="page friend-profile-page">
+  <!-- 顶部名片（封面图 + 头像 + 备注名(原名) + 个人资料） -->
+  <view wx:if="{{profile}}" class="profile-cover {{profile.coverUrl ? 'has-cover' : ''}} theme-{{profile.profileTheme}}">
+    <!-- 封面背景图 -->
+    <image wx:if="{{profile.coverUrl}}" class="profile-cover-bg" src="{{profile.coverUrl}}" mode="aspectFill" />
+
+    <view class="profile-head">
+      <view class="avatar">
+        <image wx:if="{{profile.avatarUrl}}" class="avatar-image" src="{{profile.avatarUrl}}" mode="aspectFill" />
+        <text wx:else>{{profile.avatar || '?'}}</text>
+      </view>
+      <view class="profile-head-info">
+        <view class="name-row">
+          <text class="name">{{profile.note || profile.name}}</text>
+          <text class="name-original" wx:if="{{profile.note}}">（{{profile.name}}）</text>
+          <text class="name-edit-icon" bindtap="startEditNote">✏️</text>
+        </view>
+        <text class="id">Xipoo ID · {{profile.id}}</text>
+      </view>
+    </view>
+
+    <!-- 备注编辑栏（点击✏️后显示） -->
+    <view wx:if="{{editingNote}}" class="note-edit-inline">
+      <input value="{{noteDraft}}" bindinput="onNoteInput" maxlength="20" placeholder="{{lang === 'en' ? 'Note (max 20 chars)' : '备注（最多20字）'}}" focus="{{true}}" bindblur="saveNote" confirm-type="done" bindconfirm="saveNote" />
+      <text class="note-done-btn" bindtap="saveNote">{{lang === 'en' ? 'Done' : '完成'}}</text>
+    </view>
+
+    <!-- 个人资料（卡片内部） -->
+    <view class="in-card-profile">
+      <view class="icp-row" wx:if="{{profile.degree || profile.major || profile.gender}}">
+        <text class="icp-label">{{lang === 'en' ? 'Info' : '信息'}}</text>
+        <text class="icp-value">{{profile.degree && profile.degree !== '' ? profile.degree : ''}}{{profile.major && profile.major !== '' ? '～' + profile.major : ''}}{{profile.gender && profile.gender !== '' ? '～' + profile.gender : ''}}</text>
+      </view>
+      <view wx:if="{{profile.signature}}" class="icp-signature">
+        <text class="icp-label">{{lang === 'en' ? 'Signature' : '个性签名'}}</text>
+        <text class="icp-sig-text">{{profile.signature}}</text>
+      </view>
+      <view wx:if="{{profile.tags && profile.tags.length}}" class="icp-tags">
+        <text class="icp-label">{{lang === 'en' ? 'Tags' : '兴趣标签'}}</text>
+        <view class="icp-tag-list">
+          <text wx:for="{{profile.tags}}" wx:key="*this" class="icp-tag-chip">{{item}}</text>
+        </view>
+      </view>
+      <view wx:if="{{profile.showcaseImages && profile.showcaseImages.length}}" class="icp-showcase">
+        <text class="icp-label">{{lang === 'en' ? 'Photos' : '照片墙'}}</text>
+        <view class="icp-photo-grid">
+          <image wx:for="{{profile.showcaseImages}}" wx:key="*this" src="{{item}}" mode="aspectFill" class="icp-photo" data-index="{{index}}" bindtap="previewPhoto" />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 区域一：我可以查看的内容 -->
+  <view wx:if="{{profile}}" class="share-section">
+    <text class="share-section-title">{{lang === 'en' ? 'What I can view' : '我可以查看的内容'}}</text>
+    <view class="share-status-row">
+      <text class="share-status-label">{{lang === 'en' ? 'They share with me' : '对方共享给我'}}</text>
+      <text class="share-status-value {{profile.friendPermission.level === 'none' ? 'off' : ''}}">{{friendPermLabel}}</text>
+    </view>
+    <button class="primary-btn" bindtap="openSchedule">{{lang === 'en' ? 'View friend schedule' : '查看对方日程'}}</button>
+    <button class="ghost-btn" bindtap="openCommonCourses">{{lang === 'en' ? 'View common schedule' : '查看共同日程'}}</button>
+  </view>
+
+  <!-- 区域二：对方可以查看我的内容 -->
+  <view wx:if="{{profile}}" class="share-section">
+    <text class="share-section-title">{{lang === 'en' ? 'What they can view on my schedule' : '对方可以查看我的内容'}}</text>
+    <view class="level-options">
+      <view class="level-option {{settings.level === item.value ? 'active' : ''}}" wx:for="{{permissionOptions}}" wx:key="value" data-value="{{item.value}}" bindtap="selectLevel">
+        <view class="level-option-head">
+          <view class="level-radio {{settings.level === item.value ? 'active' : ''}}"></view>
+          <text class="level-option-name">{{item.label}}</text>
+        </view>
+        <text class="level-option-desc">{{item.desc}}</text>
+      </view>
+    </view>
+
+    <view class="setting-row">
+      <text class="setting-label">{{lang === 'en' ? 'Allow shared free time calculation' : '允许参与共同空闲计算'}}</text>
+      <switch checked="{{settings.allowFreeTimeCalc}}" bindchange="toggleAllowFreeTimeCalc" color="{{themePrimary}}" />
+    </view>
+    <view class="setting-row">
+      <text class="setting-label">{{lang === 'en' ? 'Share start date' : '共享开始日期'}}</text>
+      <picker mode="date" value="{{settings.startDate}}" bindchange="onStartDate">
+        <view class="setting-picker">{{settings.startDate || (lang === 'en' ? 'No limit' : '不限')}}</view>
+      </picker>
+    </view>
+    <view class="setting-row">
+      <text class="setting-label">{{lang === 'en' ? 'Share end date' : '共享结束日期'}}</text>
+      <picker mode="date" value="{{settings.endDate}}" bindchange="onEndDate">
+        <view class="setting-picker">{{settings.endDate || (lang === 'en' ? 'No limit' : '不限')}}</view>
+      </picker>
+    </view>
+
+    <button class="primary-btn save-settings-btn" disabled="{{!settingsDirty || saving}}" bindtap="saveSettings">
+      {{saving ? (lang === 'en' ? 'Saving...' : '保存中...') : (lang === 'en' ? 'Save permissions' : '保存权限设置')}}
+    </button>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">{{lang === 'en' ? 'Loading...' : '正在加载...'}}</view>
+</view>

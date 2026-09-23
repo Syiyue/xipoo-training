@@ -1,0 +1,17 @@
+<view style="{{themeVars}}" class="page activities-page {{darkMode ? 'dark-mode' : ''}}">
+  <view wx:if="{{registrations.length}}">
+    <view class="card activity-row" wx:for="{{registrations}}" wx:key="id">
+      <view class="activity-main">
+        <text class="activity-title">{{item.title}}</text>
+        <text class="activity-meta">{{item.date}} · {{item.time}}</text>
+      </view>
+      <view class="activity-actions">
+        <button class="act-mini-ghost" data-id="{{item.activityId}}" bindtap="openActivity">{{t.viewDetails || '查看'}}</button>
+        <button class="act-mini-danger" data-id="{{item.activityId}}" bindtap="cancelRegistration">{{t.cancel || '取消'}}</button>
+      </view>
+    </view>
+  </view>
+  <view wx:else class="card empty-state">
+    <text>{{t.activityListEmpty || '暂无活动数据'}}</text>
+  </view>
+</view>

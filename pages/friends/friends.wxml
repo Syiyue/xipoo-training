@@ -1,0 +1,353 @@
+<view style="{{themeVars}}" class="page friends-page {{darkMode ? 'dark-mode' : ''}}">
+  <!-- 页面背景图（fixed 垫底，铺满整屏） -->
+  <image class="page-bg-image" src="/images/schedule-share/share-background.jpg" mode="aspectFill" />
+  <view class="friends-nav" style="padding-top: {{statusBarHeight}}px;">
+    <view class="friends-nav-title" bindtap="showFriendsHome">
+      <!-- 子视图（邀请/共享邀请）显示返回箭头，主页保留小房子图标 -->
+      <view wx:if="{{friendsView !== 'home'}}" class="nav-back-arrow">‹</view>
+      <view wx:else class="home-line-icon">
+        <view class="home-line-roof"></view>
+        <view class="home-line-body"></view>
+      </view>
+      <text class="friends-nav-label">{{lang === 'en' ? 'Schedule Sharing' : '日程共享'}}</text>
+    </view>
+  </view>
+
+  <!-- 全局横幅 -->
+  <banner visible="{{bannerVisible}}" request="{{bannerRequest}}" />
+
+  <!-- ========== 游客空态 ========== -->
+  <empty-state wx:if="{{isGuest}}"
+    title="{{lang === 'en' ? 'Sign in to manage schedule sharing' : '登录后管理日程共享'}}"
+    desc="{{lang === 'en' ? 'Sign in to share schedules with classmates you already know and find common free time.' : '登录即可与已经认识的同学共享日程、计算多人共同空闲时间。'}}"
+    actionText="{{lang === 'en' ? 'Sign in' : '去登录'}}"
+    bind:action="onGuestLogin" />
+
+  <block wx:if="{{!isGuest}}">
+  <block wx:if="{{friendsView === 'home'}}">
+  <!-- ========== 分区一：我的日程共享卡片 ========== -->
+  <view class="section-card profile-entry-card theme-{{user.profileTheme}}" bindtap="openMyShareTab">
+    <view class="pe-top">
+      <view class="pe-avatar">
+        <image wx:if="{{user && user.avatarUrl}}" src="{{user.avatarUrl}}" mode="aspectFill" class="pe-avatar-img" />
+        <text wx:else>{{user.avatar || 'X'}}</text>
+      </view>
+      <view class="pe-identity">
+        <text class="pe-name">{{user.name || 'Xipoo User'}}</text>
+        <text class="pe-subtitle">{{lang === 'en' ? 'My schedule sharing' : '我的日程共享'}}</text>
+        <text class="pe-id">Xipoo ID · {{user.id}}</text>
+      </view>
+    </view>
+    <view class="pe-share-status">
+      <text class="pe-share-count">{{lang === 'en' ? authorizedCount + ' contact(s) can view my schedule' : '当前有 ' + authorizedCount + ' 位联系人获得日程授权'}}</text>
+      <view class="pe-share-manage">
+        <text class="pe-share-manage-text">{{lang === 'en' ? 'Manage who can view my schedule' : '管理谁可以查看我的日程'}}</text>
+        <text class="pe-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 分区二：多人共同空闲功能区 ========== -->
+  <view class="section-card free-time-card" bindtap="openGroupAvailability">
+    <image class="ft-card-art" src="/images/schedule-share/free-time-card.jpg" mode="aspectFill" />
+    <view class="ft-icon-wrap">
+      <view class="ft-icon">⏰</view>
+    </view>
+    <view class="ft-info">
+      <text class="ft-title">{{lang === 'en' ? 'Shared free time' : '多人共同空闲'}}</text>
+      <text class="ft-desc">{{lang === 'en' ? 'Pick schedule contacts and quickly find time slots when everyone is free.' : '选择日程联系人，快速找出大家都没有安排的时间。'}}</text>
+    </view>
+    <view class="ft-arrow">›</view>
+  </view>
+
+  <!-- ========== 通知与邀请入口 ========== -->
+  <view class="friend-tools">
+    <view class="friend-tool-button request-tool" bindtap="showRequests" aria-label="{{lang === 'en' ? 'Share invitations' : '共享邀请'}}">
+      <image class="friend-tool-icon" src="/assets/figma/match-bell.svg" mode="aspectFit" />
+      <view wx:if="{{requests.length}}" class="tool-badge">{{requests.length}}</view>
+    </view>
+    <view class="invite-entry" bindtap="toggleAddPanel">
+      <text class="invite-entry-mark">＋</text>
+      <text class="invite-entry-text">{{lang === 'en' ? 'Invite' : '邀请'}}</text>
+    </view>
+  </view>
+
+  <!-- ========== 分区三：日程联系人管理区 ========== -->
+  <view class="section-block friends-list-section">
+    <view class="section-head-row">
+      <text class="section-title">{{lang === 'en' ? 'Schedule contacts' : '日程联系人'}}</text>
+    </view>
+
+    <!-- 切换标签：共享 / 我的小组 -->
+    <view class="contact-tabs" wx:if="{{friends.length}}">
+      <view class="contact-tab {{contactTab === 'share' ? 'active' : ''}}" data-tab="share" bindtap="switchContactTab">{{lang === 'en' ? 'Sharing' : '共享'}}</view>
+      <view class="contact-tab {{contactTab === 'groups' ? 'active' : ''}}" data-tab="groups" bindtap="switchContactTab">{{lang === 'en' ? 'My groups' : '我的小组'}}</view>
+    </view>
+
+    <!-- 时间小组 -->
+    <block wx:if="{{contactTab === 'groups' && friends.length}}">
+      <view class="group-create">
+        <view class="group-create-head">
+          <text class="group-create-title">{{lang === 'en' ? 'New time group' : '新建时间小组'}}</text>
+          <text class="group-create-hint">{{lang === 'en' ? 'Save a member combo for shared free time calculation' : '保存多人共同空闲计算的常用成员组合'}}</text>
+        </view>
+        <input class="group-name-input" value="{{groupNameDraft}}" bindinput="onGroupNameInput" maxlength="20" placeholder-style="color: #7a817c;" placeholder="{{lang === 'en' ? 'Group name, e.g. Dorm group' : '小组名称，例如：宿舍四人组'}}" />
+        <view class="group-member-picker">
+          <view class="group-member-chip {{groupMemberMap[item.friend.id] ? 'active' : ''}}" wx:for="{{friends}}" wx:key="rowKey" data-id="{{item.friend.id}}" bindtap="toggleGroupMember">{{item.friend.name}}</view>
+        </view>
+        <button class="ghost-btn group-save-btn" bindtap="saveTimeGroup">{{lang === 'en' ? 'Save group' : '保存小组'}}</button>
+      </view>
+      <view wx:if="{{timeGroups.length}}" class="group-list">
+        <view class="group-card" wx:for="{{timeGroups}}" wx:key="id" data-id="{{item.id}}" bindtap="openTimeGroup">
+          <view class="group-card-main">
+            <text class="group-card-name">{{item.name}}</text>
+            <text class="group-card-meta">{{lang === 'en' ? item.memberIds.length + ' members · tap to calculate shared free time' : item.memberIds.length + ' 位成员 · 点击计算共同空闲'}}</text>
+          </view>
+          <view class="group-card-del" catchtap="deleteTimeGroup" data-id="{{item.id}}">✕</view>
+        </view>
+      </view>
+      <view wx:else class="tab-empty-hint">{{lang === 'en' ? 'No time groups yet. Save one above for quick access.' : '还没有时间小组，可在上方保存常用成员组合。'}}</view>
+    </block>
+
+    <!-- 联系人列表（共享 tab：显示所有日程联系人） -->
+    <block wx:if="{{contactTab === 'share'}}">
+    <view wx:if="{{visibleContacts.length}}" class="friend-list">
+      <view class="friend-row" wx:for="{{visibleContacts}}" wx:key="id" data-id="{{item.friend.id}}" data-name="{{item.friend.name}}" bindlongpress="showFriendActions">
+        <view class="friend-main" data-id="{{item.friend.id}}" bindtap="openFriendProfile">
+          <view class="small-avatar">
+            <image wx:if="{{item.friend.avatarUrl}}" src="{{item.friend.avatarUrl}}" mode="aspectFill" class="small-avatar-img" binderror="onFriendAvatarError" data-id="{{item.friend.id}}" />
+            <text wx:else>{{item.friend.avatar}}</text>
+          </view>
+          <view class="friend-info-block">
+            <view class="friend-name-row">
+              <text class="friend-name">{{item.friend.name}}</text>
+              <text class="friend-arrow">›</text>
+            </view>
+            <text class="friend-id-line">Xipoo ID · {{item.friend.id}}</text>
+            <view class="perm-lines">
+              <text class="perm-line">{{lang === 'en' ? 'They share with me: ' : '对方共享给我：'}}<text class="perm-value {{item.friendPermission.level === 'none' ? 'off' : ''}}">{{item.friendPermLabel}}</text></text>
+              <text class="perm-line">{{lang === 'en' ? 'I share with them: ' : '我共享给对方：'}}<text class="perm-value {{item.myPermission.level === 'none' ? 'off' : ''}}">{{item.myPermLabel}}</text></text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 已隐藏联系人入口 -->
+      <view wx:if="{{hiddenFriends.length}}" class="hidden-entry" bindtap="showHiddenPanel">
+        <text class="hidden-icon">👁‍🗨</text>
+        <text class="hidden-label">{{lang === 'en' ? 'Hidden contacts' : '已隐藏的联系人'}}</text>
+        <text class="hidden-count">{{hiddenFriends.length}}</text>
+        <text class="hidden-arrow">›</text>
+      </view>
+      <view class="friend-list-end" wx:if="{{contactTab === 'share'}}">
+        <text>{{lang === 'en' ? 'Tap a contact to adjust schedule permissions.' : '点击联系人可调整日程查看权限。'}}</text>
+      </view>
+    </view>
+
+    <!-- 无联系人引导（空状态） -->
+    <view wx:elif="{{!friends.length}}" class="contact-empty">
+      <view class="contact-empty-xp">XP</view>
+      <text class="contact-empty-title">{{lang === 'en' ? 'No schedule contacts yet' : '暂无日程联系人'}}</text>
+      <text class="contact-empty-desc">{{lang === 'en' ? 'Invite classmates you already know to share schedules. Each side can set what is visible and for how long, and can stop sharing anytime.' : '邀请你已经认识的同学建立日程共享。双方可以分别设置查看内容和有效期，并随时停止共享。'}}</text>
+      <button class="primary-btn contact-empty-primary" open-type="share">{{lang === 'en' ? 'Invite a classmate' : '邀请同学共享日程'}}</button>
+      <button class="contact-empty-secondary" bindtap="toggleAddPanel">{{lang === 'en' ? 'Add by Xipoo ID' : '通过 Xipoo ID 添加'}}</button>
+    </view>
+    </block>
+  </view>
+
+  </block>
+
+  <!-- ========== 邀请同学完整页面状态 ========== -->
+  <view wx:elif="{{friendsView === 'add'}}" class="friend-subpage add-friend-view">
+    <view class="friend-view-tabs">
+      <view class="friend-view-tab active" data-view="add" bindtap="switchFriendView">{{lang === 'en' ? 'Invite' : '邀请同学'}}</view>
+      <view class="friend-view-tab" data-view="requests" bindtap="switchFriendView">{{lang === 'en' ? 'Invitations' : '共享邀请'}}</view>
+    </view>
+
+    <!-- 主要方式：微信邀请 -->
+    <view class="invite-primary-card">
+      <image class="share-invite-banner" src="/images/schedule-share/share-banner.jpg" mode="aspectFill" lazy-load />
+      <text class="invite-primary-title">{{lang === 'en' ? 'Invite a classmate' : '邀请同学共享日程'}}</text>
+      <text class="invite-primary-desc">{{lang === 'en' ? 'After they accept, you can each set schedule permissions and calculate shared free time.' : '接受后，我们可以分别设置日程查看权限，并计算共同空闲时间。'}}</text>
+      <button class="primary-btn invite-primary-btn" open-type="share">{{lang === 'en' ? 'Send WeChat invite' : '发送微信邀请卡片'}}</button>
+      <view class="invite-code-row">
+        <text class="invite-code-label">{{lang === 'en' ? 'My Xipoo ID (share code)' : '我的 Xipoo ID（共享码）'}}</text>
+        <view class="invite-code-value" bindtap="copyMyId">
+          <text class="invite-code-text">{{user.id}}</text>
+          <text class="invite-code-copy">{{lang === 'en' ? 'Copy' : '复制'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 次要方式：Xipoo ID -->
+    <view class="add-by-id">
+      <text class="subpage-section-label">{{lang === 'en' ? 'Add by Xipoo ID' : '通过 Xipoo ID 添加'}}</text>
+      <text class="subpage-section-hint">{{lang === 'en' ? 'Enter the Xipoo ID shared by a classmate you already know.' : '请输入现实中已经认识的同学主动提供给你的 Xipoo ID。'}}</text>
+      <view class="subpage-search-box schedule-share-search-box">
+        <image class="schedule-share-search-art" src="/images/schedule-share/search-bar-illustration.jpg" mode="aspectFill" lazy-load />
+        <input
+          class="subpage-search-input"
+          value="{{keyword}}"
+          bindinput="onKeyword"
+          bindconfirm="search"
+          confirm-type="search"
+          placeholder="{{lang === 'en' ? 'Enter complete Xipoo ID' : '输入完整 Xipoo ID'}}"
+          maxlength="20"
+        />
+        <view class="search-line-icon" bindtap="search"></view>
+      </view>
+
+      <view wx:if="{{results.length}}" class="subpage-result-list">
+        <view class="person-row subpage-person-row" wx:for="{{results}}" wx:key="id">
+          <view class="small-avatar subpage-result-avatar">
+            <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" mode="aspectFill" class="small-avatar-img" />
+            <text wx:else>{{item.avatar}}</text>
+          </view>
+          <view class="person-main">
+            <text>{{item.name}}</text>
+            <text>Xipoo ID · {{item.id}}</text>
+            <text class="result-confirm-hint">{{lang === 'en' ? 'Please confirm this is a classmate you know' : '请确认这是你认识的同学'}}</text>
+          </view>
+          <button wx:if="{{item.isFriend}}" class="added-btn" disabled>{{lang === 'en' ? 'Connected' : '已连接'}}</button>
+          <button wx:elif="{{item.requested}}" class="pending-btn" disabled>{{lang === 'en' ? 'Invited' : '已邀请'}}</button>
+          <button wx:else data-id="{{item.id}}" data-name="{{item.name}}" data-avatar="{{item.avatar}}" data-avatar-url="{{item.avatarUrl}}" bindtap="openRequestDialog">{{lang === 'en' ? 'Send invite' : '发送共享邀请'}}</button>
+        </view>
+      </view>
+      <view wx:else class="search-empty-hint">
+        <text class="search-empty-text">{{keyword ? (lang === 'en' ? 'No matching Xipoo ID found' : '未找到该 Xipoo ID 对应的用户') : (lang === 'en' ? 'Exact search by complete Xipoo ID only' : '仅支持完整 Xipoo ID 精确查询')}}</text>
+      </view>
+      <text class="add-id-note">{{lang === 'en' ? 'Xipoo ID is only used to connect classmates you already know. The platform does not recommend or match other users.' : 'Xipoo ID 仅用于连接你已经认识的同学，平台不会推荐或匹配其他用户。'}}</text>
+      <image class="share-calendar-deco" src="/images/schedule-share/share-calendar-illustration.jpg" mode="widthFix" lazy-load />
+    </view>
+  </view>
+
+  <!-- ========== 共享邀请完整页面状态 ========== -->
+  <view wx:else class="friend-subpage requests-view">
+    <view class="friend-view-tabs">
+      <view class="friend-view-tab" data-view="add" bindtap="switchFriendView">{{lang === 'en' ? 'Invite' : '邀请同学'}}</view>
+      <view class="friend-view-tab active" data-view="requests" bindtap="switchFriendView">{{lang === 'en' ? 'Invitations' : '共享邀请'}}</view>
+    </view>
+
+    <text class="request-section-title">{{lang === 'en' ? 'Invitations received' : '我收到的共享邀请'}}</text>
+    <view wx:if="{{requests.length}}" class="full-request-list">
+      <view class="full-request-card" wx:for="{{requests}}" wx:key="id">
+        <view class="request-profile">
+          <view class="request-large-avatar">
+            <image wx:if="{{item.fromUser.avatarUrl}}" src="{{item.fromUser.avatarUrl}}" mode="aspectFill" class="small-avatar-img" />
+            <text wx:else>{{item.fromUser.avatar || '?'}}</text>
+          </view>
+          <view class="request-person-copy">
+            <text class="request-person-name">{{item.fromUser.name || 'User Name'}}</text>
+            <text class="request-person-id">Xipoo ID：{{item.fromUser.id}}</text>
+          </view>
+        </view>
+        <view class="request-reason">{{lang === 'en' ? 'invites you to share schedules' : '邀请你建立日程共享'}}</view>
+        <view class="request-actions">
+          <button class="request-accept" data-id="{{item.id}}" bindtap="accept">{{lang === 'en' ? 'Accept' : '接受邀请'}}</button>
+          <button class="request-reject" data-id="{{item.id}}" bindtap="reject">{{lang === 'en' ? 'Decline' : '暂不接受'}}</button>
+        </view>
+      </view>
+    </view>
+    <text class="request-list-end">{{lang === 'en' ? 'No other share invitations' : '暂无其他共享邀请'}}</text>
+  </view>
+  </block>
+
+  <!-- ========== 微信邀请接受面板 ========== -->
+  <view wx:if="{{invitePanelOpen}}" class="modal-mask">
+    <view class="invite-panel" catchtap="noop">
+      <text class="invite-panel-title">{{lang === 'en' ? 'Schedule share invitation' : '日程共享邀请'}}</text>
+      <view class="invite-panel-user">
+        <view class="small-avatar">
+          <image wx:if="{{inviteFrom.avatarUrl}}" src="{{inviteFrom.avatarUrl}}" mode="aspectFill" class="small-avatar-img" />
+          <text wx:else>{{inviteFrom.avatar || '?'}}</text>
+        </view>
+        <view class="invite-panel-user-info">
+          <text class="invite-panel-name">{{inviteFrom.name}}</text>
+          <view class="invite-id-copy-row">
+            <text class="invite-panel-id">Xipoo ID · {{inviteFrom.id}}</text>
+            <text class="invite-id-copy-btn" data-id="{{inviteFrom.id}}" catchtap="copyInviterId">{{lang === 'en' ? 'Copy' : '复制'}}</text>
+          </view>
+        </view>
+      </view>
+      <text class="invite-panel-desc">{{lang === 'en' ? (inviteFrom.name || 'They') + ' invites you to share schedules' : (inviteFrom.name || '对方') + ' 邀请你建立日程共享'}}</text>
+      <text class="invite-panel-label">{{lang === 'en' ? 'What they can see on my schedule' : '我授权对方查看的内容'}}</text>
+      <view class="invite-panel-options">
+        <view class="invite-option {{inviteGrantLevel === item.value ? 'active' : ''}}" wx:for="{{permissionOptions}}" wx:key="value" data-value="{{item.value}}" bindtap="selectInviteGrant">
+          <text class="invite-option-name">{{item.label}}</text>
+          <text class="invite-option-desc">{{item.desc}}</text>
+        </view>
+      </view>
+      <button class="primary-btn invite-panel-accept" bindtap="confirmAcceptInvite">{{lang === 'en' ? 'Accept invitation' : '接受邀请'}}</button>
+      <button class="invite-panel-decline" bindtap="declineInvite">{{lang === 'en' ? 'Not now' : '暂不接受'}}</button>
+    </view>
+  </view>
+
+  <!-- 共享完整日程：选择共享时间范围 -->
+  <view wx:if="{{shareRangeOpen}}" class="modal-mask">
+    <view class="invite-panel" catchtap="noop">
+      <text class="invite-panel-title">{{lang === 'en' ? 'Share full schedule' : '共享完整日程'}}</text>
+      <text class="invite-panel-desc">{{lang === 'en' ? 'Choose the date range they can see. Leave the end date empty for no limit.' : '选择对方可见的时间范围；结束日期留空表示长期共享。'}}</text>
+      <view class="share-range-row">
+        <text>{{lang === 'en' ? 'From' : '开始日期'}}</text>
+        <picker mode="date" value="{{shareRangeStart}}" bindchange="onShareRangeStart"><view class="share-range-picker">{{shareRangeStart}}</view></picker>
+      </view>
+      <view class="share-range-row">
+        <text>{{lang === 'en' ? 'To' : '结束日期'}}</text>
+        <picker mode="date" value="{{shareRangeEnd}}" bindchange="onShareRangeEnd"><view class="share-range-picker">{{shareRangeEnd || (lang === 'en' ? 'No limit' : '长期') }}</view></picker>
+      </view>
+      <button class="primary-btn invite-panel-accept" bindtap="confirmShareRange">{{lang === 'en' ? 'Accept and share' : '接受并共享'}}</button>
+      <button class="invite-panel-decline" bindtap="closeShareRangeModal">{{lang === 'en' ? 'Cancel' : '取消'}}</button>
+    </view>
+  </view>
+
+  <!-- ========== 共享邀请发送弹窗（组件） ========== -->
+  <requestDialog
+    visible="{{requestDialogOpen}}"
+    targetUser="{{requestDialogTarget}}"
+    lang="{{lang}}"
+    bind:close="closeRequestDialog"
+    bind:send="onSendRequest"
+  />
+
+  <!-- ========== 已隐藏联系人面板 ========== -->
+  <view wx:if="{{hiddenPanelOpen}}" class="modal-mask" bindtap="closeHiddenPanel">
+    <view class="request-panel" catchtap="noop">
+      <view class="rp-head">
+        <text>{{lang === 'en' ? 'Hidden contacts' : '已隐藏的联系人'}}</text>
+        <button class="close-btn" bindtap="closeHiddenPanel">{{lang === 'en' ? 'Close' : '关闭'}}</button>
+      </view>
+      <view wx:if="{{hiddenFriends.length}}" class="request-list">
+        <view class="request-row" wx:for="{{hiddenFriends}}" wx:key="id">
+          <view class="small-avatar">
+            <image wx:if="{{item.friend.avatarUrl}}" src="{{item.friend.avatarUrl}}" mode="aspectFill" class="small-avatar-img" />
+            <text wx:else>{{item.friend.avatar}}</text>
+          </view>
+          <view class="person-main">
+            <text>{{item.friend.name}}</text>
+            <text class="request-message">Xipoo ID · {{item.friend.id}}</text>
+          </view>
+          <button class="restore-btn" data-id="{{item.friend.id}}" bindtap="unhideFriend">{{lang === 'en' ? 'Show' : '恢复'}}</button>
+        </view>
+      </view>
+      <empty-state wx:else title="{{lang === 'en' ? 'No hidden contacts' : '没有已隐藏的联系人'}}" desc="{{lang === 'en' ? 'Hidden contacts will appear here.' : '已隐藏的联系人会显示在这里。'}}" />
+    </view>
+  </view>
+
+  <app-tabbar active="friends" />
+
+  <!-- AI 小章鱼助手 -->
+  <ai-companion page="friends" />
+
+  <!-- ===== 新手引导 ===== -->
+  <intro-guide
+    visible="{{introGuideVisible}}"
+    steps="{{introSteps}}"
+    lang="{{lang}}"
+    themePrimary="{{themePrimary || '#7c83c7'}}"
+    darkMode="{{darkMode}}"
+    storageKey="introGuideFriendsDone"
+    bind:complete="onIntroComplete"
+    bind:exit="onIntroExit"
+    bind:gotoProfile="onIntroGotoProfile"
+  />
+</view>

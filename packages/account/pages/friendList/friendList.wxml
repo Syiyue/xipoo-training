@@ -1,0 +1,18 @@
+<view style="{{themeVars}}" class="page friendlist-page">
+  <view wx:if="{{friends.length}}" class="card">
+    <view class="friend-item" wx:for="{{friends}}" wx:key="id" data-id="{{item.friend ? item.friend.id : item.id}}" catchtap="goFriendSchedule">
+      <view class="friend-avatar">
+        <image wx:if="{{item.friend && item.friend.avatar}}" src="{{item.friend.avatar}}" mode="aspectFill" class="friend-avatar-img" />
+        <text wx:else class="friend-avatar-text">{{item.friend ? item.friend.name.substr(0,1) : item.name.substr(0,1)}}</text>
+      </view>
+      <view class="friend-info">
+        <text class="friend-name">{{item.friend ? item.friend.name : item.name}}</text>
+        <text class="friend-id">{{item.friend ? item.friend.id : item.id}}</text>
+      </view>
+      <button class="friend-remove-btn" data-user="{{item.friend || item}}" catchtap="goRemoveFriend">{{t.removeFromBlacklist || '删除'}}</button>
+    </view>
+  </view>
+  <view wx:else class="card empty-state">
+    <text>{{t.friendListEmpty || '暂无日程联系人数据'}}</text>
+  </view>
+</view>

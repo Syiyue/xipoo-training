@@ -1,0 +1,60 @@
+<view style="{{themeVars}}" class="page theme-page {{darkMode ? 'dark-mode' : ''}}">
+
+  <!-- 实时预览 -->
+  <view class="preview-card card">
+    <view class="preview-header">
+      <text class="preview-title">{{lang === 'en' ? 'Preview' : '实时预览'}}</text>
+    </view>
+    <view class="preview-body">
+      <view class="preview-banner">
+        <text class="preview-banner-text">Xipoo</text>
+      </view>
+      <view class="preview-row">
+        <text class="preview-pill">{{lang === 'en' ? 'Tag' : '标签'}}</text>
+        <text class="preview-text">{{lang === 'en' ? 'Cards, buttons and accents follow your theme.' : '按钮、卡片与强调色会跟随主题变化'}}</text>
+      </view>
+      <view class="preview-btns">
+        <view class="preview-btn-primary">{{lang === 'en' ? 'Primary' : '主按钮'}}</view>
+        <view class="preview-btn-ghost">{{lang === 'en' ? 'Minor' : '次按钮'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 预设主题 -->
+  <view class="section-title">{{lang === 'en' ? 'Presets' : '预设主题'}}</view>
+  <view class="preset-grid card">
+    <view
+      wx:for="{{presets}}"
+      wx:key="key"
+      class="preset-item {{selectedKey === item.key && !isCustom ? 'selected' : ''}}"
+      data-key="{{item.key}}"
+      data-color="{{item.color}}"
+      bindtap="onPresetTap"
+    >
+      <view class="preset-swatch" style="background: {{item.swatch}};">
+        <text wx:if="{{selectedKey === item.key && !isCustom}}" class="preset-check">✓</text>
+      </view>
+      <text class="preset-name">{{item.name}}</text>
+    </view>
+  </view>
+
+  <!-- 自定义色谱 -->
+  <view class="section-title">{{lang === 'en' ? 'Custom color' : '自定义颜色'}}</view>
+  <view class="custom-card card">
+    <view
+      class="spectrum-bar"
+      bindtouchstart="onSpectrumTouch"
+      catchtouchmove="onSpectrumTouch"
+    >
+      <view class="spectrum-cursor" style="left: {{spectrumPct}}%; background: {{isCustom ? customColor : 'var(--brand-primary)'}};"></view>
+    </view>
+    <view class="custom-meta">
+      <view class="custom-dot" style="background: {{isCustom ? customColor : 'var(--brand-primary)'}};"></view>
+      <text class="custom-label">{{isCustom ? (lang === 'en' ? 'Custom' : '自定义') + ' · ' + customColor : (lang === 'en' ? 'Drag the spectrum to create your own' : '拖动色谱选择你的专属颜色')}}</text>
+    </view>
+  </view>
+
+  <!-- 恢复默认 -->
+  <button class="reset-btn" bindtap="onReset">{{lang === 'en' ? 'Reset to default' : '恢复默认主题'}}</button>
+
+</view>

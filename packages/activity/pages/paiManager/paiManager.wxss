@@ -1,0 +1,20 @@
+.manager-page { min-height: 100vh; padding: 28rpx 24rpx 60rpx; box-sizing: border-box; background: #f3f5fb; }
+.manager-profile { display: flex; align-items: flex-start; gap: 22rpx; padding: 28rpx; border-radius: 24rpx; background: #ffffff; box-shadow: 0 8rpx 28rpx rgba(36,42,98,.08); }
+.manager-avatar { width: 132rpx; height: 132rpx; flex-shrink: 0; border-radius: 50%; background: #e8e9f7; }
+.manager-avatar-fallback { display: flex; align-items: center; justify-content: center; color: #6369b5; font-size: 46rpx; font-weight: 800; }
+.manager-copy { min-width: 0; display: flex; flex-direction: column; gap: 10rpx; }
+.manager-name { font-size: 36rpx; font-weight: 800; color: #242a62; }
+.manager-bio { font-size: 24rpx; line-height: 36rpx; color: #69728c; }
+.manager-tags, .manager-activity-tags { display: flex; flex-wrap: wrap; gap: 8rpx; }
+.manager-tags text, .manager-activity-tags text { padding: 5rpx 12rpx; border-radius: 6rpx; background: #e8e9f7; color: #6369b5; font-size: 20rpx; }
+.manager-calendar { margin-top: 28rpx; display: flex; flex-direction: column; gap: 28rpx; }
+.manager-month-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14rpx; color: #242a62; }
+.manager-month-head text:first-child { font-size: 30rpx; font-weight: 800; }
+.manager-month-head text:last-child { font-size: 22rpx; color: #79857e; }
+.manager-activity { width: 100%; min-width: 0; margin-bottom: 14rpx; padding: 16rpx; border-radius: 18rpx; background: #ffffff; display: grid; grid-template-columns: 150rpx minmax(0, 1fr); gap: 18rpx; text-align: left; line-height: 1.3; box-shadow: 0 5rpx 18rpx rgba(36,42,98,.06); }
+.manager-activity::after { border: 0; }
+.manager-activity-cover { width: 150rpx; height: 116rpx; border-radius: 12rpx; background: #e8e9f7; }
+.manager-activity-copy { min-width: 0; display: flex; flex-direction: column; gap: 7rpx; }
+.manager-activity-title { font-size: 27rpx; font-weight: 700; color: #242a62; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.manager-activity-meta { font-size: 21rpx; color: #79857e; }
+.manager-empty { padding: 140rpx 0; text-align: center; color: #999999; font-size: 26rpx; }

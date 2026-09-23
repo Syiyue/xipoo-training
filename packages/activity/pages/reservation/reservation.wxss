@@ -1,0 +1,145 @@
+/* 自研预约（模块 3）预约页 */
+.reservation-page {
+  min-height: 100vh;
+  padding: 32rpx 28rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.resv-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24rpx;
+}
+.resv-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--brand-ink, #242a62);
+  line-height: 56rpx;
+}
+.resv-subtitle {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #79857e;
+}
+
+.resv-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(36, 42, 98, 0.06);
+}
+
+.resv-label {
+  display: block;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: var(--brand-ink, #242a62);
+  margin-bottom: 16rpx;
+}
+.resv-rules {
+  font-size: 26rpx;
+  line-height: 40rpx;
+  color: #4a5568;
+  white-space: pre-wrap;
+}
+
+.resv-slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  border: 2rpx solid var(--brand-border, #d5d7eb);
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+}
+.resv-slot.selected {
+  border-color: var(--brand-primary, #7c83c7);
+  background: var(--brand-tint, #e8e9f7);
+}
+.resv-slot.full {
+  opacity: 0.45;
+}
+.resv-slot-main {
+  display: flex;
+  flex-direction: column;
+}
+.resv-slot-date {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2d3748;
+}
+.resv-slot-time {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #79857e;
+}
+.resv-slot-quota {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: var(--brand-primary, #7c83c7);
+  flex-shrink: 0;
+}
+.resv-slot-quota.full {
+  color: #999999;
+}
+
+.resv-empty {
+  padding: 40rpx 0;
+  text-align: center;
+  font-size: 26rpx;
+  color: #999999;
+}
+
+.resv-submit-btn {
+  margin-top: 8rpx;
+  height: 92rpx;
+  line-height: 92rpx;
+  border-radius: 999rpx;
+  background: var(--brand-primary, #7c83c7);
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+.resv-submit-btn[disabled] {
+  opacity: 0.6;
+}
+
+.resv-mine-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.resv-mine-slot {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2d3748;
+}
+.resv-status {
+  height: 40rpx;
+  line-height: 40rpx;
+  padding: 0 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+.resv-status-booked {
+  color: #07c160;
+  background: rgba(7, 193, 96, 0.12);
+}
+.resv-mine-verify {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #79857e;
+}
+.resv-cancel-btn {
+  margin-top: 24rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 999rpx;
+  background: #ffffff;
+  border: 2rpx solid #e64340;
+  color: #e64340;
+  font-size: 28rpx;
+}

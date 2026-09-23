@@ -1,0 +1,86 @@
+<view style="{{themeVars}}" class="page result-page {{darkMode ? 'dark-mode' : ''}}">
+  <text class="page-title">{{lang === 'en' ? 'Shared free time result' : '共同空闲结果'}}</text>
+  <text class="page-subtitle" wx:if="{{result}}">{{result.startDate}} {{lang === 'en' ? 'to' : '至'}} {{result.endDate}} · {{result.participants.length}} {{lang === 'en' ? 'participants' : '位参与者'}}</text>
+
+  <view wx:if="{{result}}" class="participant-row">
+    <view wx:for="{{result.participants}}" wx:key="id"><view class="avatar">{{item.avatar}}</view><text>{{item.name}}</text></view>
+  </view>
+
+  <view wx:if="{{sharePreview}}" class="share-summary">
+    <text class="share-summary-title">分享摘要</text>
+    <text>{{sharePreview.date}} · {{sharePreview.participantCount}}位参与者</text>
+    <text>共同时间：{{sharePreview.sharedSlotsText}}</text>
+    <text wx:if="{{sharePreview.longestText}}">最长连续：{{sharePreview.longestText}}</text>
+    <text wx:if="{{sharePreview.suggestion}}">活动参考：{{sharePreview.suggestion.title}}</text>
+  </view>
+
+  <view wx:if="{{ownCourseSections.length}}" class="exclude-section">
+    <view class="exclude-head" bindtap="toggleExcludeOpen">
+      <text>{{lang === 'en' ? 'Courses I plan to skip' : '排除我不去的课程'}}</text>
+      <text>{{excludedCount ? (lang === 'en' ? excludedCount + ' excluded ' : '已排除 ' + excludedCount + '门 ') : ''}}{{excludeOpen ? '▲' : '▼'}}</text>
+    </view>
+    <block wx:if="{{excludeOpen}}">
+      <text class="rule-note">{{lang === 'en' ? 'One switch covers all sessions of the same course and time slot. The result recalculates after each change.' : '同一门课同一时段的所有课时共用一个开关，修改后会自动重新计算。'}}</text>
+      <scroll-view scroll-y class="exclude-list">
+        <view wx:for="{{ownCourseSections}}" wx:key="key" wx:for-item="section">
+          <view class="exclude-weekday">{{section.label}}</view>
+          <view wx:for="{{section.groups}}" wx:key="key" wx:for-item="group" class="exclude-row">
+            <view class="exclude-info">
+              <text>{{group.title}}{{group.count > 1 ? (lang === 'en' ? ' · ' + group.count + ' sessions' : ' · 共' + group.count + '节') : ''}}</text>
+              <text>{{group.timeText}}{{group.place ? ' · ' + group.place : ''}}</text>
+            </view>
+            <switch checked="{{group.excluded}}" data-key="{{group.key}}" bindchange="toggleCourseExclude" color="{{themePrimary}}" />
+          </view>
+        </view>
+      </scroll-view>
+    </block>
+    <view wx:if="{{recomputing}}" class="recompute-note">{{lang === 'en' ? 'Recalculating shared free time…' : '正在重新计算共同空闲…'}}</view>
+  </view>
+
+  <view wx:if="{{windows.length}}" class="windows-section">
+    <view class="section-head"><text>{{lang === 'en' ? 'Best windows to hang out together' : '适合一起出去的连续空闲'}}</text></view>
+    <view wx:for="{{windows}}" wx:key="label" class="window-row">
+      <text class="window-label">{{item.label}}</text>
+      <text class="window-duration">{{item.durationText}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{result}}" class="calendar-section">
+    <view class="calendar-head"><button data-step="-1" bindtap="shiftMonth">‹</button><text>{{calendarTitle}}</text><button data-step="1" bindtap="shiftMonth">›</button></view>
+    <view class="weekdays"><text wx:for="{{weekdays}}" wx:key="*this">{{item}}</text></view>
+    <view class="calendar-grid">
+      <button
+        wx:for="{{calendarCells}}"
+        wx:key="date"
+        data-date="{{item.date}}"
+        bindtap="selectDay"
+        class="calendar-day level-{{item.level}} {{item.inMonth ? '' : 'muted'}} {{item.inRange ? '' : 'outside'}} {{item.selected ? 'selected' : ''}} {{item.hiddenByFilter ? 'filtered' : ''}} {{item.lw ? 'lw-' + item.lw : ''}}"
+      ><text>{{item.dayNumber}}</text><text wx:if="{{item.inRange && !item.hiddenByFilter}}">{{item.freeShort}}</text></button>
+    </view>
+    <view class="filter-row"><text>{{lang === 'en' ? 'Show only dates with shared free time' : '只显示有共同空闲的日期'}}</text><switch checked="{{onlyAvailable}}" bindchange="toggleOnlyAvailable" color="{{themePrimary}}" /></view>
+  </view>
+
+  <view wx:if="{{selectedDay}}" class="day-section">
+    <view class="section-head"><text>{{selectedDay.date}} · {{lang === 'en' ? 'Week' : '周'}}{{selectedDay.weekday}}</text><text>{{selectedDay.freeText}}</text></view>
+    <view class="free-list"><text wx:for="{{selectedDay.free}}" wx:key="start">{{item.start}}-{{item.end}}</text></view>
+    <scroll-view class="hour-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <button wx:for="{{selectedDay.hours}}" wx:key="label" data-index="{{index}}" bindtap="openHour" class="hour-cell {{item.state}}">
+        <text>{{item.label}}</text><text>{{item.state === 'available' ? (lang === 'en' ? 'Shared free time' : '共同空闲') : (item.state === 'partial' ? (item.busyCount + (lang === 'en' ? ' people busy' : '人有课')) : (lang === 'en' ? 'Everyone busy' : '全部有课'))}}</text>
+      </button>
+    </scroll-view>
+  </view>
+
+  <button wx:if="{{result}}" class="primary-btn share-button" open-type="share">{{lang === 'en' ? 'Share result' : '微信分享结果'}}</button>
+
+  <view wx:if="{{conflictOpen}}" class="modal-mask">
+    <view class="conflict-sheet">
+      <view class="sheet-head"><text>{{selectedHour.start}}-{{selectedHour.end}}</text><button bindtap="closeHour">{{lang === 'en' ? 'Close' : '关闭'}}</button></view>
+      <view wx:if="{{selectedHour.state === 'available'}}" class="available-note">{{lang === 'en' ? 'During this hour, everyone is free.' : '这一小时所有人都没有课程。'}}</view>
+      <view wx:for="{{selectedHour.conflicts}}" wx:key="id" class="conflict-row">
+        <view class="avatar">{{item.avatar}}</view>
+        <view><text>{{item.userName}} · {{item.title}}</text><text>{{item.start}}-{{item.end}} · {{item.place}}</text></view>
+      </view>
+      <view wx:if="{{selectedHour.conflictsTruncated}}" class="available-note">该时段共有 {{selectedHour.conflictCount}} 项日程，仅展示前 {{selectedHour.conflicts.length}} 项。</view>
+    </view>
+  </view>
+</view>

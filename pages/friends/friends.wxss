@@ -1,0 +1,2151 @@
+/* ===== 页面底部安全区 ===== */
+.friends-page {
+  padding-bottom: calc(190rpx + env(safe-area-inset-bottom));
+}
+
+/* ==================== 通用卡片 ==================== */
+.section-card {
+  border-radius: 20rpx;
+  box-shadow: 0 18rpx 44rpx rgba(70, 70, 100, .12);
+  overflow: hidden;
+}
+
+.section-block {
+  margin-top: 28rpx;
+}
+
+.section-title {
+  display: block;
+  color: var(--brand-ink);
+  font-size: 31rpx;
+  font-weight: 900;
+}
+
+.section-note {
+  display: block;
+  margin-top: 5rpx;
+  color: #78877e;
+  font-size: 22rpx;
+  line-height: 1.4;
+}
+
+/* ==================== 分区一：个人主页入口 ==================== */
+.profile-entry-card {
+  padding: 30rpx;
+  color: var(--brand-ink);
+}
+
+.profile-entry-card.theme-mint { background: linear-gradient(135deg, var(--brand-bright), var(--brand-tint)); }
+.profile-entry-card.theme-sky { background: linear-gradient(135deg, #8bd4f6, #e6f6ff); }
+.profile-entry-card.theme-coral { background: linear-gradient(135deg, #ffaaa0, #fff0ed); }
+.profile-entry-card.theme-graphite { color: #fff; background: linear-gradient(135deg, #34423a, #718078); }
+
+.pe-top {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+}
+
+.pe-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  color: var(--brand-ink);
+  background: rgba(255,255,255,.72);
+  font-size: 36rpx;
+  font-weight: 900;
+  overflow: hidden;
+}
+.pe-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.pe-identity {
+  min-width: 0;
+  flex: 1;
+}
+
+.pe-name {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 900;
+}
+
+.pe-id {
+  display: block;
+  margin-top: 4rpx;
+  font-size: 20rpx;
+  opacity: .72;
+}
+
+.pe-arrow {
+  font-size: 46rpx;
+  font-weight: 200;
+  opacity: .55;
+  line-height: 1;
+}
+
+.pe-signature {
+  display: block;
+  margin-top: 22rpx;
+  font-size: 25rpx;
+  line-height: 1.5;
+  font-weight: 800;
+}
+
+.pe-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid rgba(255,255,255,.36);
+}
+
+.pe-footer text:first-child {
+  font-size: 20rpx;
+  font-weight: 900;
+  opacity: .72;
+}
+
+.pe-hint {
+  font-size: 18rpx;
+  opacity: .55;
+}
+
+/* ==================== 分区二：多人共同空闲 ==================== */
+.free-time-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  margin-top: 32rpx;
+  margin-bottom: 24rpx;
+  padding: 28rpx;
+  min-height: 176rpx;
+  background: #fff;
+  box-shadow: 0 12rpx 34rpx rgba(70, 70, 100, .07);
+  z-index: 1;
+}
+
+/* 长条背景图：铺满整卡，左侧留白保证文字可读，右侧渐隐露出插画 */
+.ft-card-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.free-time-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.62) 52%, rgba(255, 255, 255, 0.12) 100%);
+  pointer-events: none;
+}
+
+.ft-icon-wrap,
+.ft-info,
+.ft-arrow {
+  position: relative;
+  z-index: 1;
+}
+
+/* 黑夜模式：压暗背景图，改用深色遮罩保证浅色文字可读 */
+.dark-mode .ft-card-art {
+  filter: brightness(0.55) saturate(0.85);
+}
+
+.dark-mode .free-time-card::after {
+  background: linear-gradient(90deg, rgba(24, 26, 32, 0.92) 0%, rgba(24, 26, 32, 0.6) 52%, rgba(24, 26, 32, 0.12) 100%);
+}
+
+.ft-icon-wrap {
+  flex: 0 0 auto;
+}
+
+.ft-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 22rpx;
+  background: linear-gradient(135deg, var(--brand-tint), var(--brand-soft));
+  font-size: 40rpx;
+}
+
+.ft-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.ft-title {
+  display: block;
+  color: var(--brand-ink);
+  font-size: 28rpx;
+  font-weight: 900;
+}
+
+.ft-desc {
+  display: block;
+  margin-top: 6rpx;
+  color: #6b7c72;
+  font-size: 21rpx;
+  line-height: 1.45;
+}
+
+.ft-arrow {
+  font-size: 42rpx;
+  color: #b0c0b6;
+  font-weight: 200;
+}
+
+/* ==================== 分区三：ID搜索 ==================== */
+.search-box {
+  display: flex;
+  margin-top: 15rpx;
+  padding: 8rpx;
+  border-radius: 16rpx;
+  background: #fff;
+  box-shadow: 0 12rpx 28rpx rgba(70, 70, 100, .07);
+}
+
+.friend-search-input {
+  min-width: 0;
+  height: 70rpx;
+  padding: 0 18rpx;
+  flex: 1;
+  font-size: 24rpx;
+}
+
+.friend-search-button {
+  width: 116rpx;
+  height: 70rpx;
+  border-radius: 12rpx;
+  color: var(--brand-ink);
+  background: var(--brand-primary);
+  font-size: 23rpx;
+  font-weight: 900;
+}
+
+.result-list {
+  margin-top: 16rpx;
+}
+
+.person-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 18rpx;
+  margin-bottom: 12rpx;
+  border-radius: 16rpx;
+  background: #fff;
+}
+
+.small-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 76rpx;
+  height: 76rpx;
+  border-radius: 50%;
+  color: var(--brand-ink);
+  background: var(--brand-tint);
+  font-size: 28rpx;
+  font-weight: 900;
+  overflow: hidden;
+}
+.small-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.person-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.person-main text:first-child {
+  display: block;
+  color: var(--brand-ink);
+  font-size: 25rpx;
+  font-weight: 900;
+}
+
+.person-main text:last-child {
+  display: block;
+  margin-top: 5rpx;
+  color: #7a8980;
+  font-size: 20rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.person-row > button {
+  min-width: 104rpx;
+  height: 56rpx;
+  padding: 0 16rpx;
+  border-radius: 12rpx;
+  color: var(--brand-ink);
+  background: var(--brand-tint);
+  font-size: 21rpx;
+  font-weight: 900;
+}
+
+.person-row > button.added-btn {
+  color: #8e9992;
+  background: var(--brand-tint-2);
+}
+
+.person-row > button.pending-btn {
+  color: #9b8650;
+  background: #fef9ed;
+}
+
+/* ==================== 分区四：我的好友列表 ==================== */
+.section-head-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.friend-count {
+  color: #78877e;
+  font-size: 22rpx;
+  font-weight: 800;
+}
+
+.request-badge {
+  min-width: auto;
+  height: 42rpx;
+  padding: 0 16rpx;
+  margin-left: auto;
+  border-radius: 999rpx;
+  color: #fff;
+  background: linear-gradient(135deg, #ff8a6e, #f05d3e);
+  font-size: 19rpx;
+  font-weight: 900;
+}
+
+.friend-list {
+  margin-top: 16rpx;
+}
+
+.friend-row {
+  padding: 24rpx;
+  margin-bottom: 22rpx;
+  border-radius: 18rpx;
+  background: #fff;
+  box-shadow: 0 12rpx 30rpx rgba(70, 70, 100, .06);
+}
+
+.friend-main {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.friend-info-block {
+  min-width: 0;
+  flex: 1;
+}
+
+.friend-name {
+  display: block;
+  color: var(--brand-ink);
+  font-size: 25rpx;
+  font-weight: 900;
+}
+
+.friend-bio {
+  display: block;
+  margin-top: 4rpx;
+  color: #7a8980;
+  font-size: 20rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.open-profile {
+  color: var(--brand-deep);
+  font-size: 22rpx;
+  font-weight: 900;
+}
+
+.share-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16rpx;
+  padding-top: 14rpx;
+  border-top: 1rpx solid var(--brand-border);
+}
+
+.share-label text:first-child {
+  display: block;
+  color: var(--brand-ink);
+  font-size: 21rpx;
+  font-weight: 800;
+}
+
+.share-status {
+  display: block;
+  margin-top: 4rpx;
+  color: #87938c;
+  font-size: 18rpx;
+}
+
+.share-status.active {
+  color: var(--brand-deep);
+}
+
+/* ==================== 好友申请弹窗 ==================== */
+.modal-mask {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(17,34,25,.46);
+}
+
+.request-panel {
+  width: 100%;
+  max-height: 70vh;
+  padding: 28rpx 28rpx calc(28rpx + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  border-radius: 24rpx 24rpx 0 0;
+  background: #fff;
+}
+
+.request-list {
+  margin-top: 8rpx;
+}
+
+.request-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 18rpx;
+  margin-bottom: 12rpx;
+  border-radius: 16rpx;
+  background: var(--brand-tint-2);
+}
+
+.request-row > button {
+  min-width: 52rpx;
+  width: 52rpx;
+  height: 52rpx;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 26rpx;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.reject-btn { color: #fff; background: #f56c6c; }
+.accept-btn { color: #fff; background: var(--brand-bright); }
+
+.request-message {
+  display: block;
+  margin-top: 4rpx;
+  color: #9a9a9a;
+  font-size: 19rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 360rpx;
+}
+
+/* ==================== 个人主页编辑弹窗 ==================== */
+.profile-editor {
+  width: 100%;
+  max-height: 90vh;
+  padding: 28rpx 28rpx calc(28rpx + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  border-radius: 24rpx 24rpx 0 0;
+  background: #fff;
+}
+
+.editor-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.editor-head > text {
+  color: var(--brand-ink);
+  font-size: 31rpx;
+  font-weight: 900;
+}
+
+.rp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18rpx;
+  position: relative;
+}
+
+.rp-head text {
+  color: var(--brand-ink);
+  font-size: 31rpx;
+  font-weight: 900;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10rpx 20rpx;
+  border-radius: 10rpx;
+  background: #f0f2f5;
+  color: #6b7c73;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14rpx;
+}
+
+.form-row {
+  margin-top: 24rpx;
+}
+
+.form-row > text {
+  display: block;
+  margin-bottom: 8rpx;
+  color: #465a4e;
+  font-size: 21rpx;
+  font-weight: 800;
+}
+
+.form-row input,
+.form-row textarea,
+.tag-input input,
+.picker-value {
+  width: 100%;
+  padding: 18rpx;
+  border-radius: 12rpx;
+  background: var(--brand-tint-2);
+  font-size: 23rpx;
+}
+
+.form-row textarea {
+  height: 126rpx;
+}
+
+.picker-value {
+  color: var(--brand-ink);
+  font-weight: 800;
+}
+
+.form-label {
+  display: block;
+  margin-top: 22rpx;
+  color: #465a4e;
+  font-size: 21rpx;
+  font-weight: 800;
+}
+
+.theme-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-top: 10rpx;
+}
+
+.theme-picker button {
+  min-height: 54rpx;
+  padding: 0 16rpx;
+  border: 3rpx solid transparent;
+  border-radius: 12rpx;
+  font-size: 20rpx;
+  font-weight: 800;
+}
+
+.theme-picker button.active {
+  border-color: var(--brand-ink);
+}
+
+.visibility-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 68rpx;
+  border-bottom: 1rpx solid var(--brand-border);
+  color: var(--brand-ink);
+  font-size: 22rpx;
+}
+
+.visibility-switch {
+  transform: scale(0.75);
+}
+
+.save-profile {
+  margin-top: 24rpx;
+}
+
+/* ==================== 好友操作区（隐藏 & 删除） ==================== */
+.friend-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16rpx;
+  margin-top: 12rpx;
+  padding-top: 12rpx;
+  border-top: 1rpx solid var(--brand-border);
+}
+
+.action-hide {
+  color: #8e9590;
+  font-size: 21rpx;
+  font-weight: 700;
+  padding: 8rpx 16rpx;
+}
+
+.action-delete {
+  color: #e88b8b;
+  font-size: 21rpx;
+  font-weight: 700;
+  padding: 8rpx 16rpx;
+}
+
+/* ==================== 已隐藏好友入口 ==================== */
+.hidden-entry {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 22rpx;
+  margin-top: 12rpx;
+  border-radius: 16rpx;
+  background: var(--brand-tint-2);
+}
+
+.hidden-icon {
+  font-size: 28rpx;
+}
+
+.hidden-label {
+  flex: 1;
+  color: #58635d;
+  font-size: 23rpx;
+  font-weight: 800;
+}
+
+.hidden-count {
+  color: #fff;
+  background: #9ba5a0;
+  border-radius: 50%;
+  min-width: 36rpx;
+  height: 36rpx;
+  line-height: 36rpx;
+  text-align: center;
+  font-size: 19rpx;
+  font-weight: 900;
+}
+
+.hidden-arrow {
+  color: #bcc5c0;
+  font-size: 36rpx;
+  font-weight: 200;
+}
+
+/* ==================== 恢复按钮 ==================== */
+.restore-btn {
+  min-width: 104rpx;
+  height: 56rpx;
+  padding: 0 16rpx;
+  border-radius: 12rpx;
+  color: var(--brand-deep);
+  background: var(--brand-tint);
+  font-size: 21rpx;
+  font-weight: 900;
+}
+.figma-page-header { margin-bottom: 16rpx; }
+.section-card,
+.section-block,
+.friend-row,
+.person-row {
+  border: 2rpx solid var(--brand-primary);
+  border-radius: 30rpx;
+  background: #f4f4f4;
+  box-shadow: none;
+}
+.search-box { border-radius: 30rpx; background: #ffffff; }
+.friend-search-button { border-radius: 30rpx; color: #ffffff; background: var(--brand-primary); }
+.share-control { border-radius: 30rpx; background: #ffffff; }
+
+/* 好友页布局修正：分区标题不再套外框，卡片只保留一层边界。 */
+.section-block {
+  margin-top: 32rpx;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.section-title {
+  font-size: 30rpx;
+  line-height: 1.35;
+}
+
+.section-note {
+  margin-top: 6rpx;
+  line-height: 1.5;
+}
+
+.search-box {
+  margin-top: 18rpx;
+  padding: 8rpx;
+  border: 2rpx solid var(--brand-primary);
+  background: #ffffff;
+}
+
+.friend-list {
+  margin-top: 18rpx;
+}
+
+.friend-row {
+  margin-bottom: 18rpx;
+  padding: 24rpx;
+  border: 2rpx solid var(--brand-primary);
+  background: #f4f4f4;
+}
+
+.share-control {
+  margin-top: 20rpx;
+  padding: 18rpx 20rpx;
+  border-top: 0;
+  border-radius: 24rpx;
+  background: #ffffff;
+}
+
+.friend-actions {
+  margin-top: 8rpx;
+  padding-top: 4rpx;
+  border-top: 0;
+}
+
+.action-hide,
+.action-delete {
+  padding: 8rpx 12rpx;
+}
+
+/* 个人入口不再沿用旧版可变渐变主题，统一到 Figma 的平面绿色。 */
+.profile-entry-card,
+.profile-entry-card.theme-mint,
+.profile-entry-card.theme-sky,
+.profile-entry-card.theme-coral,
+.profile-entry-card.theme-graphite {
+  color: #212121;
+  border: 2rpx solid var(--brand-primary);
+  background: var(--brand-soft);
+  box-shadow: none;
+}
+
+.free-time-card {
+  border-width: 2rpx;
+  background: #ffffff;
+}
+
+.search-box,
+.friend-row,
+.person-row {
+  border-width: 2rpx;
+}
+
+/* ========== 第二张参考图：好友页精确布局 ========== */
+.friends-page {
+  padding-top: 0;
+  background: #f4f4f4;
+}
+
+.friends-nav {
+  box-sizing: content-box;
+  width: calc(100% + 40rpx);
+  height: 88rpx;
+  margin: 0 -20rpx;
+  padding-bottom: 12rpx;
+  display: flex;
+  align-items: center;
+  background: transparent;
+}
+
+.friends-nav-title {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding-left: 16rpx;
+  color: #000000;
+}
+
+.friends-nav-label {
+  font-size: 48rpx;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.home-line-icon {
+  position: relative;
+  width: 48rpx;
+  height: 48rpx;
+  flex: 0 0 48rpx;
+}
+
+/* 子视图返回箭头（与小房子图标同槽位） */
+.nav-back-arrow {
+  width: 48rpx;
+  height: 48rpx;
+  flex: 0 0 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1e1e1e;
+  font-size: 56rpx;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.home-line-roof {
+  position: absolute;
+  top: 7rpx;
+  left: 6rpx;
+  width: 34rpx;
+  height: 34rpx;
+  border-top: 6rpx solid #1e1e1e;
+  border-left: 6rpx solid #1e1e1e;
+  border-radius: 3rpx 0 0;
+  transform: rotate(45deg);
+}
+
+.home-line-body {
+  position: absolute;
+  left: 9rpx;
+  bottom: 2rpx;
+  width: 31rpx;
+  height: 28rpx;
+  border: 6rpx solid #1e1e1e;
+  border-top: 0;
+  border-radius: 2rpx;
+}
+
+.section-card,
+.profile-entry-card,
+.free-time-card,
+.person-row {
+  box-shadow: none;
+}
+
+.profile-entry-card,
+.profile-entry-card.theme-mint,
+.profile-entry-card.theme-sky,
+.profile-entry-card.theme-coral,
+.profile-entry-card.theme-graphite {
+  margin-top: 12rpx;
+  padding: 18rpx 20rpx 20rpx;
+  border: 0;
+  border-radius: 20rpx;
+  color: #212121;
+  background: var(--brand-primary);
+}
+
+.pe-top {
+  min-height: 150rpx;
+  gap: 30rpx;
+}
+
+.pe-avatar {
+  width: 150rpx;
+  height: 150rpx;
+  border: 5rpx solid #ffffff;
+  color: #606060;
+  background: #dedede;
+  font-size: 42rpx;
+}
+
+.pe-name {
+  color: var(--on-brand);
+  font-size: 43rpx;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.pe-id {
+  margin-top: 6rpx;
+  color: #ffffff;
+  font-size: 24rpx;
+  opacity: 1;
+}
+
+.pe-meta {
+  display: block;
+  margin-top: 7rpx;
+  color: #ffffff;
+  font-size: 25rpx;
+  line-height: 1.2;
+}
+
+.pe-arrow {
+  color: var(--on-brand);
+  font-size: 68rpx;
+  font-weight: 400;
+  opacity: 1;
+}
+
+.pe-signature {
+  height: 68rpx;
+  margin-top: 16rpx;
+  padding: 0 44rpx;
+  display: flex;
+  align-items: center;
+  border: 4rpx solid #555555;
+  border-radius: 34rpx;
+  color: #888888;
+  background: #f4f4f4;
+  font-size: 23rpx;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.free-time-card {
+  min-height: 208rpx;
+  gap: 22rpx;
+  margin-top: 14rpx;
+  padding: 30rpx 28rpx;
+  border: 2rpx solid var(--brand-primary);
+  border-radius: 24rpx;
+  background: linear-gradient(135deg, var(--brand-tint) 0%, #ffffff 70%);
+  box-shadow: 0 10rpx 28rpx var(--brand-soft);
+}
+
+.ft-icon {
+  width: 108rpx;
+  height: 108rpx;
+  border-radius: 24rpx;
+  background: var(--brand-tint-2, var(--brand-tint));
+  font-size: 52rpx;
+}
+
+.ft-title {
+  color: #212121;
+  font-size: 33rpx;
+  font-weight: 800;
+}
+
+.ft-desc {
+  margin-top: 6rpx;
+  color: #6a6a6a;
+  font-size: 22rpx;
+  line-height: 1.4;
+}
+
+.ft-arrow {
+  color: var(--brand-primary);
+  font-size: 46rpx;
+}
+
+.friend-tools {
+  width: calc(100% + 40rpx);
+  height: 82rpx;
+  margin: 0 -20rpx;
+  padding-right: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 22rpx;
+  border-bottom: 1rpx solid #eeeeee;
+  background: #ffffff;
+}
+
+.friend-tool-button {
+  position: relative;
+  width: 54rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.friend-tool-icon {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.add-tool-icon {
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.add-tool-mark {
+  position: absolute;
+  top: 0;
+  right: -3rpx;
+  color: #1e1e1e;
+  font-size: 32rpx;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.tool-badge {
+  position: absolute;
+  top: 0;
+  right: -7rpx;
+  min-width: 25rpx;
+  height: 25rpx;
+  padding: 0 6rpx;
+  border: 2rpx solid #ffffff;
+  border-radius: 14rpx;
+  color: #ffffff;
+  background: #d8264f;
+  font-size: 16rpx;
+  line-height: 23rpx;
+  text-align: center;
+}
+
+.add-friend-panel {
+  margin: 12rpx 0;
+  padding: 20rpx;
+  border: 2rpx solid var(--brand-primary);
+  border-radius: 18rpx;
+  background: #ffffff;
+}
+
+.section-title {
+  color: #333333;
+  font-size: 27rpx;
+  font-weight: 500;
+}
+
+.section-note {
+  color: #858585;
+  font-size: 19rpx;
+}
+
+.search-box {
+  height: 68rpx;
+  margin-top: 14rpx;
+  padding: 5rpx;
+  border: 2rpx solid #9b9b9b;
+  border-radius: 34rpx;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.friend-search-input {
+  height: 56rpx;
+  padding: 0 18rpx;
+  font-size: 21rpx;
+}
+
+.friend-search-button {
+  width: 106rpx;
+  height: 56rpx;
+  border-radius: 28rpx;
+  color: #ffffff;
+  background: var(--brand-primary);
+  font-size: 20rpx;
+  font-weight: 700;
+}
+
+.friends-list-section {
+  width: calc(100% + 40rpx);
+  margin: 0 -20rpx;
+  padding: 0 16rpx 36rpx;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.section-head-row {
+  height: 68rpx;
+  padding: 0 2rpx;
+}
+
+.friends-list-section .section-title {
+  color: #484848;
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.friend-list {
+  margin-top: 0;
+}
+
+.friend-row {
+  min-height: 188rpx;
+  margin-bottom: 12rpx;
+  padding: 13rpx 18rpx 13rpx 26rpx;
+  border: 2rpx solid var(--brand-primary);
+  border-radius: 24rpx;
+  background: #f4f4f4;
+  box-shadow: none;
+}
+
+.friend-main {
+  align-items: center;
+  gap: 20rpx;
+}
+
+.small-avatar {
+  width: 148rpx;
+  height: 148rpx;
+  border: 5rpx solid #ffffff;
+  color: #606060;
+  background: #dedede;
+  font-size: 38rpx;
+}
+
+.friend-info-block {
+  width: 0;
+}
+
+.friend-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.friend-name {
+  min-width: 0;
+  overflow: hidden;
+  color: #000000;
+  font-size: 35rpx;
+  font-weight: 500;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.friend-arrow {
+  flex: 0 0 auto;
+  margin-left: 10rpx;
+  color: #1e1e1e;
+  font-size: 58rpx;
+  font-weight: 400;
+  line-height: .8;
+}
+
+.friend-bio {
+  margin-top: 5rpx;
+  color: #858585;
+  font-size: 21rpx;
+}
+
+.share-control {
+  height: 52rpx;
+  margin-top: 12rpx;
+  padding: 0 12rpx 0 20rpx;
+  border: 0;
+  border-radius: 26rpx;
+  background: #ffffff;
+}
+
+.share-control-label {
+  color: #222222;
+  font-size: 21rpx;
+  font-weight: 400;
+}
+
+.share-control-switch {
+  transform: scale(.72);
+  transform-origin: right center;
+}
+
+.hidden-entry {
+  margin: 16rpx 0 0;
+}
+
+.friend-list-end {
+  min-height: 206rpx;
+  padding-top: 92rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #666666;
+  font-size: 21rpx;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.request-panel,
+.profile-editor {
+  border-radius: 30rpx 30rpx 0 0;
+  background: #ffffff;
+}
+
+.request-row {
+  border-radius: 20rpx;
+  background: #f4f4f4;
+}
+
+/* ========== 添加好友 / 消息通知：独立页面状态 ========== */
+.friend-subpage {
+  width: calc(100% + 40rpx);
+  /* 撑满导航以下的整屏，避免灰色块半屏戛然而止、露出垫底背景图造成「切割」感 */
+  min-height: calc(100vh - 200rpx);
+  margin: 0 -20rpx;
+  background: #f4f4f4;
+}
+
+.friend-view-tabs {
+  height: 120rpx;
+  padding: 24rpx 30rpx 16rpx;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 42rpx;
+  background: #ffffff;
+}
+
+.friend-view-tab {
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24rpx;
+  color: #111111;
+  font-size: 31rpx;
+  font-weight: 500;
+}
+
+.friend-view-tab.active {
+  color: var(--on-brand);
+  background: var(--brand-primary);
+}
+
+.add-by-id {
+  padding: 10rpx 2rpx 0;
+}
+
+.subpage-section-label {
+  display: block;
+  padding-left: 8rpx;
+  color: #444444;
+  font-size: 25rpx;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.subpage-search-box {
+  position: relative;
+  height: 56rpx;
+  margin-top: 5rpx;
+  display: flex;
+  align-items: center;
+  border: 3rpx solid #838383;
+  border-radius: 28rpx;
+  background: #ffffff;
+}
+
+.subpage-search-input {
+  min-width: 0;
+  height: 52rpx;
+  flex: 1;
+  padding: 0 64rpx 0 18rpx;
+  color: #222222;
+  font-size: 21rpx;
+}
+
+.search-line-icon {
+  position: absolute;
+  top: 14rpx;
+  right: 24rpx;
+  width: 21rpx;
+  height: 21rpx;
+  border: 3rpx solid #171717;
+  border-radius: 50%;
+}
+
+.search-line-icon::after {
+  position: absolute;
+  right: -8rpx;
+  bottom: -5rpx;
+  width: 9rpx;
+  height: 3rpx;
+  content: "";
+  background: #171717;
+  transform: rotate(45deg);
+  transform-origin: left center;
+}
+
+.search-empty-hint {
+  height: 164rpx;
+  margin-top: 5rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid #b7b7b7;
+  border-radius: 20rpx;
+  background: #ffffff;
+}
+
+.search-empty-text {
+  color: #777777;
+  font-size: 20rpx;
+}
+
+.subpage-result-list {
+  margin: 8rpx 8rpx 0;
+}
+
+.subpage-person-row {
+  margin-bottom: 8rpx;
+  border-color: #a1a1a1;
+  background: #ffffff;
+}
+
+.subpage-result-avatar {
+  width: 76rpx;
+  height: 76rpx;
+  border-width: 3rpx;
+}
+
+.match-add-section {
+  margin-top: 10rpx;
+  padding: 0 8rpx;
+}
+
+.subpage-match-card {
+  min-height: 148rpx;
+  margin-top: 14rpx;
+  padding: 20rpx 24rpx 20rpx 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  border: 3rpx solid #919191;
+  border-radius: 16rpx;
+  background: #ffffff;
+}
+
+.subpage-match-icon {
+  width: 90rpx;
+  height: 90rpx;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20rpx;
+  background: var(--brand-tint);
+  font-size: 42rpx;
+}
+
+.subpage-match-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.subpage-match-title {
+  display: block;
+  color: #202020;
+  font-size: 29rpx;
+  font-weight: 700;
+}
+
+.subpage-match-desc {
+  display: block;
+  margin-top: 4rpx;
+  color: #888888;
+  font-size: 18rpx;
+  line-height: 1.35;
+}
+
+.subpage-match-arrow {
+  flex-shrink: 0;
+  color: #b7c9be;
+  font-size: 42rpx;
+}
+
+/* 消息通知 */
+.request-section-title {
+  height: 58rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555555;
+  font-size: 23rpx;
+}
+
+.full-request-list {
+  padding: 0 20rpx;
+}
+
+.full-request-card {
+  overflow: hidden;
+  margin-bottom: 18rpx;
+  border: 4rpx solid #555555;
+  border-radius: 24rpx;
+  background: var(--brand-soft);
+}
+
+.request-profile {
+  min-height: 198rpx;
+  padding: 16rpx 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 34rpx;
+}
+
+.request-large-avatar {
+  width: 172rpx;
+  height: 172rpx;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 6rpx solid #ffffff;
+  border-radius: 50%;
+  color: #666666;
+  background: #dedede;
+  font-size: 42rpx;
+}
+
+.request-person-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.request-person-name {
+  display: block;
+  overflow: hidden;
+  color: #000000;
+  font-size: 42rpx;
+  font-weight: 500;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.request-person-meta,
+.request-person-id {
+  display: block;
+  margin-top: 7rpx;
+  overflow: hidden;
+  color: #5f6b63;
+  font-size: 23rpx;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.request-reason {
+  height: 92rpx;
+  margin: 0 20rpx 8rpx;
+  padding: 14rpx 26rpx;
+  overflow: hidden;
+  border: 4rpx solid #555555;
+  border-radius: 46rpx;
+  color: #888888;
+  background: #f4f4f4;
+  font-size: 22rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.request-actions {
+  display: flex;
+  gap: 20rpx;
+  padding: 14rpx 24rpx;
+  background: #ffffff;
+  border-radius: 0 0 24rpx 24rpx;
+}
+
+.request-accept,
+.request-reject {
+  flex: 1;
+  height: 64rpx;
+  margin: 0;
+  border-radius: 20rpx;
+  color: #ffffff;
+  font-size: 26rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.request-accept {
+  background: var(--brand-primary);
+}
+
+.request-reject {
+  background: #d8264f;
+}
+
+.request-list-end {
+  display: block;
+  margin-top: 82rpx;
+  color: #777777;
+  font-size: 21rpx;
+  text-align: center;
+}
+
+/* ==================== 日程共享中心（重构新增） ==================== */
+
+/* 我的日程共享卡片 */
+.pe-subtitle {
+  font-size: 24rpx;
+  color: rgba(31, 36, 33, 0.72);
+  margin-top: 2rpx;
+}
+.pe-share-status {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(230, 234, 231, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+.pe-share-count {
+  font-size: 24rpx;
+  color: #1f2421;
+  font-weight: 500;
+}
+.pe-share-manage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pe-share-manage-text {
+  font-size: 26rpx;
+  color: var(--brand-primary);
+  font-weight: 600;
+}
+.pe-share-manage .pe-arrow {
+  color: var(--brand-primary);
+}
+
+/* 邀请入口按钮 */
+.invite-entry {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  background: var(--brand-primary);
+  border-radius: 999rpx;
+  padding: 14rpx 28rpx;
+  box-shadow: 0 8rpx 20rpx var(--brand-soft);
+}
+.invite-entry-mark {
+  color: #ffffff;
+  font-size: 30rpx;
+  line-height: 1;
+}
+.invite-entry-text {
+  color: #ffffff;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+/* 联系人标签页 */
+.contact-tabs {
+  display: flex;
+  background: #eef1ef;
+  border-radius: 16rpx;
+  padding: 6rpx;
+  margin-bottom: 24rpx;
+}
+.contact-tab {
+  flex: 1;
+  text-align: center;
+  font-size: 26rpx;
+  color: #7a817c;
+  padding: 14rpx 0;
+  border-radius: 12rpx;
+}
+.contact-tab.active {
+  background: #ffffff;
+  color: #1f2421;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(31, 36, 33, 0.06);
+}
+.tab-empty-hint {
+  font-size: 26rpx;
+  color: #7a817c;
+  text-align: center;
+  padding: 28rpx 32rpx;
+  margin: 24rpx 12rpx;
+  border-radius: 16rpx;
+  /* 半透明白底，避免页面背景图花纹把文字「切割」得看不清 */
+  background: rgba(255, 255, 255, 0.86);
+}
+
+/* 联系人权限状态行 */
+.friend-id-line {
+  font-size: 22rpx;
+  color: #a4aaa6;
+  margin-top: 2rpx;
+}
+.perm-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  margin-top: 8rpx;
+}
+.perm-line {
+  font-size: 24rpx;
+  color: #7a817c;
+}
+.perm-value {
+  color: var(--brand-primary);
+  font-weight: 500;
+}
+.perm-value.off {
+  color: #a4aaa6;
+}
+
+/* 空状态 */
+.contact-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56rpx 48rpx;
+}
+.contact-empty-xp {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: var(--brand-tint);
+  color: var(--brand-primary);
+  font-size: 40rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+}
+.contact-empty-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1f2421;
+}
+.contact-empty-desc {
+  font-size: 26rpx;
+  color: #7a817c;
+  text-align: center;
+  line-height: 1.6;
+  margin: 16rpx 0 32rpx;
+}
+.contact-empty-primary {
+  width: 100%;
+  height: 92rpx;
+  line-height: 92rpx;
+  padding: 0 24rpx;
+  border-radius: 46rpx;
+  font-size: 28rpx;
+  white-space: nowrap;
+}
+.contact-empty-secondary {
+  margin-top: 20rpx;
+  background: transparent;
+  color: var(--brand-primary);
+  font-size: 28rpx;
+  border: none;
+}
+.contact-empty-secondary::after {
+  border: none;
+}
+
+/* 邀请主卡片 */
+.invite-primary-card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+  border: 1rpx solid #e6eae7;
+}
+.invite-primary-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1f2421;
+}
+.invite-primary-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #7a817c;
+  line-height: 1.6;
+  margin: 12rpx 0 24rpx;
+}
+.invite-primary-btn {
+  width: 100%;
+  height: 92rpx;
+  line-height: 92rpx;
+  padding: 0 24rpx;
+  border-radius: 46rpx;
+  font-size: 28rpx;
+  white-space: nowrap;
+}
+.invite-code-row {
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #e6eae7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.invite-code-label {
+  font-size: 24rpx;
+  color: #7a817c;
+}
+.invite-code-value {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.invite-code-text {
+  font-size: 26rpx;
+  color: #1f2421;
+  font-weight: 600;
+}
+.invite-code-copy {
+  font-size: 24rpx;
+  color: var(--brand-primary);
+  border: 1rpx solid var(--brand-primary);
+  border-radius: 999rpx;
+  padding: 4rpx 20rpx;
+}
+
+/* Xipoo ID 次要入口 */
+.subpage-section-hint {
+  display: block;
+  font-size: 24rpx;
+  color: #a4aaa6;
+  margin: 8rpx 0 16rpx;
+}
+.add-id-note {
+  display: block;
+  font-size: 22rpx;
+  color: #a4aaa6;
+  line-height: 1.6;
+  margin-top: 24rpx;
+}
+.result-confirm-hint {
+  font-size: 22rpx;
+  color: #a4aaa6;
+}
+
+/* 邀请接受面板 */
+.invite-panel {
+  background: #ffffff;
+  border-radius: 32rpx;
+  padding: 40rpx 32rpx;
+  margin: 0 48rpx;
+  width: calc(100% - 96rpx);
+  box-sizing: border-box;
+}
+.share-range-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  color: #4b5563;
+  font-size: 26rpx;
+}
+.share-range-picker {
+  min-width: 220rpx;
+  padding: 14rpx 24rpx;
+  border-radius: 14rpx;
+  background: #f3f4f6;
+  color: #1f2421;
+  font-size: 26rpx;
+  font-weight: 600;
+  text-align: center;
+}
+.invite-panel-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1f2421;
+  text-align: center;
+  display: block;
+}
+.invite-panel-user {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin: 32rpx 0 12rpx;
+}
+.invite-panel-user-info {
+  display: flex;
+  flex-direction: column;
+}
+.invite-panel-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1f2421;
+}
+.invite-panel-id {
+  font-size: 24rpx;
+  color: #a4aaa6;
+}
+.invite-id-copy-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.invite-id-copy-btn {
+  font-size: 20rpx;
+  color: var(--brand-primary);
+  border: 1rpx solid var(--brand-primary);
+  border-radius: 999rpx;
+  padding: 2rpx 14rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.invite-panel-desc {
+  font-size: 26rpx;
+  color: #7a817c;
+  display: block;
+  margin-bottom: 24rpx;
+}
+.invite-panel-label {
+  font-size: 26rpx;
+  color: #1f2421;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 16rpx;
+}
+.invite-panel-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-bottom: 32rpx;
+}
+.invite-option {
+  border: 1rpx solid #e6eae7;
+  border-radius: 20rpx;
+  padding: 20rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+}
+.invite-option.active {
+  border-color: var(--brand-primary);
+  background: var(--brand-tint-2);
+}
+.invite-option-name {
+  font-size: 28rpx;
+  color: #1f2421;
+  font-weight: 500;
+}
+.invite-option-desc {
+  font-size: 22rpx;
+  color: #a4aaa6;
+  margin-top: 4rpx;
+}
+.invite-panel-accept {
+  width: 100%;
+  max-width: 100%;
+  height: 92rpx;
+  line-height: 92rpx;
+  border-radius: 46rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+  margin: 0;
+}
+.invite-panel-decline {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 16rpx;
+  background: transparent;
+  color: #7a817c;
+  font-size: 28rpx;
+  border: none;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 10rpx 0;
+}
+.invite-panel-decline::after {
+  border: none;
+}
+
+/* 时间小组 */
+.group-create {
+  background: #ffffff;
+  border: 1rpx solid #e6eae7;
+  border-radius: 28rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+}
+.group-create-head {
+  margin-bottom: 16rpx;
+}
+.group-create-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1f2421;
+  display: block;
+}
+.group-create-hint {
+  font-size: 22rpx;
+  color: #a4aaa6;
+  display: block;
+  margin-top: 4rpx;
+}
+.group-name-input {
+  background: #f7f8f7;
+  border-radius: 16rpx;
+  padding: 18rpx 24rpx;
+  font-size: 28rpx;
+  margin-bottom: 16rpx;
+}
+.group-member-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-bottom: 32rpx;
+}
+.group-member-chip {
+  font-size: 26rpx;
+  color: #7a817c;
+  border: 1rpx solid #e6eae7;
+  border-radius: 999rpx;
+  padding: 10rpx 28rpx;
+}
+.group-member-chip.active {
+  color: #ffffff;
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+.group-save-btn {
+  width: 100%;
+}
+.group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.group-card {
+  background: #ffffff;
+  border: 1rpx solid #e6eae7;
+  border-radius: 28rpx;
+  padding: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.group-card-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1f2421;
+  display: block;
+}
+.group-card-meta {
+  font-size: 24rpx;
+  color: #7a817c;
+  display: block;
+  margin-top: 6rpx;
+}
+.group-card-del {
+  color: #a4aaa6;
+  font-size: 28rpx;
+  padding: 12rpx;
+}
+
+/* ----- 页面背景图（fixed 垫底，盖住页面底色） ----- */
+.friends-page {
+  background: none;
+}
+
+.page-bg-image {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* ----- 空态卡片：加半透明白底，避免背景图干扰文字阅读 ----- */
+.contact-empty {
+  background: rgba(255, 255, 255, 0.86);
+  border-radius: 28rpx;
+  margin: 0 8rpx;
+  box-shadow: 0 8rpx 24rpx rgba(124, 131, 199, 0.1);
+}
+
+.contact-empty-desc {
+  color: #5f655f;
+}
+
+.contact-empty-secondary {
+  font-weight: 600;
+}
+
+/* ----- 黑夜模式：压暗背景图融入深色底 ----- */
+.dark-mode .page-bg-image {
+  opacity: 1;
+  filter: brightness(0.15) saturate(0.6);
+}
+
+.friends-page.dark-mode {
+  background: none;
+}
+
+.dark-mode .contact-empty {
+  background: var(--card-bg);
+  box-shadow: none;
+}
+
+.dark-mode .contact-empty-desc {
+  color: var(--text-secondary);
+}
+
+/* 日程共享主视图：使用提供的夜读插画与日历横幅，仍保留完整的邀请和精确检索交互。 */
+.add-friend-view {
+  position: relative;
+  overflow: hidden;
+  background: rgba(248, 248, 250, 0.9);
+}
+
+.add-friend-view .friend-view-tabs,
+.add-friend-view .invite-primary-card,
+.add-friend-view .add-by-id {
+  position: relative;
+  z-index: 1;
+}
+
+.invite-primary-card {
+  overflow: hidden;
+  border: 1rpx solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 14rpx 40rpx rgba(71, 65, 137, 0.1);
+}
+
+.share-invite-banner {
+  display: block;
+  width: calc(100% + 64rpx);
+  height: 154rpx;
+  margin: -32rpx -32rpx 24rpx;
+  border-radius: 28rpx 28rpx 0 0;
+}
+
+.schedule-share-search-box {
+  height: 104rpx;
+  overflow: hidden;
+  border: 0;
+  border-radius: 24rpx;
+  background: transparent;
+  box-shadow: 0 8rpx 20rpx rgba(88, 78, 161, 0.12);
+}
+
+.schedule-share-search-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.schedule-share-search-box .subpage-search-input {
+  position: relative;
+  z-index: 1;
+  width: auto;
+  height: 104rpx;
+  padding: 0 126rpx 0 190rpx;
+  color: #3f3a57;
+  font-size: 23rpx;
+}
+
+.schedule-share-search-box .search-line-icon {
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: 112rpx;
+  height: 104rpx;
+  border: 0;
+  border-radius: 0;
+}
+
+.schedule-share-search-box .search-line-icon::after {
+  display: none;
+}
+
+.share-calendar-deco {
+  display: block;
+  width: 280rpx;
+  margin: 26rpx auto 8rpx;
+  opacity: 0.76;
+}
+
+.dark-mode .add-friend-view {
+  background: rgba(15, 18, 30, 0.92);
+}
+
+.dark-mode .share-invite-banner,
+.dark-mode .share-calendar-deco {
+  opacity: 0.52;
+  filter: brightness(0.76) saturate(0.6);
+}
+
+/* ----- 黑夜模式整改 ----- */
+.dark-mode .friends-nav-label {
+  color: var(--text-primary);
+}
+
+.dark-mode .home-line-roof {
+  border-top-color: #e2e8f0;
+  border-left-color: #e2e8f0;
+}
+
+.dark-mode .home-line-body {
+  border-color: #e2e8f0;
+  border-top: 0;
+}
+
+.dark-mode .section-card,
+.dark-mode .friend-row,
+.dark-mode .person-row {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+}
+
+.dark-mode .ft-title,
+.dark-mode .friend-name {
+  color: var(--text-primary);
+}
+
+.dark-mode .ft-desc,
+.dark-mode .friend-id-line {
+  color: var(--text-secondary);
+}
+
+/* 暗色模式：空态提示用深色卡片底，浅色文字；避免浅色文字落在半透明白条上像被「切割」 */
+.dark-mode .tab-empty-hint {
+  color: var(--text-secondary);
+  background: var(--card-bg);
+  border: 1rpx solid var(--card-border);
+}
+
+/* ----- 黑夜模式：工具行去白底，图标提亮 ----- */
+.dark-mode .friend-tools {
+  background: transparent;
+  border-bottom-color: var(--divider-color);
+}
+
+.dark-mode .friend-tool-icon {
+  filter: invert(85%);
+}
+
+.dark-mode .section-title {
+  color: var(--text-primary);
+}
+

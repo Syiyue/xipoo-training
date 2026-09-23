@@ -1,0 +1,96 @@
+<view style="{{themeVars}}" class="page detail-page {{darkMode ? 'dark-mode' : ''}}">
+  <!-- 自定义导航：返回箭头 + 左对齐标题 -->
+  <view class="detail-nav" style="padding-top: {{statusBarHeight}}px;">
+    <view class="navigation-left" bindtap="goBack" hover-class="navigation-left-hover">
+      <view class="back-icon"></view>
+      <text class="navigation-title">{{lang === 'en' ? 'Course Detail' : '课程详情'}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{course}}" class="detail-content">
+    <view wx:if="{{course.needsReview}}" class="review-alert card">
+      <text class="review-alert-icon">⚠️</text>
+      <view>
+        <text class="review-alert-title">{{lang === 'en' ? 'Needs Review' : '需要人工核验'}}</text>
+        <text class="review-alert-desc" wx:if="{{course.reviewReasonsText}}">{{course.reviewReasonsText}}</text>
+      </view>
+    </view>
+
+    <view class="detail-header card">
+      <view class="detail-title-block">
+        <text class="detail-title">{{course.title}}</text>
+        <text class="detail-subtitle">{{course.date}} · {{weekLabel}} · {{course.start}}-{{course.end}}</text>
+      </view>
+    </view>
+
+    <view class="info-card card">
+      <view class="info-group-label">{{lang === 'en' ? 'Course Info' : '课程信息'}}</view>
+      <view class="info-row">
+        <text class="info-label">{{lang === 'en' ? 'Code' : '课程代码'}}</text>
+        <text class="info-value">{{course.courseCode || '--'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">{{lang === 'en' ? 'Section' : '教学班'}}</text>
+        <text class="info-value">{{course.section || '--'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">{{lang === 'en' ? 'Term' : '学期'}}</text>
+        <text class="info-value">{{course.term || '--'}}</text>
+      </view>
+      <view wx:if="{{course.weeksDisplay}}" class="info-row">
+        <text class="info-label">{{lang === 'en' ? 'Weeks' : '教学周'}}</text>
+        <text class="info-value">{{course.weeksDisplay}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">{{lang === 'en' ? 'Type' : '类型'}}</text>
+        <text class="info-value">{{course.type || '--'}}</text>
+      </view>
+    </view>
+
+    <view class="info-card card">
+      <view class="info-group-label">{{lang === 'en' ? 'Time & Place' : '时间地点'}}</view>
+      <view class="info-row">
+        <text class="info-label">{{lang === 'en' ? 'Date' : '日期'}}</text>
+        <text class="info-value">{{course.date}} · {{weekLabel}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">{{lang === 'en' ? 'Time' : '时间'}}</text>
+        <text class="info-value">{{course.start}} - {{course.end}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">{{lang === 'en' ? 'Place' : '地点'}}</text>
+        <text class="info-value {{course.place ? '' : 'info-missing'}}">{{course.place || (lang === 'en' ? 'Not set' : '未填写')}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">{{lang === 'en' ? 'Teacher' : '老师'}}</text>
+        <text class="info-value">{{course.teacher || (lang === 'en' ? 'Not set' : '未填写')}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">{{lang === 'en' ? 'Confirmed' : '已核对'}}</text>
+        <text class="info-value {{course.confirmed ? 'status-ok' : 'status-warn'}}">{{course.confirmed ? '✓' : '✗'}}</text>
+      </view>
+    </view>
+
+    <view class="detail-actions">
+      <view class="detail-main-actions">
+        <button class="delete-btn" bindtap="confirmDelete">{{lang === 'en' ? 'Delete' : '删除'}}</button>
+        <button class="edit-btn" bindtap="openEdit">{{lang === 'en' ? 'Edit' : '编辑'}}</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{showDeleteConfirm}}" class="modal-mask" bindtap="cancelDelete">
+    <view class="confirm-sheet card" catchtap="noop">
+      <text class="confirm-title">{{lang === 'en' ? 'Confirm Delete' : '确认删除'}}</text>
+      <text class="confirm-desc">{{lang === 'en' ? 'This action cannot be undone.' : '删除后无法恢复，确定要删除吗？'}}</text>
+      <view class="confirm-buttons">
+        <button class="ghost-btn" bindtap="cancelDelete">{{lang === 'en' ? 'Cancel' : '取消'}}</button>
+        <button class="primary-btn danger" bindtap="doDelete">{{lang === 'en' ? 'Delete' : '删除'}}</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="empty-state">
+    <text>{{lang === 'en' ? 'Loading...' : '加载中...'}}</text>
+  </view>
+</view>

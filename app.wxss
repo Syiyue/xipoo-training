@@ -1,0 +1,326 @@
+/* ==========================================================
+   Xipoo 全局样式 — 莫奈（印象派）水彩视觉，支持深色模式
+   使用 CSS 变量实现主题切换；静态默认值 = 默认主题「莫奈·睡莲」
+   派生色板，运行时由页面根节点 themeVars 覆盖。
+   ========================================================== */
+
+/* 浅色模式变量（默认） */
+page {
+  --page-bg: #f4f4f4;
+  --text-color: #212121;
+  --text-primary: #212121;
+  --text-secondary: #757575;
+  --text-muted: #9a9a9a;
+  --text-page-title: #000000;
+  --text-page-subtitle: #757575;
+  --brand-primary: #7c83c7;
+  --brand-bright: #6659d0;
+  --brand-deep: #3843aa;
+  --brand-ink: #242a62;
+  --brand-soft: #cbceec;
+  --brand-tint: #e8e9f7;
+  --brand-tint-2: #f0f1fa;
+  --brand-border: #d5d7eb;
+  --on-brand: #ffffff;
+  --tab-icon-filter: invert(65%) sepia(18%) saturate(1110%) hue-rotate(181deg) brightness(93%) contrast(86%);
+
+  /* ===== Figma 设计规范 tokens（日程页还原用） ===== */
+  --color-primary: #7C83C7;
+  --color-primary-soft: #CBCEEC;
+  --color-text-primary: #1E1E1E;
+  --color-text-secondary: #8A8A8A;
+  --color-background: #F8F8FA;
+  --color-surface: #FFFFFF;
+  --color-divider: #F4F4F4;
+  --color-border: #CAC4D0;
+  --course-green: #BCF9D0;
+  --course-red: #FECBCA;
+  --course-purple: #DDD6FF;
+  --course-orange: #FFE9D1;
+
+  --surface-default: #f4f4f4;
+  --surface-raised: #ffffff;
+  --card-bg: #ffffff;
+  --card-border: var(--brand-border);
+  --card-shadow: 0 6rpx 20rpx rgba(70, 70, 100, 0.06), 0 20rpx 50rpx var(--brand-tint);
+  --menu-hover-bg: rgba(0,0,0,0.02);
+  --divider-color: #f1f5f9;
+  --stat-divider-color: #eef2f7;
+  --arrow-color: #cbd5e1;
+  --id-bar-bg: linear-gradient(135deg, var(--brand-tint), var(--brand-tint-2));
+  --id-bar-border: var(--brand-border);
+  /* 莫奈水彩底：主色系柔光斑叠在多段浅渐变上，营造水面光影感 */
+  --page-bg-gradient:
+    radial-gradient(circle at 10% 4%, var(--brand-tint), rgba(255, 255, 255, 0) 42%),
+    radial-gradient(circle at 92% 16%, var(--brand-tint-2), rgba(255, 255, 255, 0) 46%),
+    radial-gradient(circle at 78% 88%, var(--brand-tint), rgba(255, 255, 255, 0) 40%),
+    linear-gradient(168deg, var(--brand-tint-2) 0%, #ffffff 42%, var(--brand-tint) 100%);
+
+  min-height: 100%;
+  background: var(--page-bg);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 深色模式（page 根元素 + .page 容器均生效） */
+page.dark-mode,
+.page.dark-mode {
+  --brand-bright: #8177d6;
+  --brand-deep: #9399d9;
+  --brand-ink: #d1d4f0;
+  --brand-soft: hsla(234, 45%, 55%, 0.28);
+  --brand-tint: hsla(234, 40%, 55%, 0.14);
+  --brand-tint-2: hsla(234, 35%, 55%, 0.09);
+  --brand-border: hsla(234, 35%, 60%, 0.35);
+  --page-bg: #0f0f1a;
+  --text-color: #e0e0e0;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-page-title: #e2e8f0;
+  --text-page-subtitle: #94a3b8;
+  --card-bg: rgba(26, 26, 46, 0.92);
+  --card-border: var(--brand-border);
+  --card-shadow: 0 20rpx 54rpx rgba(0, 0, 0, 0.5);
+  --menu-hover-bg: rgba(255,255,255,0.05);
+  --divider-color: rgba(255,255,255,0.08);
+  --stat-divider-color: rgba(255,255,255,0.08);
+  --arrow-color: #475569;
+  --id-bar-bg: linear-gradient(135deg, #1a1a2e, #16213e);
+  --id-bar-border: var(--brand-border);
+  /* Figma 设计规范 tokens 深色翻转（日程周/月视图、活动页日历等引用这些变量） */
+  --color-primary: #8177d6;
+  --color-primary-soft: hsla(234, 45%, 55%, 0.28);
+  --color-text-primary: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-background: #0f0f1a;
+  --color-surface: #1a1a2e;
+  --color-divider: rgba(255, 255, 255, 0.08);
+  --color-border: hsla(234, 35%, 60%, 0.35);
+  /* 深色水彩：主色微光斑叠在深色多段渐变上 */
+  --page-bg-gradient:
+    radial-gradient(circle at 12% 4%, var(--brand-tint), rgba(15, 15, 26, 0) 44%),
+    radial-gradient(circle at 90% 10%, var(--brand-tint-2), rgba(15, 15, 26, 0) 38%),
+    linear-gradient(160deg, #0f0f1a 0%, #1a1a2e 42%, #16213e 100%);
+}
+
+view,
+text,
+button,
+image,
+scroll-view,
+swiper,
+input,
+picker {
+  box-sizing: border-box;
+}
+
+button {
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  background: transparent;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button::after {
+  border: 0;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 24rpx 20rpx calc(136rpx + env(safe-area-inset-bottom));
+  background: var(--page-bg-gradient);
+}
+
+.figma-page-header {
+  min-height: calc(92rpx + env(safe-area-inset-top));
+  display: flex;
+  align-items: center;
+  padding: env(safe-area-inset-top) 12rpx 0;
+  background: #ffffff;
+}
+
+.figma-page-title {
+  color: #000000;
+  font-size: 52rpx;
+  font-weight: 500;
+  letter-spacing: 2rpx;
+}
+
+/* 主 Tab 页统一顶部导航：运行时传入状态栏高度，避免部分设备 safe-area 环境值为 0。 */
+.main-page-nav {
+  box-sizing: content-box;
+  width: calc(100% + 40rpx);
+  height: 88rpx;
+  margin: -24rpx -20rpx 0;
+  padding-bottom: 12rpx;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+}
+
+.main-page-nav-title {
+  padding-left: 32rpx;
+  color: #000000;
+  font-size: 48rpx;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+/* 自定义导航需要铺满屏幕，不能继承 .page 的内容边距。 */
+.page > .figma-page-header:first-child {
+  width: calc(100% + 40rpx);
+  margin: -24rpx -20rpx 0;
+  padding-right: 190rpx;
+  padding-left: 20rpx;
+}
+
+.page-title {
+  display: block;
+  color: var(--text-page-title);
+  font-size: 52rpx;
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+
+.page-subtitle {
+  display: block;
+  margin-top: 10rpx;
+  color: var(--text-page-subtitle);
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.card {
+  border: 2rpx solid var(--card-border);
+  border-radius: 30rpx;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+}
+
+.primary-btn {
+  height: 76rpx;
+  border-radius: 36rpx;
+  color: var(--on-brand);
+  font-size: 26rpx;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-bright));
+  box-shadow: 0 10rpx 28rpx var(--brand-soft);
+}
+
+/* 操作按钮通用渐变样式（保留原尺寸，只换视觉） */
+.action-btn {
+  color: var(--on-brand);
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-bright));
+  box-shadow: 0 8rpx 22rpx var(--brand-soft);
+  border-radius: 36rpx;
+}
+
+.ghost-btn {
+  height: 76rpx;
+  border-radius: 30rpx;
+  color: var(--brand-primary);
+  font-size: 26rpx;
+  font-weight: 900;
+  background: #ffffff;
+  border: 2rpx solid var(--brand-primary);
+}
+
+.primary-btn:active,
+.ghost-btn:active,
+button:active {
+  transform: scale(0.97);
+  opacity: 0.94;
+}
+
+.danger-text {
+  color: #ef7d5f;
+}
+
+.xipoo-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44rpx;
+  padding: 0 18rpx;
+  border-radius: 999rpx;
+  border: 1rpx solid var(--brand-border);
+  color: var(--brand-deep);
+  font-size: 20rpx;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--brand-tint), var(--brand-tint-2));
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(16rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes softFloat {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6rpx);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* ----- 标签栏主题变量（供 app-tabbar 组件通过 CSS 变量继承） ----- */
+page {
+  --tabbar-bg: #ffffff;
+  --tabbar-text: #1e1e1e;
+  --tabbar-border: #f4f4f4;
+}
+
+page.dark-mode,
+.page.dark-mode {
+  --tabbar-bg: #15152b;
+  --tabbar-text: #e2e8f0;
+  --tabbar-border: rgba(255, 255, 255, 0.08);
+}
+
+/* ----- 黑夜模式：自定义导航去白底，标题转浅色 ----- */
+.dark-mode .main-page-nav {
+  background: transparent;
+}
+
+.dark-mode .main-page-nav-title {
+  color: var(--text-page-title);
+}
+
+/* 标签栏未选中图标滤镜（深色下提亮为浅灰） */
+page {
+  --tab-icon-idle-filter: none;
+}
+
+page.dark-mode,
+.page.dark-mode {
+  --tab-icon-idle-filter: invert(82%) brightness(95%);
+}

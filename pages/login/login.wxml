@@ -1,0 +1,57 @@
+<view style="{{themeVars}}" class="login-page {{darkMode ? 'dark-mode' : ''}}">
+
+  <!-- 背景装饰圆 -->
+  <view class="deco-circle deco-circle-1"></view>
+  <view class="deco-circle deco-circle-2"></view>
+  <view class="deco-circle deco-circle-3"></view>
+
+  <!-- 语言切换 - 左上角胶囊分段 -->
+  <view class="lang-bar">
+    <view class="lang-segment {{lang === 'zh' ? 'active' : ''}}" data-lang="zh" bindtap="switchLang">中文</view>
+    <view class="lang-segment lang-segment-en {{lang === 'en' ? 'active' : ''}}" data-lang="en" bindtap="switchLang">English</view>
+  </view>
+
+  <!-- 顶部品牌区 -->
+  <view class="brand-area">
+    <text class="slogan-sub">{{t.brandSlogan}}</text>
+  </view>
+
+  <!-- 中部主视觉 -->
+  <view class="illustration-area">
+    <image class="illustration-img" src="/images/login/xipoo_hero.png" mode="aspectFit" />
+  </view>
+
+  <!-- 文案区 -->
+  <view class="hero-copy">
+    <text class="hero-title">{{t.heroTitle}}</text>
+    <text class="hero-sub">{{t.heroSub}}</text>
+    <view class="tag-row">
+      <text class="tag-pill" wx:for="{{t.heroTags}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 协议勾选 -->
+  <view class="agreement-row">
+    <view class="checkbox {{agreed ? 'checked' : ''}}" bindtap="toggleAgree">
+      <text wx:if="{{agreed}}" class="checkmark">✓</text>
+    </view>
+    <text class="agree-text">
+      <text>{{t.agreePrefix}}</text>
+      <text class="link" data-type="privacyPolicy" bindtap="goLink">{{t.privacyPolicy}}</text>
+      <text>{{t.agreeAnd}}</text>
+      <text class="link" data-type="userAgreement" bindtap="goLink">{{t.userAgreement}}</text>
+    </text>
+  </view>
+
+  <!-- 登录按钮 -->
+  <button class="login-btn {{!agreed ? 'disabled' : ''}}" disabled="{{!agreed || loading}}" loading="{{loading}}" bindtap="wechatLogin">
+    <text>{{t.loginBtnText}}</text>
+  </button>
+
+  <!-- 先逛逛：不登录也可返回浏览 -->
+  <view class="browse-first" bindtap="browseFirst">{{t.browseFirst}}</view>
+
+  <!-- 版权 -->
+  <text class="copyright">{{t.copyright}}</text>
+
+</view>

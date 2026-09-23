@@ -1,0 +1,8 @@
+<view class="bridge-page">
+  <view class="fallback-card">
+    <text class="fallback-title">{{lang === 'en' ? 'Import with Safari' : '使用 Safari 导入日历'}}</text>
+    <text class="fallback-desc">{{lang === 'en' ? 'iPhone does not allow the mini program to open Calendar directly. Copy the secure calendar link, then paste it into Safari.' : 'iPhone 不允许小程序直接唤起系统日历。请复制安全日历链接，再粘贴到 Safari 打开。'}}</text>
+    <view class="steps"><text>1. {{lang === 'en' ? 'Copy the calendar link' : '复制日历链接'}}</text><text>2. {{lang === 'en' ? 'Paste it in Safari' : '在 Safari 地址栏粘贴并访问'}}</text><text>3. {{lang === 'en' ? 'Tap Add All in Calendar' : '在日历导入页点击「全部添加」'}}</text></view>
+    <button class="fallback-btn" bindtap="copyUrlToClipboard">{{lang === 'en' ? 'Copy calendar link' : '复制日历链接'}}</button>
+  </view>
+</view>

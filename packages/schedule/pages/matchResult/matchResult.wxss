@@ -1,0 +1,70 @@
+.participant-row { display: flex; gap: 16rpx; margin-top: 22rpx; overflow-x: auto; }
+.share-summary { display: flex; flex-direction: column; gap: 8rpx; margin-top: 22rpx; padding: 22rpx; border-radius: 18rpx; color: #596174; background: var(--brand-tint-2); font-size: 20rpx; line-height: 1.45; }
+.share-summary-title { color: var(--brand-ink); font-size: 25rpx; font-weight: 800; }
+.participant-row > view { flex: 0 0 108rpx; text-align: center; }
+.avatar { display: flex; align-items: center; justify-content: center; width: 64rpx; height: 64rpx; margin: 0 auto; border-radius: 50%; color: var(--brand-ink); background: var(--brand-soft); font-size: 24rpx; font-weight: 900; }
+.participant-row text { display: block; margin-top: 6rpx; color: #3e5548; font-size: 18rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.calendar-section, .day-section { margin-top: 24rpx; padding: 24rpx; border-radius: 18rpx; background: #fff; box-shadow: 0 14rpx 34rpx var(--brand-border); }
+.calendar-head, .filter-row, .section-head, .sheet-head { display: flex; align-items: center; justify-content: space-between; }
+.calendar-head button, .sheet-head button { width: 58rpx; height: 52rpx; border-radius: 12rpx; color: var(--brand-deep); background: var(--brand-tint); font-size: 28rpx; font-weight: 900; }
+.calendar-head > text, .section-head > text:first-child, .sheet-head > text { color: var(--brand-ink); font-size: 28rpx; font-weight: 900; }
+.section-head > text:last-child { color: var(--brand-deep); font-size: 21rpx; font-weight: 800; }
+.weekdays, .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); }
+.weekdays { margin-top: 16rpx; }
+.weekdays text { color: #8b9790; font-size: 18rpx; text-align: center; }
+.calendar-grid { margin-top: 8rpx; border-left: 1rpx solid var(--brand-border); border-top: 1rpx solid var(--brand-border); }
+.calendar-day { min-width: 0; height: 94rpx; padding: 8rpx 3rpx; flex-direction: column; border-right: 1rpx solid var(--brand-border); border-bottom: 1rpx solid var(--brand-border); background: #fff; }
+.calendar-day text { display: block; color: var(--brand-ink); font-size: 19rpx; }
+.calendar-day text:last-child { margin-top: 4rpx; font-size: 13rpx; line-height: 1.2; }
+.calendar-day.level-1 { background: var(--brand-tint); }
+.calendar-day.level-2 { background: var(--brand-soft); }
+.calendar-day.level-3 { background: var(--brand-primary); }
+.calendar-day.level-4 { background: var(--brand-deep); }
+.calendar-day.selected { box-shadow: inset 0 0 0 4rpx var(--brand-deep); }
+
+/* 跨天连续空闲：贯穿色带（start/end 圆角收尾） */
+.calendar-day.lw-mid,
+.calendar-day.lw-start,
+.calendar-day.lw-end { background: var(--brand-tint); }
+.calendar-day.lw-start { border-radius: 12rpx 0 0 12rpx; }
+.calendar-day.lw-end { border-radius: 0 12rpx 12rpx 0; }
+.calendar-day.muted, .calendar-day.outside { opacity: .28; }
+.calendar-day.filtered { opacity: .18; }
+.filter-row { margin-top: 16rpx; color: #52665a; font-size: 21rpx; }
+.free-list { display: flex; flex-wrap: wrap; gap: 8rpx; margin-top: 14rpx; }
+.free-list text { padding: 9rpx 12rpx; border-radius: 10rpx; color: var(--brand-deep); background: var(--brand-tint); font-size: 18rpx; font-weight: 800; }
+.hour-scroll { width: 100%; white-space: nowrap; margin-top: 18rpx; }
+.hour-cell { display: inline-flex; width: 142rpx; height: 96rpx; margin-right: 8rpx; flex-direction: column; border-radius: 12rpx; }
+.hour-cell text { display: block; font-size: 19rpx; font-weight: 900; }
+.hour-cell text:last-child { margin-top: 7rpx; font-size: 16rpx; font-weight: 700; }
+.hour-cell.available { color: var(--brand-deep); background: var(--brand-soft); }
+.hour-cell.partial { color: #765b15; background: #f8e7a7; }
+.hour-cell.busy { color: #8a4638; background: #f5c6bb; }
+.share-button { margin-top: 24rpx; }
+.modal-mask { position: fixed; z-index: 60; inset: 0; display: flex; align-items: flex-end; background: rgba(17,34,25,.45); }
+.conflict-sheet { width: 100%; max-height: 72vh; padding: 28rpx 28rpx calc(28rpx + env(safe-area-inset-bottom)); overflow-y: auto; border-radius: 24rpx 24rpx 0 0; background: #fff; }
+.available-note { margin-top: 20rpx; padding: 24rpx; border-radius: 14rpx; color: var(--brand-deep); background: var(--brand-tint); text-align: center; }
+.conflict-row { display: flex; align-items: center; gap: 14rpx; margin-top: 14rpx; padding: 16rpx; border-radius: 14rpx; background: var(--brand-tint-2); }
+.conflict-row > view:last-child { min-width: 0; flex: 1; }
+.conflict-row text { display: block; color: var(--brand-ink); font-size: 21rpx; font-weight: 900; }
+.conflict-row text:last-child { margin-top: 5rpx; color: #718078; font-size: 18rpx; font-weight: 600; }
+
+/* 排除课程 + 连续空闲窗口 */
+.exclude-section, .windows-section { margin-top: 24rpx; padding: 24rpx; border-radius: 18rpx; background: #fff; box-shadow: 0 14rpx 34rpx var(--brand-border); }
+.exclude-head { display: flex; align-items: center; justify-content: space-between; }
+.exclude-head > text:first-child { color: var(--brand-ink); font-size: 28rpx; font-weight: 900; }
+.exclude-head > text:last-child { color: var(--brand-deep); font-size: 21rpx; font-weight: 800; }
+.rule-note { display: block; margin-top: 7rpx; color: #7b8981; font-size: 20rpx; line-height: 1.45; }
+.exclude-weekday { margin-top: 18rpx; color: #52665a; font-size: 21rpx; font-weight: 800; }
+.exclude-row { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; margin-top: 10rpx; padding: 14rpx 16rpx; border-radius: 14rpx; background: var(--brand-tint-2); }
+.exclude-info { min-width: 0; flex: 1; }
+.exclude-info text { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.exclude-info text:first-child { color: var(--brand-ink); font-size: 21rpx; font-weight: 900; }
+.exclude-info text:last-child { margin-top: 4rpx; color: #718078; font-size: 17rpx; }
+.exclude-row switch { transform: scale(.8); }
+/* 限高滚动：避免课程多时面板占满整页 */
+.exclude-list { max-height: 620rpx; }
+.recompute-note { margin-top: 14rpx; color: var(--brand-deep); font-size: 20rpx; text-align: center; }
+.window-row { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; margin-top: 12rpx; padding: 16rpx; border-radius: 14rpx; background: var(--brand-tint); }
+.window-label { color: var(--brand-ink); font-size: 22rpx; font-weight: 900; }
+.window-duration { flex: 0 0 auto; color: var(--brand-deep); font-size: 19rpx; font-weight: 800; }

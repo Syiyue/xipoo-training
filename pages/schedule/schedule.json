@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "日程",
+  "usingComponents": {
+    "app-tabbar": "/components/app-tabbar/app-tabbar",
+    "empty-state": "/components/empty-state/empty-state",
+    "intro-guide": "/components/intro-guide/intro-guide"
+  }
+}

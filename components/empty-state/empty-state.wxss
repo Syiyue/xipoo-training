@@ -1,0 +1,50 @@
+.empty-state {
+  padding: 42rpx 28rpx;
+  border: 1rpx dashed var(--brand-border);
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.76);
+  text-align: center;
+}
+
+.empty-mark {
+  width: 72rpx;
+  height: 72rpx;
+  margin: 0 auto 18rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-ink);
+  font-size: 20rpx;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--brand-bright), var(--brand-bright));
+}
+
+.empty-title,
+.empty-desc {
+  display: block;
+}
+
+.empty-title {
+  color: var(--brand-ink);
+  font-size: 28rpx;
+  font-weight: 900;
+}
+
+.empty-desc {
+  margin-top: 10rpx;
+  color: #66766d;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+.empty-action {
+  width: 260rpx;
+  height: 64rpx;
+  margin: 24rpx auto 0;
+  border-radius: 999rpx;
+  color: var(--brand-ink);
+  font-size: 22rpx;
+  font-weight: 900;
+  background: var(--brand-bright);
+}

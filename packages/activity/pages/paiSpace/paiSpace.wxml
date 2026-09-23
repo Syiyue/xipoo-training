@@ -1,0 +1,95 @@
+<view style="{{themeVars}}" class="page paispace-page {{darkMode ? 'dark-mode' : ''}}">
+  <!-- 顶部品牌区 -->
+  <view class="ps-brand">
+    <image class="ps-brand-logo" src="/assets/publishers/paispace-logo.png" mode="aspectFit" />
+    <view class="ps-brand-info">
+      <text class="ps-brand-name">{{lang === 'en' ? brand.nameEn : brand.nameZh}}</text>
+      <text class="ps-brand-intro">{{lang === 'en' ? brand.introEn : brand.introZh}}</text>
+    </view>
+  </view>
+
+  <view class="ps-stats">
+    <button class="ps-stat" bindtap="showActivities">
+      <text class="ps-stat-num">{{activities.length}}</text>
+      <text class="ps-stat-label">{{lang === 'en' ? 'Activities' : '场活动'}}</text>
+    </button>
+    <button class="ps-stat" bindtap="toggleManagers">
+      <text class="ps-stat-num">{{managers.length}}</text>
+      <text class="ps-stat-label">{{lang === 'en' ? 'Hosts' : '主理人人数'}}</text>
+    </button>
+    <button class="ps-stat" bindtap="showContentTypes">
+      <text class="ps-stat-num">{{contentCategories.length}}</text>
+      <text class="ps-stat-label">{{lang === 'en' ? 'Content types' : '类内容'}}</text>
+    </button>
+  </view>
+
+  <view wx:if="{{showManagers}}" id="psManagers" class="ps-manager-section">
+    <view class="ps-section-head"><text>{{lang === 'en' ? 'Hosts' : 'π空间主理人'}}</text><text>{{managers.length}}</text></view>
+    <view wx:if="{{managers.length}}" class="ps-manager-list">
+      <button wx:for="{{managers}}" wx:key="id" class="ps-manager-card" data-id="{{item.id}}" bindtap="openManager">
+        <image wx:if="{{item.avatarUrl}}" class="ps-manager-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+        <view wx:else class="ps-manager-avatar ps-manager-fallback">{{item.initial}}</view>
+        <view class="ps-manager-copy">
+          <text class="ps-manager-name">{{item.displayName}}</text>
+          <text class="ps-manager-bio">{{item.bio || (lang === 'en' ? 'PAI Space host' : 'π空间主理人')}}</text>
+          <view class="ps-manager-tags"><text wx:for="{{item.tags}}" wx:key="*this">{{item}}</text></view>
+        </view>
+        <text class="ps-manager-count">{{item.activityCount}} {{lang === 'en' ? 'events' : '场'}}</text>
+      </button>
+    </view>
+    <view wx:else class="ps-manager-empty">{{lang === 'en' ? 'Hosts are being added' : '主理人资料正在完善中'}}</view>
+  </view>
+
+  <!-- 分类标签栏 -->
+  <scroll-view id="psCategories" scroll-x enhanced show-scrollbar="{{false}}" class="ps-cat-bar">
+    <view
+      class="ps-cat-chip {{activeCategory === '' ? 'active' : ''}}"
+      data-key=""
+      bindtap="selectCategory"
+    >{{lang === 'en' ? 'All' : '全部'}}</view>
+    <view
+      wx:for="{{categories}}"
+      wx:key="key"
+      class="ps-cat-chip {{activeCategory === item.key ? 'active' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="selectCategory"
+    >{{item.displayName}}</view>
+  </scroll-view>
+
+  <!-- 活动瀑布流（双列） -->
+  <view id="psActivities" wx:if="{{leftActivities.length || rightActivities.length}}" class="ps-waterfall">
+    <view class="ps-column">
+      <view wx:for="{{leftActivities}}" wx:key="id" class="ps-card" data-id="{{item.id}}" bindtap="openActivity">
+        <image src="{{item.coverUrl}}" mode="aspectFill" class="ps-card-img" />
+        <text wx:if="{{item.statusKey}}" class="ac-status ac-status-{{item.statusKey}} ac-status-floating">{{item.statusText}}</text>
+        <view class="ps-card-body">
+          <text class="ps-card-title">{{item.displayTitle}}</text>
+          <text class="ps-card-meta">{{item.displayTime}}</text>
+          <view class="ps-card-tags">
+            <text wx:if="{{item.categoryName}}" class="ps-card-cat">{{item.categoryName}}</text>
+            <text wx:if="{{item.managerName || item.displayHost}}" class="ps-card-host">{{lang === 'en' ? 'Host' : '主理人'}} · {{item.managerName || item.displayHost}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="ps-column">
+      <view wx:for="{{rightActivities}}" wx:key="id" class="ps-card" data-id="{{item.id}}" bindtap="openActivity">
+        <image src="{{item.coverUrl}}" mode="aspectFill" class="ps-card-img" />
+        <text wx:if="{{item.statusKey}}" class="ac-status ac-status-{{item.statusKey}} ac-status-floating">{{item.statusText}}</text>
+        <view class="ps-card-body">
+          <text class="ps-card-title">{{item.displayTitle}}</text>
+          <text class="ps-card-meta">{{item.displayTime}}</text>
+          <view class="ps-card-tags">
+            <text wx:if="{{item.categoryName}}" class="ps-card-cat">{{item.categoryName}}</text>
+            <text wx:if="{{item.managerName || item.displayHost}}" class="ps-card-host">{{lang === 'en' ? 'Host' : '主理人'}} · {{item.managerName || item.displayHost}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空态 -->
+  <view wx:if="{{!loading && !leftActivities.length && !rightActivities.length}}" class="ps-empty">
+    <text>{{lang === 'en' ? 'No activities in this category yet' : '该分类暂无活动'}}</text>
+  </view>
+</view>

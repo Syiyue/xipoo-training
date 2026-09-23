@@ -1,0 +1,110 @@
+<view style="{{themeVars}}" class="page buddy-post-page {{darkMode ? 'dark-mode' : ''}}" wx:if="{{post}}">
+  <view class="post-hero">
+    <view class="type-row">
+      <text class="type-badge">{{post.type === 'course' ? (lang === 'en' ? 'Course Group' : '课程小组') : (lang === 'en' ? 'Buddy Recruit' : '搭子招募')}}</text>
+      <text class="post-status-tag {{post.status}}">{{post.status === 'closed' ? (lang === 'en' ? 'Closed' : '已结束') : (lang === 'en' ? 'Recruiting' : '招募中')}}</text>
+    </view>
+    <text class="title">{{post.title}}</text>
+    <view wx:if="{{post.courseName}}" class="scope">
+      <text>📚 {{post.courseName}}</text>
+    </view>
+    <text class="meta">
+      {{post._memberCount}}/{{post.maxMembers}} {{lang === 'en' ? 'members' : '人'}}
+      <text wx:if="{{post.place}}"> · 📍 {{post.place}}</text>
+      <text wx:if="{{post.genderFilter && post.genderFilter !== 'any'}}"> · {{post.genderFilter === 'male' ? '👨' : '👩'}} {{lang === 'en' ? post.genderFilter : (post.genderFilter === 'male' ? '仅限男' : '仅限女')}}</text>
+    </text>
+    <text wx:if="{{post.deadline}}" class="deadline">{{lang === 'en' ? 'Deadline' : '截止'}}: {{post.deadline}}</text>
+    <text class="description">{{post._description ? post._description : (lang === 'en' ? 'No description yet.' : '发起人暂未填写补充说明。')}}</text>
+  </view>
+
+  <view wx:if="{{post.creator}}" class="creator-card">
+    <view class="profile" data-userid="{{post.creator.id}}" bindtap="viewProfile">
+      <image wx:if="{{post.creator.avatar}}" class="avatar-img" src="{{post.creator.avatar}}" mode="aspectFill" />
+      <view wx:else class="avatar">{{post.creator.nickname[0] || '?'}}</view>
+      <view>
+        <text>{{post.creator.nickname}}</text>
+        <text wx:if="{{post.creator.signature}}">{{post.creator.signature}}</text>
+        <text wx:if="{{post.creator.grade}}" class="creator-grade">{{post.creator.grade}}</text>
+      </view>
+    </view>
+    <view wx:if="{{!isCreator}}" class="minor-actions">
+      <button bindtap="blockCreator">{{lang === 'en' ? 'Block' : '屏蔽'}}</button>
+      <button bindtap="reportCreator">{{lang === 'en' ? 'Report' : '举报'}}</button>
+    </view>
+  </view>
+
+  <view class="member-section">
+    <view class="section-head">
+      <text>{{lang === 'en' ? 'Members' : '小组成员'}}</text>
+      <text>{{post._memberCount}}/{{post.maxMembers}}</text>
+    </view>
+    <view wx:for="{{post._members}}" wx:key="id" class="member-row">
+      <image wx:if="{{item.avatar}}" class="avatar-img-sm" src="{{item.avatar}}" mode="aspectFill" />
+      <view wx:else class="avatar-sm">{{item.nickname[0] || '?'}}</view>
+      <view class="member-info">
+        <view class="member-name-row">
+          <text class="member-name">{{item.nickname}}</text>
+          <text wx:if="{{item.grade}}" class="member-grade">{{item.grade}}</text>
+          <text wx:if="{{item.isCreator}}" class="member-creator-tag">{{lang === 'en' ? 'Creator' : '发起人'}}</text>
+        </view>
+        <view wx:if="{{item.buddyWechatId && (isCreator || isMember || item.isMe)}}" class="member-contact">
+          <text class="contact-label">{{lang === 'en' ? 'WeChat: ' : '微信: '}}</text>
+          <text class="contact-value">{{item.buddyWechatId}}</text>
+          <button class="copy-wx-btn" data-wechat="{{item.buddyWechatId}}" catchtap="copyWechat">{{lang === 'en' ? 'Copy' : '复制'}}</button>
+        </view>
+        </view>
+      <view wx:if="{{!item.isCreator && !item.isMe}}" class="member-minor-actions">
+        <button class="block-member-btn" data-userid="{{item.id}}" catchtap="blockMember">{{lang === 'en' ? 'Block' : '屏蔽'}}</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 发起人视角：待审核申请 -->
+  <view wx:if="{{isCreator && pendingApps.length > 0}}" class="apps-section">
+    <view class="section-head">
+      <text>{{lang === 'en' ? 'Pending Applications' : '待审核申请'}}</text>
+      <text>{{pendingApps.length}}</text>
+    </view>
+    <view wx:for="{{pendingApps}}" wx:key="id" class="app-card">
+      <view class="app-info">
+        <text class="app-user">{{item.userId}}</text>
+        <text wx:if="{{item.message}}" class="app-msg">"{{item.message}}"</text>
+      </view>
+      <view class="app-actions">
+        <button class="btn-accept action-btn" data-appid="{{item.id}}" catchtap="acceptApp">{{lang === 'en' ? 'Accept' : '通过'}}</button>
+        <button class="btn-reject action-btn" data-appid="{{item.id}}" catchtap="rejectApp">{{lang === 'en' ? 'Reject' : '拒绝'}}</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 申请方视角 -->
+  <button wx:if="{{!isCreator && !isMember && !hasApplied && !closed && !isFull}}" class="primary-btn main-action" bindtap="openApply">{{lang === 'en' ? 'Apply to join' : '申请加入'}}</button>
+  <view wx:if="{{hasApplied}}" class="pending">{{lang === 'en' ? 'Application submitted, waiting for approval' : '已申请，等待发起人确认'}}</view>
+  <view wx:if="{{myAppStatus === 'rejected'}}" class="rejected">{{lang === 'en' ? 'Application was rejected' : '申请已被拒绝'}}</view>
+  <view wx:if="{{isMember && !isCreator}}" class="member-status">
+    <view class="pending">{{lang === 'en' ? 'You are a member' : '你已是成员'}}</view>
+    <button class="leave-btn" bindtap="leavePost">{{lang === 'en' ? 'Leave group' : '退出小组'}}</button>
+  </view>
+  <button wx:if="{{isCreator}}" class="danger-action" bindtap="closePost">{{lang === 'en' ? 'Close post' : '关闭帖子'}}</button>
+</view>
+
+<view wx:else class="loading-container" style="{{themeVars}}">
+  <text>{{lang === 'en' ? 'Loading...' : '加载中...'}}</text>
+</view>
+
+<!-- 申请弹窗 -->
+<view wx:if="{{applyOpen}}" class="modal-mask" style="{{themeVars}}" catchtap="closeApply">
+  <view class="editor" catchtap="noop">
+    <view class="editor-head">
+      <text>{{lang === 'en' ? 'Apply to Join' : '申请加入'}}</text>
+      <button catchtap="closeApply">{{lang === 'en' ? 'Close' : '关闭'}}</button>
+    </view>
+    <text class="apply-post-title">{{post.title}}</text>
+    <view class="apply-note">
+      <text>{{lang === 'en' ? 'Your application will be reviewed by the post creator.' : '你的申请将由发起人审核通过后才能成为成员。'}}</text>
+    </view>
+    <text class="sec-title">{{lang === 'en' ? 'Introduce Yourself' : '介绍自己'}}</text>
+    <textarea class="apply-msg-input" placeholder="{{lang === 'en' ? 'Tell them why you want to join...' : '介绍一下自己，为什么想加入...'}}" value="{{applyMsg}}" bindinput="onApplyMsg" maxlength="300" />
+    <button class="save-btn action-btn" bindtap="submitApply">{{lang === 'en' ? 'Submit Application' : '提交申请'}}</button>
+  </view>
+</view>

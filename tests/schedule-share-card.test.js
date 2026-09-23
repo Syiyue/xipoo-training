@@ -1,0 +1,23 @@
+const assert = require('assert')
+const fs = require('fs')
+const path = require('path')
+
+const root = path.join(__dirname, '..')
+const scheduleJs = fs.readFileSync(path.join(root, 'pages/schedule/schedule.js'), 'utf8')
+const scheduleWxml = fs.readFileSync(path.join(root, 'pages/schedule/schedule.wxml'), 'utf8')
+const settingsJs = fs.readFileSync(path.join(root, 'packages/schedule/pages/settings/settings.js'), 'utf8')
+const settingsWxml = fs.readFileSync(path.join(root, 'packages/schedule/pages/settings/settings.wxml'), 'utf8')
+const profileWxml = fs.readFileSync(path.join(root, 'pages/profile/profile.wxml'), 'utf8')
+const profileWxss = fs.readFileSync(path.join(root, 'pages/profile/profile.wxss'), 'utf8')
+const shareImage = path.join(root, 'images/schedule-share/share-banner.jpg')
+
+assert(scheduleJs.includes("imageUrl: '/images/schedule-share/share-banner.jpg'"))
+assert(!scheduleWxml.includes('bindtap="openShareReserve"'))
+assert(!settingsJs.includes('CourseReminder'))
+assert(!settingsWxml.includes('课程提醒'))
+assert.strictEqual((profileWxml.match(/toggle-row segmented-toggle/g) || []).length, 0)
+assert.strictEqual((profileWxml.match(/class="switch-box"/g) || []).length, 2)
+assert(profileWxss.includes('.switch-box'))
+assert(fs.statSync(shareImage).size > 0)
+
+console.log('schedule-share-card tests passed')

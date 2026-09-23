@@ -1,0 +1,11 @@
+<view style="{{themeVars}}" class="page blacklist-page {{darkMode ? 'dark-mode' : ''}}">
+  <view wx:if="{{blacklist.length}}" class="card">
+    <view class="blacklist-row" wx:for="{{blacklist}}" wx:key="id">
+      <text>{{item.name}}</text>
+      <button class="remove-btn" data-id="{{item.id}}" bindtap="removeBlacklist">{{t.removeFromBlacklist || '移除'}}</button>
+    </view>
+  </view>
+  <view wx:else class="empty-state card">
+    <text>{{t.blacklistEmpty || '暂无拉黑记录'}}</text>
+  </view>
+</view>

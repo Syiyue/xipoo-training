@@ -1,0 +1,5 @@
+.contact-page { animation: pageFadeIn 300ms ease; }
+.contact-card { margin-top: 18rpx; padding: 28rpx; display: flex; flex-direction: column; align-items: center; }
+.contact-label { color: #64748b; font-size: 22rpx; }
+.contact-email { margin-top: 12rpx; color: #0f172a; font-size: 30rpx; font-weight: 900; }
+.copy-contact-btn { margin-top: 20rpx; height: 56rpx; padding: 0 28rpx; border-radius: 16rpx; color: #ffffff; font-size: 22rpx; font-weight: 900; background: var(--brand-primary); }

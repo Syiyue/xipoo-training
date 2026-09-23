@@ -1,0 +1,201 @@
+.theme-page {
+  min-height: 100vh;
+}
+
+/* ---------- 预览 ---------- */
+.preview-card {
+  margin-bottom: 32rpx;
+  padding: 28rpx;
+}
+
+.preview-header {
+  margin-bottom: 20rpx;
+}
+
+.preview-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: var(--text-secondary, #757575);
+}
+
+.preview-banner {
+  height: 120rpx;
+  border-radius: 20rpx;
+  background: linear-gradient(135deg, var(--brand-deep, #3d8a52), var(--brand-primary, #61b673));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+
+.preview-banner-text {
+  color: var(--on-brand, #ffffff);
+  font-size: 36rpx;
+  font-weight: 900;
+  letter-spacing: 4rpx;
+}
+
+.preview-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.preview-pill {
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+  background: var(--brand-tint, #edf7f0);
+  color: var(--brand-deep, #3d8a52);
+  font-size: 20rpx;
+  font-weight: 700;
+  margin-right: 16rpx;
+}
+
+.preview-text {
+  flex: 1;
+  font-size: 22rpx;
+  color: var(--text-secondary, #757575);
+}
+
+.preview-btns {
+  display: flex;
+  gap: 20rpx;
+}
+
+.preview-btn-primary {
+  flex: 1;
+  height: 68rpx;
+  border-radius: 24rpx;
+  background: var(--brand-primary, #61b673);
+  color: var(--on-brand, #ffffff);
+  font-size: 24rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-btn-ghost {
+  flex: 1;
+  height: 68rpx;
+  border-radius: 24rpx;
+  border: 2rpx solid var(--brand-primary, #61b673);
+  color: var(--brand-primary, #61b673);
+  font-size: 24rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg, #ffffff);
+}
+
+/* ---------- 区块标题 ---------- */
+.section-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: var(--text-secondary, #757575);
+  margin: 36rpx 8rpx 20rpx;
+}
+
+/* ---------- 预设网格 ---------- */
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 28rpx 20rpx;
+  gap: 28rpx 12rpx;
+}
+
+.preset-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.preset-swatch {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid transparent;
+  transition: transform 160ms ease;
+}
+
+.preset-item.selected .preset-swatch {
+  border-color: var(--brand-ink, #1c4424);
+  transform: scale(1.06);
+}
+
+.preset-check {
+  color: #ffffff;
+  font-size: 40rpx;
+  font-weight: 900;
+}
+
+.preset-name {
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: var(--text-color, #212121);
+}
+
+/* ---------- 自定义色谱 ---------- */
+.custom-card {
+  padding: 32rpx 28rpx;
+}
+
+.spectrum-bar {
+  position: relative;
+  height: 48rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(to right,
+    hsl(0, 50%, 55%), hsl(45, 50%, 55%), hsl(90, 50%, 55%),
+    hsl(135, 50%, 55%), hsl(180, 50%, 55%), hsl(225, 50%, 55%),
+    hsl(270, 50%, 55%), hsl(315, 50%, 55%), hsl(360, 50%, 55%));
+}
+
+.spectrum-cursor {
+  position: absolute;
+  top: 50%;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  border: 6rpx solid #ffffff;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.25);
+  transform: translate(-50%, -50%);
+}
+
+.custom-meta {
+  display: flex;
+  align-items: center;
+  margin-top: 24rpx;
+}
+
+.custom-dot {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  margin-right: 16rpx;
+  border: 2rpx solid rgba(0, 0, 0, 0.06);
+}
+
+.custom-label {
+  font-size: 22rpx;
+  color: var(--text-secondary, #757575);
+}
+
+/* ---------- 恢复默认 ---------- */
+.reset-btn {
+  margin-top: 48rpx;
+  height: 76rpx;
+  border-radius: 30rpx;
+  background: var(--brand-primary, #61b673);
+  color: var(--on-brand, #ffffff);
+  font-size: 26rpx;
+  font-weight: 900;
+}
+
+/* ---------- 深色模式 ---------- */
+.dark-mode .preview-btn-ghost {
+  background: transparent;
+}

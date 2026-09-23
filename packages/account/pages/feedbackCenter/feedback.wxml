@@ -1,0 +1,12 @@
+<view style="{{themeVars}}" class="page feedback-page">
+  <view class="feedback-card">
+    <text class="feedback-card-title">{{lang === 'en' ? 'Join the Xipoo user group first' : '请先加入 Xipoo 用户交流群'}}</text>
+    <text class="feedback-card-desc">{{lang === 'en' ? 'Scan the QR code below for support and announcements.' : '遇到小程序使用问题，欢迎扫码加入用户交流群，我们会优先在群内协助。'}}</text>
+    <image class="qr-image" src="./feedback-qr.png" mode="aspectFit" bindtap="previewQr" />
+    <text class="qr-tip">{{lang === 'en' ? 'Tap the QR code to enlarge it' : '点击二维码可放大，长按识别即可加群'}}</text>
+  </view>
+  <view class="after-group-card">
+    <text class="after-group-title">{{lang === 'en' ? 'Still need help?' : '加群后仍需反馈？'}}</text>
+    <text class="after-group-desc">{{lang === 'en' ? 'Please contact us by email: 268182534@139.com' : '请在群内说明问题；如无法入群，可发送邮件至：268182534@139.com'}}</text>
+  </view>
+</view>

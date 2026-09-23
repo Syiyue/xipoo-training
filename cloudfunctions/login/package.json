@@ -1,0 +1,12 @@
+{
+  "name": "xipoo-cloud-login",
+  "version": "2.0.0",
+  "description": "Xipoo 登录云函数 — 支持自动注册、数据库重试、集合自适应创建",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  },
+  "engines": {
+    "node": ">=16.13"
+  }
+}

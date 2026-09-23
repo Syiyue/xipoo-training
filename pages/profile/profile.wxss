@@ -1,0 +1,425 @@
+.profile-page {
+  min-height: 100vh;
+  padding: 0 0 calc(600rpx + env(safe-area-inset-bottom));
+  background: var(--page-bg);
+}
+
+/* 顶部封面区 */
+.profile-hero {
+  position: relative;
+  min-height: 452rpx;
+  background: var(--surface-raised);
+  overflow: hidden;
+}
+
+.profile-cover {
+  display: block;
+  width: 100%;
+  height: 340rpx;
+  background: #d9dedb;
+  will-change: height;
+}
+
+.profile-cover-wrap {
+  position: relative;
+  width: 100%;
+  height: 340rpx;
+  overflow: hidden;
+  transition: height 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.cover-edit-hint {
+  position: absolute;
+  right: 24rpx;
+  bottom: 24rpx;
+  z-index: 2;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cover-edit-icon {
+  font-size: 28rpx;
+  line-height: 1;
+}
+
+.profile-cover-fallback {
+  background:
+    linear-gradient(145deg, rgba(25, 41, 31, 0.22), rgba(15, 20, 17, 0.7)),
+    #98a29c;
+}
+
+.hero-avatar {
+  position: absolute;
+  left: 24rpx;
+  top: 250rpx;
+  z-index: 2;
+  width: 180rpx;
+  height: 180rpx;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 6rpx solid var(--surface-raised);
+  border-radius: 50%;
+  background: var(--brand-tint);
+  transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-placeholder {
+  color: var(--text-secondary);
+  font-size: 56rpx;
+  font-weight: 700;
+}
+
+.hero-stats {
+  position: absolute;
+  left: 224rpx;
+  right: 0;
+  top: 340rpx;
+  height: 104rpx;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-number {
+  color: var(--text-primary);
+  font-size: 44rpx;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.stat-label {
+  margin-top: 8rpx;
+  color: var(--brand-primary);
+  font-size: 22rpx;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* 姓名与 ID */
+.profile-identity {
+  min-height: 108rpx;
+  padding: 8rpx 24rpx 6rpx;
+  background: transparent;
+}
+
+.profile-name {
+  display: block;
+  color: var(--text-primary);
+  font-size: 42rpx;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.profile-desc {
+  display: block;
+  margin-top: 4rpx;
+  color: var(--text-secondary);
+  font-size: 23rpx;
+  line-height: 1.3;
+}
+
+.id-bar {
+  height: 84rpx;
+  margin: 16rpx 24rpx;
+  padding: 0 12rpx 0 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1rpx solid var(--id-bar-border);
+  border-radius: 999rpx;
+  background: var(--id-bar-bg);
+}
+
+.id-text {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.id-label,
+.id-number {
+  color: var(--brand-deep);
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.copy-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56rpx;
+  padding: 0 24rpx;
+  border-radius: 999rpx;
+  color: var(--on-brand);
+  background: var(--brand-primary);
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.copy-btn-hover {
+  opacity: 0.8;
+}
+
+/* 设置列表 */
+.menu-card {
+  margin: 20rpx 16rpx 0;
+  padding: 0 20rpx;
+  overflow: hidden;
+  border: 1rpx solid var(--card-border);
+  border-radius: 24rpx;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+}
+
+.menu-item {
+  min-height: 102rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 4rpx;
+}
+
+.menu-left {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  width: 48rpx;
+  height: 48rpx;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12rpx;
+  color: var(--brand-primary);
+  background: var(--brand-tint);
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.menu-text {
+  min-width: 0;
+  flex: 1;
+  margin-left: 16rpx;
+}
+
+.menu-title {
+  display: block;
+  color: var(--text-primary);
+  font-size: 27rpx;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.menu-desc {
+  display: block;
+  margin-top: 3rpx;
+  color: var(--text-secondary);
+  font-size: 18rpx;
+  line-height: 1.25;
+}
+
+.menu-divider {
+  height: 1rpx;
+  margin-left: 64rpx;
+  background: var(--divider-color);
+}
+
+.arrow-icon {
+  flex-shrink: 0;
+  margin-left: 10rpx;
+  color: var(--arrow-color);
+  font-size: 32rpx;
+  font-weight: 400;
+}
+
+.toggle-row {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.toggle-label {
+  color: var(--brand-primary);
+  font-size: 21rpx;
+  font-weight: 700;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.toggle-label-en {
+  min-width: 76rpx;
+  text-align: right;
+  letter-spacing: 0.2rpx;
+}
+
+.toggle-label.active {
+  color: var(--brand-primary);
+}
+
+/* 微信原生 switch 宽高不受 CSS width/height 控制，需用 transform 缩放；
+   外层定宽容器负责占位，避免真机上开关按默认大尺寸挤压文字造成穿模重叠。 */
+.switch-box {
+  width: 76rpx;
+  height: 48rpx;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.settings-switch {
+  transform: scale(0.7);
+  transform-origin: center center;
+  margin: 0;
+}
+
+.menu-hover {
+  background: var(--brand-tint-2);
+}
+
+.logout-btn {
+  width: 424rpx;
+  height: 76rpx;
+  margin: 76rpx auto 0;
+  border-radius: 30rpx;
+  color: var(--on-brand);
+  background: var(--brand-primary);
+  font-size: 29rpx;
+  font-weight: 700;
+}
+
+/* 游客状态保留独立卡片，避免套用登录态封面结构 */
+.guest-card {
+  margin: calc(env(safe-area-inset-top) + 24rpx) 20rpx 0;
+  padding: 28rpx;
+  border: 0;
+  border-radius: 28rpx;
+  background: var(--card-bg);
+}
+
+.profile-card-top {
+  display: flex;
+  align-items: center;
+}
+
+.profile-avatar {
+  width: 104rpx;
+  height: 104rpx;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--brand-tint);
+}
+
+.profile-info {
+  min-width: 0;
+  flex: 1;
+  margin-left: 18rpx;
+}
+
+.guest-login-btn {
+  height: 76rpx;
+  margin-top: 24rpx;
+  border-radius: 30rpx;
+  color: var(--on-brand);
+  background: var(--brand-primary);
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+/* ----- 黑夜模式微调 ----- */
+.dark-mode.profile-page {
+  background: var(--page-bg);
+}
+
+.dark-mode .profile-hero {
+  background: transparent;
+}
+
+.dark-mode .profile-identity,
+.dark-mode .id-bar,
+.dark-mode .menu-card,
+.dark-mode .hero-stats {
+  background: var(--card-bg);
+}
+
+.dark-mode .profile-name,
+.dark-mode .id-label,
+.dark-mode .id-number,
+.dark-mode .menu-title,
+.dark-mode .stat-number {
+  color: var(--text-primary);
+}
+
+.dark-mode .profile-desc,
+.dark-mode .menu-desc {
+  color: var(--text-secondary);
+}
+
+.dark-mode .toggle-label,
+.dark-mode .toggle-label.active {
+  color: var(--brand-primary);
+}
+
+/* 隐藏压缩 canvas */
+.hidden-canvas {
+  position: absolute;
+  top: -9999rpx;
+  left: -9999rpx;
+}
+
+/* ----- 页面背景图 ----- */
+.profile-page {
+  background: none;
+}
+
+.page-bg-image {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.dark-mode .page-bg-image {
+  opacity: 1;
+  filter: brightness(0.15) saturate(0.6);
+}
+
+.dark-mode.profile-page {
+  background: none;
+}

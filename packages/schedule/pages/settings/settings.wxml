@@ -1,0 +1,250 @@
+<view style="{{themeVars}}" class="page settings-page">
+  <!-- 自定义导航栏 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-back" bindtap="goBack">
+      <text class="nav-back-icon">‹</text>
+    </view>
+    <text class="nav-title">{{focusAiImports ? 'AI 识别记录' : '课表管理'}}</text>
+    <view class="nav-close" bindtap="goBack">
+      <text class="nav-close-icon">✕</text>
+    </view>
+  </view>
+
+  <!-- 顶部学期栏 -->
+  <view wx:if="{{!focusAiImports}}" class="semester-header">
+    <text class="semester-label">2026-2027第一学期</text>
+    <view class="semester-switch-btn" bindtap="switchSemester">
+      <text>学期切换</text>
+    </view>
+  </view>
+
+  <!-- 提示框 -->
+  <view wx:if="{{!focusAiImports}}" class="tip-box">
+    <view class="tip-avatar">🤖</view>
+    <text class="tip-text">请仔细核对学期信息，避免上错课哦</text>
+  </view>
+
+  <!-- 基础设置 -->
+  <view wx:if="{{!focusAiImports}}" class="setting-group">
+    <view class="setting-row" bindtap="editWeekCount">
+      <text class="setting-label">学期周数</text>
+      <view class="setting-value">
+        <text class="setting-val-text">{{weekCount}}周</text>
+        <text class="setting-arrow">›</text>
+      </view>
+    </view>
+    <view class="setting-row" bindtap="editStartDate">
+      <text class="setting-label">起始周时间</text>
+      <view class="setting-value">
+        <text class="setting-val-text">{{startDate}}</text>
+        <text class="setting-arrow">›</text>
+      </view>
+    </view>
+    <view class="setting-row" bindtap="editWeekStart">
+      <text class="setting-label">每周起始日</text>
+      <view class="setting-value">
+        <text class="setting-val-text">{{weekStart}}</text>
+        <text class="setting-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- AI 导入按批次保留，可只撤销其中一次录入。 -->
+  <view class="section-title">AI 导入记录</view>
+  <view class="setting-group ai-import-group">
+    <view wx:if="{{aiImportBatchesLoading}}" class="ai-import-empty">正在加载导入记录</view>
+    <view wx:elif="{{!aiImportBatches.length}}" class="ai-import-empty">暂无可撤销的 AI 导入记录</view>
+    <block wx:else>
+      <view class="ai-import-row" wx:for="{{aiImportBatches}}" wx:key="id">
+        <view class="ai-import-copy">
+          <text class="setting-label">AI 导入 · {{item.displayTime}}</text>
+          <text class="setting-hint ai-import-hint">{{item.courseCount}} 门课程 · {{item.previewText}}</text>
+        </view>
+        <view class="ai-import-actions">
+          <button class="ai-import-view" data-batch-id="{{item.id}}" catchtap="openAiImportBatch">查看</button>
+          <button
+            class="ai-import-delete"
+            data-batch-id="{{item.id}}"
+            loading="{{deletingImportBatchId === item.id}}"
+            disabled="{{deletingImportBatchId && deletingImportBatchId !== item.id}}"
+            catchtap="deleteAiImportBatch"
+          >删除本次</button>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="section-title danger-section-title">课程管理</view>
+  <view class="setting-group danger-group">
+    <view class="setting-row clear-courses-row {{clearingCourses ? 'disabled' : ''}}" bindtap="clearAllCourses">
+      <view>
+        <text class="setting-label danger-label">清空全部课程</text>
+        <text class="setting-hint">删除当前账户的手动课程与全部 AI 导入课程</text>
+      </view>
+      <text class="danger-action">{{clearingCourses ? '清空中' : '清空'}}</text>
+    </view>
+  </view>
+
+  <!-- 学期周数选择器 -->
+
+  <view wx:if="{{importBatchDetailOpen}}" class="import-detail-mask" catchtap="closeImportBatchDetail" catchtouchmove="noop">
+    <view class="import-detail-sheet" catchtap="noop">
+      <view class="import-detail-head">
+        <view>
+          <text class="import-detail-title">AI 识别记录</text>
+          <text class="import-detail-subtitle">{{selectedImportBatch.displayTime}} · {{selectedImportCourseCount}} 门课程</text>
+        </view>
+        <button class="import-detail-close" catchtap="closeImportBatchDetail">×</button>
+      </view>
+      <view wx:if="{{importBatchDetailLoading}}" class="ai-import-empty">正在加载课程</view>
+      <scroll-view wx:else class="import-detail-list" scroll-y enhanced show-scrollbar="{{false}}">
+        <view class="import-verification-section">
+          <text class="import-verification-title">识别核验图</text>
+          <text wx:if="{{importBatchVerificationLoading}}" class="import-verification-note">正在加载核验图</text>
+          <text wx:elif="{{importBatchVerificationNotice}}" class="import-verification-note">{{importBatchVerificationNotice}}</text>
+          <image
+            wx:if="{{importBatchVerificationPath}}"
+            class="import-verification-image"
+            src="{{importBatchVerificationPath}}"
+            mode="widthFix"
+            show-menu-by-longpress
+            bindtap="previewImportVerificationImage"
+          />
+        </view>
+        <view wx:if="{{!selectedImportCourses.length}}" class="ai-import-empty">本次识别已没有课程</view>
+        <view class="import-course-row" wx:for="{{selectedImportCourses}}" wx:key="id">
+          <view class="import-course-copy">
+            <text class="import-course-title">{{item.verificationIndex}}. {{item.title || '未命名课程'}}</text>
+            <text class="import-course-meta">{{item.date || '日期待补'}} · {{item.start || '--:--'}}-{{item.end || '--:--'}} · {{item.place || '地点待补'}}</text>
+          </view>
+          <view class="import-course-actions">
+            <button data-id="{{item.id}}" catchtap="editImportedCourse">编辑</button>
+            <button class="danger" data-id="{{item.id}}" loading="{{deletingCourseId === item.id}}" catchtap="deleteImportedCourse">删除</button>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 学期周数选择器 -->
+  <view wx:if="{{weekPickerOpen}}" class="week-picker-mask" catchtap="closeWeekPicker">
+    <view class="week-picker-sheet" catchtap="noop">
+      <view class="week-picker-top">
+        <text class="week-picker-cancel" catchtap="closeWeekPicker">取消</text>
+        <text class="week-picker-title">学期周数</text>
+        <text class="week-picker-confirm" catchtap="confirmWeekCount">完成</text>
+      </view>
+      <scroll-view class="week-picker-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+        <view class="week-picker-inner">
+          <view
+            class="week-picker-opt {{weekCount === item ? 'active' : ''}}"
+            wx:for="{{weekOptions}}"
+            wx:key="*this"
+            data-val="{{item}}"
+            bindtap="selectWeekCount"
+          >{{item}}周</view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 日历选择弹窗 -->
+  <view wx:if="{{calendarOpen}}" class="cal-mask" catchtap="closeCalendar">
+    <view class="cal-sheet" catchtap="noop">
+      <view class="cal-header">
+        <text class="cal-header-title">日期选择</text>
+        <view class="cal-header-close" catchtap="closeCalendar">
+          <text class="cal-close-icon">✕</text>
+        </view>
+      </view>
+      <scroll-view class="cal-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+        <view class="cal-month-block" wx:for="{{calMonths}}" wx:key="label">
+          <text class="cal-month-label">{{item.label}}</text>
+          <view class="cal-weekdays">
+            <text class="cal-wd">一</text>
+            <text class="cal-wd">二</text>
+            <text class="cal-wd">三</text>
+            <text class="cal-wd">四</text>
+            <text class="cal-wd">五</text>
+            <text class="cal-wd">六</text>
+            <text class="cal-wd">日</text>
+          </view>
+          <view class="cal-grid">
+            <view
+              class="cal-day {{d.empty ? 'empty' : ''}} {{calSelected === d.date ? 'selected' : ''}}"
+              wx:for="{{item.days}}"
+              wx:key="index"
+              wx:for-item="d"
+              data-date="{{d.date}}"
+              bindtap="selectCalDate"
+            >
+              <text wx:if="{{!d.empty}}">{{d.day}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="cal-bottom">
+        <view class="cal-confirm-btn" bindtap="confirmDate">确认</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 每周起始日选择器 -->
+  <view wx:if="{{weekStartPickerOpen}}" class="ws-mask" catchtap="closeWeekStartPicker">
+    <view class="ws-sheet" catchtap="noop">
+      <view class="ws-top">
+        <text class="ws-cancel" catchtap="closeWeekStartPicker">取消</text>
+        <text class="ws-title">每周起始日</text>
+        <text class="ws-confirm" catchtap="confirmWeekStart">完成</text>
+      </view>
+      <view class="ws-options">
+        <view class="ws-opt {{weekStart === '周一' ? 'active' : ''}}" data-val="周一" bindtap="selectWeekStart">
+          <text class="ws-opt-label">周一</text>
+          <view class="ws-preview">
+            <text class="ws-prev-item">一</text>
+            <text class="ws-prev-item">二</text>
+            <text class="ws-prev-item">三</text>
+            <text class="ws-prev-item">四</text>
+            <text class="ws-prev-item">五</text>
+            <text class="ws-prev-item">六</text>
+            <text class="ws-prev-item">日</text>
+          </view>
+        </view>
+        <view class="ws-opt {{weekStart === '周日' ? 'active' : ''}}" data-val="周日" bindtap="selectWeekStart">
+          <text class="ws-opt-label">周日</text>
+          <view class="ws-preview">
+            <text class="ws-prev-item">日</text>
+            <text class="ws-prev-item">一</text>
+            <text class="ws-prev-item">二</text>
+            <text class="ws-prev-item">三</text>
+            <text class="ws-prev-item">四</text>
+            <text class="ws-prev-item">五</text>
+            <text class="ws-prev-item">六</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提醒时间选择器 -->
+  <view wx:if="{{timePickerOpen}}" class="tp-mask" catchtap="closeTimePicker">
+    <view class="tp-sheet" catchtap="noop">
+      <view class="tp-top">
+        <text class="tp-cancel" catchtap="closeTimePicker">取消</text>
+        <text class="tp-title">提醒时间</text>
+        <text class="tp-confirm" catchtap="confirmRemindTime">完成</text>
+      </view>
+      <scroll-view class="tp-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+        <view class="tp-inner">
+          <view
+            class="tp-opt {{remindHour === item ? 'active' : ''}}"
+            wx:for="{{hourOptions}}"
+            wx:key="*this"
+            data-val="{{item}}"
+            bindtap="selectRemindHour"
+          >{{item}}:00</view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

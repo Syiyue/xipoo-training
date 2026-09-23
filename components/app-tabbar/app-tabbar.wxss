@@ -1,0 +1,130 @@
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  /* 先给不识别 env() 的内核提供确定高度，再由安全区环境变量覆盖。 */
+  height: 112rpx;
+  padding: 4rpx 40rpx 4rpx;
+  height: calc(112rpx + env(safe-area-inset-bottom));
+  padding: 4rpx 40rpx env(safe-area-inset-bottom);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1rpx solid #f4f4f4;
+  background: #ffffff;
+}
+
+.tab {
+  min-width: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #1e1e1e;
+  transition: transform 180ms ease, color 180ms ease;
+}
+
+.icon {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 31rpx;
+  line-height: 1;
+  color: #1e1e1e;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.icon-image {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.tab-label {
+  max-width: 140rpx;
+  margin-top: 4rpx;
+  font-size: 20rpx;
+  font-weight: 400;
+  line-height: 1.12;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tab.active {
+  color: var(--brand-primary, #61b673);
+}
+
+.tab.active .icon {
+  color: var(--brand-primary, #61b673);
+  background: transparent;
+  box-shadow: none;
+}
+
+.tab.active .icon-image {
+  filter: var(--tab-icon-filter, invert(65%) sepia(18%) saturate(1110%) hue-rotate(80deg) brightness(93%) contrast(86%));
+}
+
+.tab.center.active {
+  transform: translateY(-10rpx);
+}
+
+.tab.center.active .icon {
+  width: 58rpx;
+  height: 58rpx;
+  border-radius: 22rpx;
+}
+
+@keyframes tabbarRise {
+  from {
+    opacity: 0;
+    transform: translateY(24rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes activePop {
+  0% {
+    transform: scale(0.88);
+  }
+  70% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ----- 深色模式：标签栏配色跟随页面 CSS 变量 ----- */
+.tabbar {
+  background: var(--tabbar-bg, #ffffff);
+  border-top-color: var(--tabbar-border, #f4f4f4);
+}
+
+.tab,
+.tab .icon,
+.tab .tab-label {
+  color: var(--tabbar-text, #1e1e1e);
+}
+
+.tab.active,
+.tab.active .icon {
+  color: var(--brand-primary, #7c83c7);
+}
+
+/* ----- 未选中图标跟随页面变量（深色下提亮），选中态保持品牌色滤镜 ----- */
+.tab .icon-image {
+  filter: var(--tab-icon-idle-filter, none);
+}
+
+.tab.active .icon-image {
+  filter: var(--tab-icon-filter, invert(65%) sepia(18%) saturate(1110%) hue-rotate(181deg) brightness(93%) contrast(86%));
+}

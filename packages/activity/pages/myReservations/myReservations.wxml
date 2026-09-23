@@ -1,0 +1,23 @@
+<view style="{{themeVars}}" class="page myresv-page {{darkMode ? 'dark-mode' : ''}}">
+  <view wx:if="{{!loading && !list.length}}" class="myresv-empty">
+    <text>{{lang === 'en' ? 'No reservations yet' : '暂无预约记录'}}</text>
+  </view>
+
+  <view wx:for="{{list}}" wx:key="id" class="myresv-card card">
+    <view class="myresv-head">
+      <text class="myresv-title">{{item.displayTitle}}</text>
+      <text class="myresv-status {{item.status === 'booked' ? 'booked' : 'cancelled'}}">{{item.statusText}}</text>
+    </view>
+    <text class="myresv-slot">{{item.slotText}}</text>
+    <view class="myresv-meta">
+      <text>{{lang === 'en' ? 'Submitted' : '提交时间'}}：{{item.createdAtText}}</text>
+      <text>{{item.verifyText}}</text>
+    </view>
+    <button
+      wx:if="{{item.status === 'booked'}}"
+      class="myresv-cancel-btn"
+      data-id="{{item.id}}"
+      bindtap="cancelOrder"
+    >{{lang === 'en' ? 'Cancel reservation' : '取消预约'}}</button>
+  </view>
+</view>

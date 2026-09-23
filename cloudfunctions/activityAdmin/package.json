@@ -1,0 +1,10 @@
+{
+  "name": "activityAdmin",
+  "version": "1.0.0",
+  "description": "Xipoo activity admin backend: login + activity CRUD for the promotion team web console",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3",
+    "@cloudbase/node-sdk": "^3.16.0"
+  }
+}

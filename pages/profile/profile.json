@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "\u6211\u7684",
+  "usingComponents": {
+    "app-tabbar": "/components/app-tabbar/app-tabbar",
+    "avatarPicker": "../../components/avatarPicker/avatarPicker",
+    "intro-guide": "/components/intro-guide/intro-guide"
+  }
+}

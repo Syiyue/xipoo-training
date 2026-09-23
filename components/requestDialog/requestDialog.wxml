@@ -1,0 +1,29 @@
+<view wx:if="{{visible}}" class="modal-mask" bindtap="onClose">
+  <view class="dialog-body" catchtap="noop">
+    <view class="dialog-head">
+      <text class="dialog-title">{{lang === 'en' ? 'Send share invitation' : '发送共享邀请'}}</text>
+      <button class="close-btn" bindtap="onClose">{{lang === 'en' ? '✕' : '✕'}}</button>
+    </view>
+    <view class="target-info">
+      <view class="target-avatar">
+        <image wx:if="{{targetUser.avatarUrl}}" class="target-avatar-image" src="{{targetUser.avatarUrl}}" mode="aspectFill" />
+        <text wx:else>{{targetUser.avatar || '?'}}</text>
+      </view>
+      <view class="target-detail">
+        <text class="target-name">{{targetUser.name || '用户'}}</text>
+        <text class="target-id">Xipoo ID · {{targetUser.id}}</text>
+      </view>
+    </view>
+    <textarea 
+      class="msg-input"
+      value="{{message}}"
+      bindinput="onMessageInput"
+      maxlength="100"
+      placeholder="{{lang === 'en' ? 'Add a note so they can recognize you (optional)' : '写一句备注，方便对方认出你（选填）'}}"
+    />
+    <view class="dialog-actions">
+      <button class="cancel-btn" bindtap="onClose">{{lang === 'en' ? 'Cancel' : '取消'}}</button>
+      <button class="send-btn" bindtap="onSend">{{lang === 'en' ? 'Send invitation' : '发送邀请'}}</button>
+    </view>
+  </view>
+</view>

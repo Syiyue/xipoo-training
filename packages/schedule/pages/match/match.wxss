@@ -1,0 +1,501 @@
+.setup-section, .calendar-section, .day-section { margin-top: 24rpx; padding: 24rpx; border-radius: 18rpx; background: #fff; box-shadow: 0 14rpx 34rpx var(--brand-border); }
+.section-head, .calendar-head, .filter-row, .sheet-head { display: flex; align-items: center; justify-content: space-between; }
+.section-head > text:first-child { color: var(--brand-ink); font-size: 28rpx; font-weight: 900; }
+.section-head > text:last-child { color: var(--brand-deep); font-size: 21rpx; font-weight: 800; }
+.rule-note { display: block; margin-top: 7rpx; color: #7b8981; font-size: 20rpx; line-height: 1.45; }
+.friend-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12rpx; width: 100%; margin-top: 18rpx; }
+.friend-option { width: 100%; max-width: none; min-width: 0; min-height: 92rpx; margin: 0; padding: 12rpx; box-sizing: border-box; justify-content: flex-start; gap: 12rpx; overflow: hidden; border: 2rpx solid transparent; border-radius: 14rpx; background: var(--brand-tint-2); }
+.friend-option.active { border-color: var(--brand-bright); background: var(--brand-tint); }
+.self-card { background: #eef6ff; }
+.self-card.active { border-color: #3b82f6; background: #dbeafe; }
+.self-avatar { color: #1e40af; background: #93c5fd; }
+.avatar { display: flex; align-items: center; justify-content: center; width: 58rpx; height: 58rpx; flex: 0 0 58rpx; border-radius: 50%; color: var(--brand-ink); background: var(--brand-soft); font-size: 23rpx; font-weight: 900; }
+.friend-option > view:last-child { flex: 1; min-width: 0; text-align: left; }
+.friend-option text { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.friend-option text:first-child { color: var(--brand-ink); font-size: 22rpx; font-weight: 900; }
+.friend-option text:last-child { margin-top: 5rpx; color: #7c8a82; font-size: 17rpx; }
+.date-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14rpx; margin-top: 20rpx; }
+.date-grid > view { padding: 15rpx; border-radius: 12rpx; background: var(--brand-tint-2); }
+.date-grid text { display: block; color: #708078; font-size: 18rpx; }
+.date-grid picker { margin-top: 6rpx; color: var(--brand-ink); font-size: 23rpx; font-weight: 900; }
+.calculate { margin-top: 20rpx; }
+
+/* 排除课程 + 连续空闲窗口 */
+.exclude-section { margin-top: 20rpx; padding: 18rpx; border-radius: 12rpx; background: var(--brand-tint-2); }
+.exclude-head { display: flex; align-items: center; justify-content: space-between; }
+.exclude-head > text:first-child { color: var(--brand-ink); font-size: 24rpx; font-weight: 900; }
+.exclude-head > text:last-child { color: var(--brand-deep); font-size: 20rpx; font-weight: 800; }
+.exclude-weekday { margin-top: 16rpx; color: #52665a; font-size: 20rpx; font-weight: 800; }
+.exclude-row { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; margin-top: 10rpx; padding: 14rpx 16rpx; border-radius: 12rpx; background: #fff; }
+.exclude-info { min-width: 0; flex: 1; }
+.exclude-info text { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.exclude-info text:first-child { color: var(--brand-ink); font-size: 21rpx; font-weight: 900; }
+.exclude-info text:last-child { margin-top: 4rpx; color: #718078; font-size: 17rpx; }
+.exclude-row switch { transform: scale(.8); }
+/* 搜索框 + 限高滚动：避免课程多时面板占满整页 */
+.exclude-search { margin-top: 14rpx; }
+.exclude-search input { padding: 14rpx 20rpx; border-radius: 12rpx; background: #fff; color: var(--brand-ink); font-size: 22rpx; }
+.exclude-list { max-height: 620rpx; }
+.exclude-empty { padding: 32rpx 0; color: #8a8a8a; font-size: 22rpx; text-align: center; }
+.windows-section { margin-top: 24rpx; padding: 24rpx; border-radius: 18rpx; background: #fff; box-shadow: 0 14rpx 34rpx var(--brand-border); }
+.window-row { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; margin-top: 12rpx; padding: 16rpx; border-radius: 14rpx; background: var(--brand-tint); }
+.window-label { color: var(--brand-ink); font-size: 22rpx; font-weight: 900; }
+.window-duration { flex: 0 0 auto; color: var(--brand-deep); font-size: 19rpx; font-weight: 800; }
+.result-summary { display: grid; grid-template-columns: 1fr 1fr 1.35fr; gap: 10rpx; margin-top: 24rpx; }
+.result-summary view { padding: 17rpx 10rpx; border-radius: 14rpx; background: var(--brand-tint); text-align: center; }
+.result-summary text { display: block; }
+.result-summary text:first-child { color: var(--brand-ink); font-size: 25rpx; font-weight: 900; }
+.result-summary text:last-child { margin-top: 5rpx; color: #6c7d73; font-size: 17rpx; }
+.calendar-head button, .sheet-head button { width: 58rpx; height: 52rpx; border-radius: 12rpx; color: var(--brand-deep); background: var(--brand-tint); font-size: 28rpx; font-weight: 900; }
+.calendar-head > text { color: var(--brand-ink); font-size: 28rpx; font-weight: 900; }
+.weekdays, .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); }
+.weekdays { margin-top: 16rpx; }
+.weekdays text { color: #8b9790; font-size: 18rpx; text-align: center; }
+.calendar-grid { margin-top: 8rpx; border-left: 1rpx solid var(--brand-border); border-top: 1rpx solid var(--brand-border); }
+.calendar-day { width: 100%; min-width: 0; height: 82rpx; padding: 4rpx 2rpx; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1rpx solid var(--brand-border); border-bottom: 1rpx solid var(--brand-border); background: #fff; overflow: hidden; position: relative; }
+.calendar-day text { display: block; color: var(--brand-ink); font-size: 20rpx; font-weight: 700; text-align: center; line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; position: relative; z-index: 1; }
+.calendar-day text:last-child { margin-top: 2rpx; font-size: 12rpx; line-height: 1.15; font-weight: 600; }
+.calendar-day::before { content: ''; position: absolute; left: 3rpx; right: 3rpx; bottom: 3rpx; height: 6rpx; border-radius: 3rpx; }
+.calendar-day.level-1::before { background: var(--brand-soft); }
+.calendar-day.level-2::before { background: var(--brand-primary); }
+.calendar-day.level-3::before { background: var(--brand-bright); }
+.calendar-day.level-4::before { background: var(--brand-deep); }
+.calendar-day.selected { box-shadow: inset 0 0 0 4rpx var(--brand-deep); }
+.calendar-day.muted, .calendar-day.outside { opacity: .28; }
+.calendar-day.filtered { opacity: .18; }
+.filter-row { margin-top: 16rpx; color: #52665a; font-size: 21rpx; }
+.free-list { display: flex; flex-wrap: wrap; gap: 8rpx; margin-top: 14rpx; }
+.free-list text { padding: 9rpx 12rpx; border-radius: 10rpx; color: var(--brand-deep); background: var(--brand-tint); font-size: 18rpx; font-weight: 800; }
+.hour-scroll { width: 100%; white-space: nowrap; margin-top: 18rpx; }
+.hour-cell { display: inline-flex; width: 142rpx; height: 96rpx; margin-right: 8rpx; flex-direction: column; border-radius: 12rpx; }
+.hour-cell text { display: block; font-size: 19rpx; font-weight: 900; }
+.hour-cell text:last-child { margin-top: 7rpx; font-size: 16rpx; font-weight: 700; }
+.hour-cell.available { color: var(--brand-deep); background: var(--brand-soft); }
+.hour-cell.partial { color: #765b15; background: #f8e7a7; }
+.hour-cell.busy { color: #8a4638; background: #f5c6bb; }
+.save-result { margin-top: 24rpx; }
+.modal-mask { position: fixed; z-index: 60; inset: 0; display: flex; align-items: flex-end; background: rgba(17,34,25,.45); }
+.conflict-sheet { width: 100%; max-height: 72vh; padding: 28rpx 28rpx calc(28rpx + env(safe-area-inset-bottom)); overflow-y: auto; border-radius: 24rpx 24rpx 0 0; background: #fff; }
+.sheet-head > text { color: var(--brand-ink); font-size: 29rpx; font-weight: 900; }
+.available-note { margin-top: 20rpx; padding: 24rpx; border-radius: 14rpx; color: var(--brand-deep); background: var(--brand-tint); font-size: 22rpx; text-align: center; }
+.conflict-row { display: flex; align-items: center; gap: 14rpx; margin-top: 14rpx; padding: 16rpx; border-radius: 14rpx; background: var(--brand-tint-2); }
+.conflict-row > view:last-child { min-width: 0; flex: 1; }
+.conflict-row text { display: block; color: var(--brand-ink); font-size: 21rpx; font-weight: 900; }
+.conflict-row text:last-child { margin-top: 5rpx; color: #718078; font-size: 18rpx; font-weight: 600; }
+
+.match-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 48rpx;
+  text-align: center;
+}
+
+.empty-illustration {
+  font-size: 96rpx;
+  margin-bottom: 24rpx;
+}
+
+.match-empty-state .empty-title {
+  display: block;
+  color: #0f172a;
+  font-size: 32rpx;
+  font-weight: 900;
+  margin-bottom: 12rpx;
+}
+
+.match-empty-state .empty-desc {
+  display: block;
+  color: #64748b;
+  font-size: 24rpx;
+  line-height: 1.5;
+  margin-bottom: 32rpx;
+}
+
+.match-empty-state .primary-btn {
+  min-width: 280rpx;
+}
+
+/* 共同空闲决策视图：默认使用学生熟悉的上午、下午、晚上大块。 */
+.decision-toolbar { margin-top: 22rpx; }
+.view-switch { display: grid; grid-template-columns: 1fr 1fr; padding: 6rpx; border-radius: 18rpx; background: #e9e9f6; }
+.view-switch button, .scenario-chips button { min-height: 54rpx; margin: 0; padding: 0 18rpx; border-radius: 13rpx; color: #59605f; background: transparent; font-size: 21rpx; font-weight: 700; line-height: 54rpx; }
+.view-switch button.active, .scenario-chips button.active { color: #fff; background: #4341d6; }
+.scenario-chips { display: flex; gap: 10rpx; margin-top: 14rpx; overflow-x: auto; white-space: nowrap; }
+.scenario-chips button { flex: 0 0 auto; min-height: 48rpx; border: 1rpx solid #d8d8eb; background: #fff; line-height: 46rpx; }
+.weekly-section, .recommend-section { margin-top: 20rpx; padding: 24rpx; border-radius: 22rpx; background: #fff; }
+.weekly-head, .recommend-head { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; }
+.weekly-head > view { flex: 1; text-align: center; }
+.weekly-head > view text, .recommend-head > view text { display: block; }
+.weekly-head > view text:first-child, .recommend-head > view text:first-child { color: #20202b; font-size: 26rpx; font-weight: 800; }
+.weekly-head > view text:last-child, .recommend-head > view text:last-child { margin-top: 4rpx; color: #77778b; font-size: 19rpx; }
+.weekly-head button { width: 56rpx; height: 52rpx; padding: 0; border-radius: 12rpx; color: #4341d6; background: #ececfa; font-size: 32rpx; line-height: 50rpx; }
+.matrix-legend { display: flex; flex-wrap: wrap; gap: 10rpx 16rpx; margin: 18rpx 0 12rpx; color: #666679; font-size: 17rpx; }
+.matrix-legend text { position: relative; padding-left: 18rpx; }
+.matrix-legend text::before { content: ''; position: absolute; top: 4rpx; left: 0; width: 12rpx; height: 12rpx; border-radius: 3rpx; }
+.legend-free::before { background: #4341d6; }.legend-partial::before { background: #e0dffb; border: 1rpx solid #c9c8ee; }.legend-busy::before { background: #fff; border: 1rpx solid #e5e5ea; }
+.halfday-matrix { margin-top: 16rpx; }
+.halfday-header, .halfday-row { display: grid; grid-template-columns: 86rpx repeat(3, minmax(0, 1fr)); gap: 8rpx; }
+.halfday-header { align-items: center; margin-bottom: 8rpx; color: #70707d; font-size: 19rpx; font-weight: 700; text-align: center; }
+.halfday-header text:first-child { text-align: left; }
+.halfday-row { min-height: 82rpx; margin-top: 8rpx; }
+.halfday-row-muted { opacity: .3; }
+.halfday-date { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; color: #3d3d50; }
+.halfday-date text:first-child { font-size: 21rpx; font-weight: 800; }.halfday-date text:last-child { margin-top: 2rpx; color: #8e8e93; font-size: 18rpx; }
+.halfday-block { position: relative; display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 82rpx; padding: 6rpx; box-sizing: border-box; border: 1rpx solid #e5e5ea; border-radius: 8rpx; color: #777787; background: #fff; font-size: 18rpx; font-weight: 700; line-height: 1.25; text-align: center; transition: opacity .2s ease-out, transform .2s ease-out; overflow: hidden; }
+.halfday-block:active { transform: scale(.97); }
+.halfday-block.all-free { border-color: #4341d6; color: #fff; background: #4341d6; }
+.halfday-block.one-missing { border-color: #d3d2f4; color: #4b4a85; background: #e0dffb; }
+.halfday-block.clustered { box-shadow: inset 0 0 0 2rpx #302eb0; }
+.halfday-block.weekend-cluster { box-shadow: inset 0 0 0 2rpx #252394, 0 4rpx 10rpx rgba(67,65,214,.16); }
+.halfday-block.selected-block { outline: 3rpx solid #252394; outline-offset: 1rpx; }
+.cluster-label { font-size: 17rpx; font-weight: 800; }
+.matrix-help { display: block; margin-top: 16rpx; color: #77778b; font-size: 18rpx; line-height: 1.5; }
+.upgraded-calendar .calendar-day { height: 92rpx; justify-content: center; padding-top: 4rpx; }.calendar-day.day-quality-full { background: #e0dffb; }.calendar-day.day-quality-half { background: #f0effd; }.calendar-day.day-quality-none { background: #fff; }.calendar-day.weekend-playable { box-shadow: inset 0 -5rpx 0 #4341d6; }.calendar-day.three-day-run { box-shadow: inset 0 0 0 2rpx #4341d6; }.calendar-day.scenario-hidden { opacity: .28; }
+.day-summary-label { display: block; margin-top: 18rpx; color: #4341d6; font-size: 21rpx; font-weight: 800; }.period-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8rpx; margin-top: 10rpx; }.period-summary-cell { min-height: 86rpx; padding: 12rpx 6rpx; border: 1rpx solid #e5e5ea; border-radius: 8rpx; box-sizing: border-box; background: #fff; text-align: center; }.period-summary-cell text { display: block; color: #777787; font-size: 18rpx; }.period-summary-cell text:first-child { font-weight: 800; }.period-summary-cell text:last-child { margin-top: 5rpx; font-size: 16rpx; }.period-summary-cell.free { border-color: #4341d6; background: #4341d6; }.period-summary-cell.free text { color: #fff; }.merged-free-list { display: flex; flex-wrap: wrap; gap: 8rpx; margin-top: 14rpx; }.merged-free-list text { padding: 7rpx 10rpx; border-radius: 8rpx; color: #4b4a85; background: #f0effd; font-size: 17rpx; }.merged-free-list text:first-child { color: #6d6c77; background: transparent; padding-left: 0; }.people-detail-toggle { width: 100%; margin-top: 18rpx; border: 1rpx solid #4341d6; border-radius: 12rpx; color: #4341d6; background: #fff; font-size: 20rpx; }.people-detail-list { margin-top: 14rpx; }.person-period-row { display: grid; grid-template-columns: 112rpx 1fr; gap: 10rpx; align-items: center; margin-top: 10rpx; }.person-period-row > view:first-child { display: flex; gap: 6rpx; overflow: hidden; color: #4f4f60; font-size: 18rpx; white-space: nowrap; }.person-periods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5rpx; }.person-period { height: 32rpx; border: 1rpx solid #e5e5ea; border-radius: 5rpx; background: #fff; }.person-period.busy { border-color: #c7c6df; background: #d8d7ef; }.period-caption { display: grid; grid-template-columns: 112rpx repeat(3, 1fr); gap: 5rpx; margin-top: 6rpx; color: #8e8e93; font-size: 16rpx; text-align: center; }.period-caption text:first-child { grid-column: 2; }
+.recommend-head button { flex: 0 0 auto; min-height: 52rpx; padding: 0 16rpx; border: 1rpx solid #4341d6; border-radius: 13rpx; color: #4341d6; background: #fff; font-size: 19rpx; line-height: 50rpx; }.recommend-group { margin-top: 18rpx; }.recommend-group-title { display: block; color: #4341d6; font-size: 20rpx; font-weight: 800; }.recommend-row { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; margin-top: 10rpx; padding: 16rpx; border-radius: 12rpx; background: #f5f5fc; }.recommend-row > view { flex: 1; min-width: 0; }.recommend-row text { display: block; }.recommend-row text:first-child { color: #282839; font-size: 21rpx; font-weight: 800; }.recommend-row text:last-child { margin-top: 4rpx; color: #737388; font-size: 18rpx; }.recommend-row button, .compare-row button { min-height: 48rpx; padding: 0 15rpx; border-radius: 12rpx; color: #fff; background: #4341d6; font-size: 19rpx; line-height: 48rpx; }.recommend-empty { padding: 36rpx 0 10rpx; color: #77778b; font-size: 21rpx; text-align: center; }
+.member-state-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10rpx; margin-top: 16rpx; }.member-state { display: flex; justify-content: space-between; gap: 6rpx; padding: 12rpx; border-radius: 12rpx; background: #f5f5fc; color: #4f4f60; font-size: 18rpx; }.member-state text:last-child { color: #5856d6; font-weight: 800; }
+.compare-sheet { width: 100%; padding: 28rpx 28rpx calc(28rpx + env(safe-area-inset-bottom)); border-radius: 30rpx 30rpx 0 0; background: #fff; }.compare-row { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; margin-top: 16rpx; padding: 16rpx; border-radius: 14rpx; background: #f5f5fc; }.compare-row > view { min-width: 0; flex: 1; }.compare-row text { display: block; color: #2d2d3b; font-size: 21rpx; font-weight: 800; }.compare-row text:last-child { margin-top: 5rpx; color: #75758a; font-size: 18rpx; font-weight: 500; }.compare-row button { color: #5856d6; background: #fff; border: 1rpx solid #5856d6; }.compare-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 14rpx; margin-top: 22rpx; }.compare-actions button { min-height: 70rpx; border-radius: 16rpx; color: #fff; background: #5856d6; font-size: 22rpx; line-height: 70rpx; }
+@media (prefers-reduced-motion: reduce) { .halfday-block { transition: none; } }
+
+/* Figma UI */
+.match-page { background: #f4f4f4; }
+.setup-section,
+.calendar-section,
+.day-section {
+  border: 3rpx solid var(--brand-primary);
+  border-radius: 30rpx;
+  background: #f4f4f4;
+  box-shadow: none;
+}
+.friend-option,
+.date-grid > view,
+.result-summary view,
+.hour-cell,
+.conflict-row {
+  border-radius: 30rpx;
+}
+.friend-option.active,
+.calendar-day.selected {
+  border-color: var(--brand-primary);
+  background: var(--brand-soft);
+}
+
+/* 跨天连续空闲：贯穿色带（start/end 圆角收尾）；单日短时空闲：右上角小圆点 */
+.calendar-day.lw-mid,
+.calendar-day.lw-start,
+.calendar-day.lw-end { background: var(--brand-tint); }
+.calendar-day.lw-start { border-radius: 12rpx 0 0 12rpx; }
+.calendar-day.lw-end { border-radius: 0 12rpx 12rpx 0; }
+.calendar-day .sw-dot {
+  position: absolute;
+  top: 6rpx;
+  right: 6rpx;
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: var(--brand-bright);
+}
+.calendar-legend {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 12rpx;
+  color: #757575;
+  font-size: 18rpx;
+}
+.legend-item { display: flex; align-items: center; gap: 8rpx; }
+.legend-band { width: 28rpx; height: 12rpx; border-radius: 6rpx; background: var(--brand-tint); }
+.legend-dot { width: 10rpx; height: 10rpx; border-radius: 50%; background: var(--brand-bright); }
+.primary-btn { border-radius: 30rpx; color: #ffffff; background: var(--brand-primary); box-shadow: none; }
+.conflict-sheet { border-radius: 30rpx 30rpx 0 0; }
+
+/* 清除小程序 page 默认底色，避免盖住 fixed 背景图 */
+page {
+  background-color: transparent;
+}
+
+/* 多人日程匹配：Figma 20:1892。原生导航已提供页面标题，正文只保留功能标签。 */
+.match-page {
+  min-height: 100vh;
+  padding: 0 20rpx 48rpx;
+  position: relative;
+  background: none;
+}
+
+/* 页面背景图：fixed 全屏垫底，不拦截点击 */
+.page-bg-image {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 内容层：浮在背景之上 */
+.page-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* 黑夜模式：压暗背景图融入深色底 */
+.dark-mode .page-bg-image {
+  filter: brightness(0.15) saturate(0.6);
+}
+
+.match-space-illustration {
+  position: absolute;
+  top: 76rpx;
+  right: 0;
+  z-index: 0;
+  width: 100%;
+  height: 520rpx;
+  opacity: 0.36;
+  filter: hue-rotate(var(--illustration-hue-shift)) saturate(0.76);
+  pointer-events: none;
+}
+
+.match-page > view,
+.match-page > scroll-view {
+  position: relative;
+  z-index: 1;
+}
+
+.dark-mode .match-space-illustration {
+  opacity: 0.15;
+  filter: hue-rotate(var(--illustration-hue-shift)) brightness(0.68) saturate(0.55);
+}
+
+.match-section-tab {
+  height: 60rpx;
+  margin: 0 -20rpx 22rpx;
+  padding: 0 38rpx;
+  display: flex;
+  align-items: center;
+  border-radius: 0 0 20rpx 20rpx;
+  color: #212121;
+  background: var(--brand-soft);
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.setup-section {
+  margin-top: 0;
+  padding: 28rpx;
+  border: 0;
+  border-radius: 22rpx;
+  background: #fff;
+}
+
+.setup-section .section-head > text:first-child {
+  color: #212121;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.rule-note {
+  color: #757575;
+}
+
+.friend-option {
+  min-height: 76rpx;
+  border: 0;
+  border-radius: 18rpx;
+  background: #f4f4f4;
+}
+
+.friend-option.active,
+.self-card.active {
+  border: 0;
+  background: var(--brand-soft);
+}
+
+/* 不可选联系人：未双向共享 / 未开启空闲计算，灰态弱化并降透明度 */
+.friend-option.ineligible {
+  opacity: 0.5;
+  background: #f0f0f0;
+}
+.friend-option.ineligible .avatar {
+  background: #e0e0e0;
+  color: #9a9a9a;
+}
+.friend-option.ineligible text:last-child {
+  color: #b5b5b5;
+}
+
+.date-grid > view {
+  border-radius: 12rpx;
+  background: #fff;
+}
+
+.calculate {
+  width: 350rpx;
+  height: 62rpx;
+  margin: 22rpx auto 0;
+  border-radius: 24rpx;
+  color: #212121;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.calendar-section,
+.day-section {
+  border: 0;
+  border-radius: 22rpx;
+  background: #fff;
+}
+
+.match-empty-state {
+  margin-top: 0;
+  padding: 64rpx 40rpx;
+  border-radius: 22rpx;
+  background: #fff;
+}
+
+/* V2: 月历先给结论，详情再按需展开。所有紫色时间条均来自全员真实交集。 */
+.match-page { padding-bottom: calc(58rpx + env(safe-area-inset-bottom)); background: #f6f7fb; }
+.match-section-tab { margin-bottom: 18rpx; color: var(--brand-ink); background: var(--brand-tint); }
+.range-note { display: block; margin-top: 14rpx; color: #727889; font-size: 20rpx; line-height: 1.45; }
+.period-head { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin: 24rpx 8rpx 12rpx; }
+.period-head text { display: block; }
+.period-title { color: var(--brand-ink); font-size: 32rpx; font-weight: 700; }
+.period-subtitle { margin-top: 5rpx; color: #7a8090; font-size: 20rpx; }
+.period-edit { min-height: 52rpx; margin: 0; padding: 0 18rpx; border: 1rpx solid var(--brand-border); border-radius: 26rpx; color: var(--brand-deep); background: #fff; font-size: 20rpx; line-height: 50rpx; }
+.v2-summary { grid-template-columns: 1fr 1fr; margin-top: 0; }
+.v2-summary view { min-height: 86rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff; }
+.v2-summary text:first-child { color: var(--brand-deep); }
+.v2-calendar, .v2-day-section, .activity-section, .members-section { margin-top: 18rpx; padding: 24rpx; border: 0; border-radius: 22rpx; background: #fff; }
+.v2-calendar .calendar-head { display: flex; align-items: center; justify-content: space-between; }
+.v2-calendar .calendar-head button { margin: 0; }
+.v2-calendar .weekdays { margin-top: 18rpx; }
+.v2-calendar-grid { gap: 6rpx; margin-top: 8rpx; border: 0; }
+.v2-calendar .calendar-day { height: 108rpx; padding: 8rpx 4rpx; border: 0; border-radius: 12rpx; background: #fff; justify-content: flex-start; }
+.v2-calendar .calendar-day::before, .v2-calendar .calendar-day::after { display: none; }
+.v2-calendar .calendar-day { line-height: 1; }
+.v2-calendar .calendar-day.selected { box-shadow: inset 0 0 0 3rpx var(--brand-primary); }
+.v2-calendar .calendar-day.muted, .v2-calendar .calendar-day.outside { opacity: .3; }
+.v2-calendar .day-number { align-self: flex-start; color: #3e4453; font-size: 20rpx; font-weight: 700; }
+.calendar-timebar { position: relative; width: 100%; height: 14rpx; margin-top: 15rpx; overflow: hidden; border-radius: 7rpx; background: #eef0f5; }
+.calendar-segment { position: absolute; top: 0; height: 100%; border-radius: 7rpx; background: var(--brand-primary); }
+.availability-medium .calendar-segment { opacity: .5; }
+.availability-short .calendar-segment { opacity: .22; }
+.availability-full .calendar-segment, .availability-long .calendar-segment { opacity: 1; }
+.calendar-longest { display: block; width: 100%; margin-top: 7rpx; color: var(--brand-deep); font-size: 16rpx; font-weight: 700; line-height: 1.1; text-align: left; }
+.calendar-legend { display: flex; gap: 18rpx; margin-top: 18rpx; color: #707687; font-size: 18rpx; }
+.calendar-legend view { display: flex; align-items: center; gap: 7rpx; }
+.legend-long, .legend-medium { width: 16rpx; height: 10rpx; border-radius: 6rpx; background: var(--brand-primary); }
+.legend-medium { opacity: .5; }
+.selected-day-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12rpx; }
+.selected-day-head view text { display: block; }
+.selected-day-head view text:first-child { color: var(--brand-ink); font-size: 27rpx; font-weight: 700; }
+.selected-day-head view text:last-child { margin-top: 4rpx; color: #7a8090; font-size: 19rpx; }
+.selected-day-head > text { margin-top: 4rpx; color: var(--brand-deep); font-size: 19rpx; font-weight: 700; }
+.shared-timeline { margin-top: 24rpx; }
+.timeline-axis { position: relative; height: 28rpx; margin: 0 2rpx; }
+.timeline-tick { position: absolute; top: 0; display: inline-block; color: #858b99; font-size: 16rpx; transform: translateX(-50%); white-space: nowrap; }
+.timeline-tick:first-child { transform: none; }.timeline-tick:last-child { transform: translateX(-100%); }
+.timeline-track, .member-track { position: relative; height: 44rpx; overflow: hidden; border-radius: 10rpx; background: #eff1f6; }
+.shared-free-bar, .member-busy-bar { position: absolute; top: 7rpx; height: 30rpx; border-radius: 8rpx; }
+.shared-free-bar { background: var(--brand-primary); }
+.shared-slot-list { display: flex; flex-wrap: wrap; gap: 8rpx; margin-top: 14rpx; }
+.shared-slot-list text { padding: 7rpx 10rpx; border-radius: 8rpx; color: var(--brand-deep); background: var(--brand-tint); font-size: 18rpx; font-weight: 600; }
+.longest-line { display: flex; justify-content: space-between; margin-top: 18rpx; padding-top: 16rpx; border-top: 1rpx solid #eef0f4; color: #747b8b; font-size: 20rpx; }
+.longest-line text:last-child { color: var(--brand-ink); font-weight: 700; }
+.day-empty, .activity-empty { padding: 38rpx 12rpx; color: #818796; font-size: 21rpx; line-height: 1.5; text-align: center; }
+.activity-head { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; }
+.activity-head text { display: block; }.activity-head text:first-child { color: var(--brand-ink); font-size: 27rpx; font-weight: 700; }.activity-head text:last-child { margin-top: 4rpx; color: #858b99; font-size: 19rpx; }
+.activity-head button { min-height: 50rpx; margin: 0; padding: 0 18rpx; border: 1rpx solid var(--brand-border); border-radius: 25rpx; color: var(--brand-deep); background: #fff; font-size: 19rpx; line-height: 48rpx; }
+.activity-head button[disabled] { color: #a8acb6; border-color: #e5e6eb; }
+.activity-list { margin-top: 16rpx; }.activity-card { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-top: 10rpx; padding: 16rpx; border-radius: 14rpx; background: var(--brand-tint-2); }
+.activity-card > view { min-width: 0; flex: 1; }.activity-card text { display: block; }.activity-card text:first-child { overflow: hidden; color: var(--brand-ink); font-size: 22rpx; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }.activity-card text:last-child { margin-top: 5rpx; color: #717889; font-size: 18rpx; line-height: 1.35; }.activity-card .activity-duration { flex: 0 0 auto; margin: 0; color: var(--brand-deep); font-size: 18rpx; font-weight: 700; }
+.activity-loading { margin-top: 18rpx; }.activity-loading view { height: 76rpx; margin-top: 10rpx; border-radius: 14rpx; background: #f1f2f6; }
+.member-toggle { width: 100%; min-height: 62rpx; display: flex; align-items: center; justify-content: space-between; margin: 0; padding: 0 4rpx; color: var(--brand-ink); background: transparent; font-size: 24rpx; font-weight: 700; line-height: 62rpx; text-align: left; }
+.member-toggle text { color: var(--brand-deep); font-size: 30rpx; }
+.member-timelines { margin-top: 14rpx; padding-top: 14rpx; border-top: 1rpx solid #eef0f4; }.member-row { display: grid; grid-template-columns: 94rpx minmax(0, 1fr); gap: 12rpx; align-items: center; margin-top: 12rpx; }.member-name { overflow: hidden; color: #555c6c; font-size: 19rpx; text-overflow: ellipsis; white-space: nowrap; }.member-row .member-track { height: 32rpx; }.member-row .member-busy-bar, .member-row .shared-free-bar { top: 5rpx; height: 22rpx; border-radius: 6rpx; }.shared-row .member-name { color: var(--brand-deep); font-weight: 700; }.save-result { margin: 24rpx 0 0; }
+@media (prefers-reduced-motion: reduce) { .calendar-day, .activity-card { transition: none; } }
+
+/* 清晰度优化：月历只承担“哪天值得点开”，精确时段只在下方详情出现。 */
+.period-head { display: block; margin: 22rpx 8rpx 12rpx; }
+.period-heading { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; }
+.period-subtitle { margin-top: 8rpx; color: #737b8c; font-size: 19rpx; line-height: 1.3; }
+.v2-summary { gap: 12rpx; }
+.v2-summary view { min-height: 78rpx; border-radius: 18rpx; }
+.v2-summary text:first-child { font-size: 28rpx; }.v2-summary text:last-child { font-size: 18rpx; }
+.month-insight { margin-top: 16rpx; padding: 20rpx 22rpx 14rpx; border-radius: 18rpx; background: #fff; }
+.month-insight-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12rpx; padding-bottom: 12rpx; }
+.month-insight-head text:first-child { color: var(--brand-ink); font-size: 24rpx; font-weight: 700; }.month-insight-head text:last-child { color: #858b99; font-size: 17rpx; }
+.month-insight-row { display: flex; align-items: center; justify-content: space-between; gap: 14rpx; padding: 12rpx 0; border-top: 1rpx solid #eef0f4; }
+.month-insight-row > view { min-width: 124rpx; }.month-insight-row text { display: block; }.month-insight-row > view text:first-child { color: #505769; font-size: 20rpx; font-weight: 600; }.month-insight-row > view text:last-child { margin-top: 3rpx; color: #9298a6; font-size: 16rpx; }.month-insight-row > text { flex: 1; overflow: hidden; color: var(--brand-deep); font-size: 19rpx; font-weight: 600; line-height: 1.4; text-align: right; }
+.v2-calendar { padding: 22rpx 20rpx 20rpx; }
+.v2-calendar .weekdays { margin-top: 14rpx; }.v2-calendar .weekdays text { font-size: 17rpx; }
+.v2-calendar-grid { gap: 5rpx; margin-top: 7rpx; }
+.v2-calendar .calendar-day { height: 88rpx; padding: 8rpx 4rpx; border-radius: 10rpx; justify-content: center; }
+.v2-calendar .day-number { align-self: center; font-size: 19rpx; }
+.calendar-timebar { height: 16rpx; margin-top: 11rpx; border-radius: 8rpx; background: #eef0f5; }
+.calendar-segment { border-radius: 8rpx; }
+.calendar-longest { display: none; }
+.calendar-legend { justify-content: center; gap: 20rpx; margin-top: 15rpx; font-size: 17rpx; }
+.selected-day-head > text { white-space: nowrap; }
+.shared-slot-list { gap: 10rpx; }.shared-slot-list text { padding: 8rpx 12rpx; font-size: 19rpx; }
+
+/* 打点模式：单元格只显示圆点，不再渲染时长条。
+   三色圆点标记当日共同空闲等级，严格匹配图例：
+   绿=全天有空 / 深蓝=大段空闲(半天以上≥4h) / 橙=半天有空(较有空2-4h) */
+.v2-calendar .calendar-day { position: relative; }
+.v2-calendar .day-dot {
+  position: absolute;
+  bottom: 10rpx;
+  left: 50%;
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+.day-dot.dot-fullDay { background: #16A34A; }
+.day-dot.dot-long { background: #2563EB; }
+.day-dot.dot-medium { background: #F59E0B; }
+
+.calendar-legend { justify-content: center; gap: 14rpx; margin-top: 14rpx; color: #707687; font-size: 17rpx; }
+.calendar-legend view { display: flex; align-items: center; gap: 6rpx; }
+.legend-dot { display: inline-block; width: 14rpx; height: 14rpx; border-radius: 50%; }
+.legend-dot.dot-fullDay { background: #16A34A; }
+.legend-dot.dot-long { background: #2563EB; }
+.legend-dot.dot-medium { background: #F59E0B; }
+
+/* 成员日程：空闲时间条（取反后），颜色沿用成员自身色 */
+.member-row .member-free-bar, .member-row .shared-free-bar { top: 5rpx; height: 22rpx; border-radius: 6rpx; }
+.member-free-bar { position: absolute; border-radius: 6rpx; }
+
+/* 日历 BUG 修复 + 美化：日期数字在单元格内水平+垂直居中，统一字号，保证 7 列完全一致 */
+.v2-calendar .calendar-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  line-height: 1;
+}
+.v2-calendar .calendar-day::after { display: none; }
+.v2-calendar .day-number {
+  align-self: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  color: #3e4453;
+  font-size: 20rpx;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+/* 覆盖早期 .calendar-day text:last-child 对唯一日期数字的 12rpx 缩小干扰 */
+.v2-calendar .calendar-day .day-number { font-size: 20rpx; }
+.v2-calendar .day-dot { z-index: 1; }
+/* 表头与格子列对齐：表头需与网格相同的 gap，避免列错位导致某列数字“看起来缺失” */
+.v2-calendar .weekdays { gap: 5rpx; }

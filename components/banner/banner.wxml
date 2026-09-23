@@ -1,0 +1,10 @@
+<view class="banner-root" wx:if="{{showContent}}" animation="{{slideAnimation}}" bindtap="onTap">
+  <view class="banner-inner">
+    <view class="banner-avatar">{{request.fromUser.avatar || '?'}}</view>
+    <view class="banner-text">
+      <text class="banner-name">{{request.fromUser.name || '用户'}}</text>
+      <text class="banner-desc">邀请您建立日程共享</text>
+    </view>
+    <view class="banner-arrow">›</view>
+  </view>
+</view>

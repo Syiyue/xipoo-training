@@ -1,0 +1,34 @@
+<!-- 头像选择弹窗组件 - 预制头像+自定义头像入口 -->
+<view class="avatar-picker-overlay {{visible ? 'show' : ''}}" catchtouchmove="{{true}}" bindtap="onOverlayTap">
+  <view class="avatar-picker-modal {{visible ? 'show' : ''}}" catchtap="stopPropagation">
+    <!-- 标题 -->
+    <view class="picker-header">
+      <text class="picker-title">{{t.selectAvatar}}</text>
+    </view>
+
+    <!-- 预制头像网格 2行3列 圆形裁切 -->
+    <view class="preset-grid">
+      <view
+        class="preset-item {{selectedPreset === index ? 'active' : ''}}"
+        wx:for="{{presetAvatars}}"
+        wx:key="index"
+        data-index="{{index}}"
+        bindtap="selectPreset"
+      >
+        <image src="{{item}}" mode="aspectFill" class="preset-img" />
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="picker-actions">
+      <button class="action-btn wechat-action" open-type="chooseAvatar" bindchooseavatar="onChooseWechatAvatar">
+        <text class="action-icon">@</text>
+        <text class="action-text">{{t.customAvatar}}</text>
+      </button>
+      <view class="action-divider"></view>
+      <button class="action-btn cancel-action" bindtap="onCancel">
+        <text class="action-text cancel-text">{{t.cancel}}</text>
+      </button>
+    </view>
+  </view>
+</view>

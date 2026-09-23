@@ -1,0 +1,9 @@
+{
+  "name": "xipoo-companion",
+  "version": "1.0.0",
+  "description": "Xipoo AI companion (Pupu) cloud function, powered by Hunyuan",
+  "main": "index.js",
+  "dependencies": {
+    "@cloudbase/node-sdk": "^3.18.3"
+  }
+}

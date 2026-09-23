@@ -1,0 +1,13 @@
+<view style="{{themeVars}}" class="page account-page {{darkMode ? 'dark-mode' : ''}}">
+  <view class="card info-card" wx:if="{{user}}">
+    <view class="info-row">
+      <text class="info-label">{{t.phone || '手机号'}}</text>
+      <text class="info-value">{{user.phone || t.noPhone || '未绑定'}}</text>
+    </view>
+    <view class="info-divider"></view>
+    <view class="info-row">
+      <text class="info-label">{{t.identity || '微信认证'}}</text>
+      <text class="info-value">{{user.wechatBound ? (t.wechatBound || '已认证') : (t.wechatUnbound || '未认证')}}</text>
+    </view>
+  </view>
+</view>

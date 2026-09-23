@@ -1,0 +1,26 @@
+<view wx:if="{{visible && steps.length > 0}}" class="guide-root">
+  <!-- 遮罩层：四个矩形块拼出洞口 -->
+  <view class="guide-mask" bindtap="onMaskTap" wx:if="{{holeReady}}">
+    <view class="mask-block" style="top: 0; left: 0; right: 0; height: {{holeTop}}px;"></view>
+    <view class="mask-block" style="top: {{holeTop + holeHeight}}px; left: 0; right: 0; bottom: 0;"></view>
+    <view class="mask-block" style="top: {{holeTop}}px; left: 0; width: {{holeLeft}}px; height: {{holeHeight}}px;"></view>
+    <view class="mask-block" style="top: {{holeTop}}px; left: {{holeLeft + holeWidth}}px; right: 0; height: {{holeHeight}}px;"></view>
+
+    <!-- 高亮边框 -->
+    <view wx:if="{{currentStep < steps.length - 1}}" class="hole-border" style="top: {{holeTop}}px; left: {{holeLeft}}px; width: {{holeWidth}}px; height: {{holeHeight}}px;"></view>
+  </view>
+
+  <!-- 底部浮窗 -->
+  <view class="guide-sheet {{sheetClass}}">
+    <view class="sheet-step">{{currentStep + 1}} / {{steps.length}}</view>
+    <text class="sheet-text">{{steps[currentStep].text}}</text>
+
+    <view class="sheet-dots">
+      <view wx:for="{{renderSteps}}" wx:key="_guideKey" class="dot {{index === currentStep ? 'active' : ''}} {{index < currentStep ? 'done' : ''}}"></view>
+    </view>
+
+    <button class="sheet-btn" bindtap="onNext">
+      {{currentStep === steps.length - 1 ? '开始使用' : '下一步'}}
+    </button>
+  </view>
+</view>

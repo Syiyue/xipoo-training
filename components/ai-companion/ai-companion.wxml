@@ -1,0 +1,69 @@
+<view wx:if="{{visible}}" class="ai-companion {{page === 'schedule' ? 'on-schedule' : ''}} {{snapping ? 'snapping' : ''}}" style="{{posStyle}}">
+  <!-- 主动建议气泡 -->
+  <view wx:if="{{bubble}}" class="bubble" catchtap="openPanel">
+    <text class="bubble-icon">{{bubble.icon}}</text>
+    <text class="bubble-text">{{bubble.text}}<text wx:if="{{bubble.aiEnhanced}}" class="ai-badge">✨</text><text wx:if="{{bubble.isPromotion}}" class="ad-badge">{{lang === 'en' ? 'Ad' : '推广'}}</text></text>
+    <view class="bubble-close" catchtap="dismissBubble">×</view>
+  </view>
+
+  <!-- 小章鱼本体：以点击为第一优先级。拖拽手势会在部分开发者工具内吞掉 tap，
+       因此不再将二者绑定到同一热区。 -->
+  <view
+    class="mascot-wrap {{dragging ? 'dragging' : ''}} {{wiggle ? 'wiggle' : ''}} {{mascotPop ? 'pop' : ''}} {{mascotSwitching ? 'switching' : ''}}"
+    bindtap="onMascotTap"
+    role="button"
+    aria-label="{{lang === 'en' ? 'Open Pupu assistant' : '打开噗噗助手'}}"
+  >
+    <view class="mascot-halo"></view>
+    <image class="mascot" src="{{mascotSrc}}" mode="aspectFit" />
+    <view wx:if="{{hasSuggestions && !bubble}}" class="dot"></view>
+  </view>
+  <view wx:if="{{page === 'schedule'}}" class="mascot-caption" catchtap="onMascotTap">{{lang === 'en' ? 'AI Import' : 'AI 录入'}}</view>
+
+  <!-- 建议面板 -->
+  <root-portal wx:if="{{panelOpen}}">
+  <view class="panel-mask" catchtap="closePanel">
+    <view class="panel" catchtap="noop">
+      <view class="panel-head">
+        <image class="panel-avatar" src="{{mascotSrc}}" mode="aspectFit" />
+        <view class="panel-title">
+          <text class="panel-title-main">{{lang === 'en' ? 'Pupu Assistant' : '噗噗助手'}}</text>
+          <text class="panel-sub">{{greeting || (lang === 'en' ? 'Your personal schedule companion' : '你的专属日程小助手')}}</text>
+        </view>
+        <view class="panel-close" catchtap="closePanel">×</view>
+      </view>
+      <scroll-view scroll-y class="panel-body">
+        <view wx:if="{{!suggestions.length}}" class="panel-empty">
+          {{lang === 'en' ? 'All clear for now. Enjoy your day!' : '现在没有什么要提醒的，好好享受当下吧～'}}
+        </view>
+        <view
+          wx:for="{{suggestions}}"
+          wx:key="dedupeKey"
+          class="tip-card {{item.isPromotion ? 'tip-ad' : ''}}"
+          data-index="{{index}}"
+          catchtap="onSuggestionTap"
+        >
+          <text class="tip-icon">{{item.icon}}</text>
+          <text class="tip-text">{{item.text}}<text wx:if="{{item.aiEnhanced}}" class="ai-badge">✨</text></text>
+          <text wx:if="{{item.isPromotion}}" class="ad-badge">{{lang === 'en' ? 'Ad' : '推广'}}</text>
+          <view wx:if="{{item.isPromotion}}" class="ad-close" data-index="{{index}}" catchtap="closePromotion">×</view>
+          <text wx:elif="{{item.action}}" class="tip-go">›</text>
+        </view>
+      </scroll-view>
+      <view wx:if="{{page === 'schedule'}}" class="panel-footer" catchtap="onAiImport">
+        <text class="footer-icon">📷</text>
+        <text>{{lang === 'en' ? 'Upload schedule with AI' : 'AI 拍照上传课表'}}</text>
+      </view>
+      <view wx:elif="{{page === 'activities'}}" class="panel-footer" catchtap="onActivityFinder">
+        <text class="footer-icon">🔎</text>
+        <text>{{lang === 'en' ? 'Find activity organizers' : '查找活动方'}}</text>
+      </view>
+      <view class="panel-feedback" catchtap="onFeedbackTap">
+        <text class="footer-icon">🔵</text>
+        <text>{{lang === 'en' ? 'Feedback' : '意见反馈'}}</text>
+      </view>
+      <view class="panel-mute" catchtap="onDisableTap">{{lang === 'en' ? 'Hide Pupu assistant' : '关闭噗噗助手'}}</view>
+    </view>
+  </view>
+  </root-portal>
+</view>

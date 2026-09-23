@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "匹配",
+  "usingComponents": {
+    "app-tabbar": "/components/app-tabbar/app-tabbar",
+    "empty-state": "/components/empty-state/empty-state",
+    "post-editor": "/components/post-editor/post-editor",
+    "guide-overlay": "/components/guide-overlay/guide-overlay"
+  }
+}

@@ -1,0 +1,4 @@
+.blacklist-page { animation: pageFadeIn 300ms ease; }
+.blacklist-row { display: flex; align-items: center; justify-content: space-between; padding: 22rpx 24rpx; }
+.empty-state { margin-top: 18rpx; padding: 48rpx 24rpx; text-align: center; color: #94a3b8; font-size: 24rpx; }
+.remove-btn { height: 52rpx; padding: 0 18rpx; border-radius: 14rpx; color: #ef4444; font-size: 20rpx; font-weight: 800; background: #fef2f2; }

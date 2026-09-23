@@ -1,0 +1,6 @@
+.account-page { animation: pageFadeIn 300ms ease; }
+.info-card { margin-top: 18rpx; padding: 0; }
+.info-row { display: flex; align-items: center; justify-content: space-between; padding: 26rpx 24rpx; }
+.info-label { color: #64748b; font-size: 24rpx; font-weight: 800; }
+.info-value { color: #0f172a; font-size: 24rpx; font-weight: 900; }
+.info-divider { height: 1rpx; margin: 0 24rpx; background: #f1f5f9; }

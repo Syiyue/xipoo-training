@@ -1,0 +1,72 @@
+/* 好友头像 + 姓名 */
+.friend-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin: 20rpx 0 8rpx;
+  padding: 24rpx;
+  border-radius: 20rpx;
+  background: #fff;
+  box-shadow: 0 8rpx 24rpx var(--brand-border);
+}
+.fph-avatar {
+  width: 96rpx;
+  height: 96rpx;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--brand-tint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fph-avatar-img {
+  width: 100%;
+  height: 100%;
+}
+.fph-avatar-text {
+  color: var(--text-secondary);
+  font-size: 40rpx;
+  font-weight: 700;
+}
+.fph-info {
+  min-width: 0;
+  flex: 1;
+}
+.fph-name {
+  display: block;
+  color: var(--text-primary);
+  font-size: 30rpx;
+  font-weight: 700;
+}
+.fph-id {
+  display: block;
+  margin-top: 4rpx;
+  color: var(--text-secondary);
+  font-size: 22rpx;
+}
+
+.calendar-card { margin-top: 24rpx; padding: 22rpx; border-radius: 18rpx; background: #fff; box-shadow: 0 14rpx 34rpx var(--brand-border); }
+.calendar-head, .date-row { display: flex; align-items: center; justify-content: space-between; }
+.calendar-head button { width: 56rpx; height: 50rpx; border-radius: 12rpx; color: var(--brand-deep); background: var(--brand-tint); font-size: 28rpx; font-weight: 900; }
+.calendar-head text { color: var(--brand-ink); font-size: 28rpx; font-weight: 900; }
+.weekdays, .month-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); }
+.weekdays { margin-top: 14rpx; }
+.weekdays text { color: #87948c; font-size: 22rpx; text-align: center; -webkit-font-smoothing: antialiased; }
+.month-grid { margin-top: 8rpx; border-left: 1rpx solid var(--brand-border); border-top: 1rpx solid var(--brand-border); }
+.month-day { position: relative; display: flex; align-items: center; justify-content: center; height: 76rpx; border-right: 1rpx solid var(--brand-border); border-bottom: 1rpx solid var(--brand-border); color: var(--brand-ink); background: #fff; font-size: 24rpx; -webkit-font-smoothing: antialiased; }
+.month-day.muted { color: #b8c5bd; background: var(--brand-tint-2); }
+.month-day.selected { color: #fff; background: var(--brand-primary); }
+.course-dot { position: absolute; right: 5rpx; bottom: 5rpx; width: 25rpx; height: 25rpx; border-radius: 50%; color: var(--brand-ink); background: var(--brand-soft); font-size: 14rpx; line-height: 25rpx; text-align: center; }
+.date-row { margin-top: 20rpx; padding: 18rpx 20rpx; border-radius: 14rpx; color: var(--brand-ink); background: #fff; font-size: 22rpx; font-weight: 800; }
+.date-row picker { padding: 10rpx 14rpx; border-radius: 10rpx; background: var(--brand-tint); }
+.course-list { margin-top: 20rpx; }
+.course-row { display: flex; gap: 18rpx; margin-bottom: 14rpx; padding: 20rpx; border-radius: 16rpx; background: #fff; box-shadow: 0 12rpx 28rpx var(--brand-border); }
+.time { flex: 0 0 100rpx; padding-right: 16rpx; border-right: 4rpx solid var(--brand-bright); }
+.course-row text { display: block; }
+.time text { color: var(--brand-deep); font-size: 21rpx; font-weight: 900; }
+.time text:last-child { margin-top: 7rpx; color: #87948c; }
+.course-row > view:last-child { min-width: 0; flex: 1; }
+.course-row > view:last-child text:first-child { color: var(--brand-ink); font-size: 25rpx; font-weight: 900; }
+.course-row > view:last-child text:last-child { margin-top: 8rpx; color: #748279; font-size: 20rpx; }
+.empty { margin-top: 20rpx; padding: 36rpx; border-radius: 16rpx; color: #849188; background: #fff; text-align: center; }

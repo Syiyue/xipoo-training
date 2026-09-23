@@ -1,0 +1,174 @@
+<view style="{{themeVars}}" class="page messages-page {{darkMode ? 'dark-mode' : ''}}">
+  <!-- Tab Bar -->
+  <view class="msg-tabs">
+    <view class="msg-tab {{tab === 'matches' ? 'active' : ''}}" data-tab="matches" bindtap="switchTab">{{lang === 'en' ? 'Buddies' : '搭子'}}<text wx:if="{{badgeMatches > 0}}" class="tab-badge">{{badgeMatches}}</text></view>
+    <view class="msg-tab {{tab === 'incoming' ? 'active' : ''}}" data-tab="incoming" bindtap="switchTab">{{lang === 'en' ? 'Incoming' : '收到的'}}<text wx:if="{{badgeIncoming > 0}}" class="tab-badge">{{badgeIncoming}}</text></view>
+    <view class="msg-tab {{tab === 'recruit' ? 'active' : ''}}" data-tab="recruit" bindtap="switchTab">{{lang === 'en' ? 'Recruit' : '招募'}}<text wx:if="{{badgeRecruit > 0}}" class="tab-badge">{{badgeRecruit}}</text></view>
+    <view class="msg-tab {{tab === 'sent' ? 'active' : ''}}" data-tab="sent" bindtap="switchTab">{{lang === 'en' ? 'Sent' : '已发'}}<text wx:if="{{badgeSent > 0}}" class="tab-badge">{{badgeSent}}</text></view>
+    <view class="msg-tab {{tab === 'blocked' ? 'active' : ''}}" data-tab="blocked" bindtap="switchTab">{{lang === 'en' ? 'Blocked' : '已拉黑'}}</view>
+  </view>
+
+  <!-- 搭子 Tab -->
+  <view wx:if="{{tab === 'matches'}}">
+    <view wx:if="{{myMatches.length === 0}}" class="empty">
+      <text class="empty-icon">🤝</text>
+      <text class="empty-title">{{lang === 'en' ? 'No buddies yet' : '暂无搭子'}}</text>
+    </view>
+    <view wx:else class="notif-list">
+      <view wx:for="{{myMatches}}" wx:key="pairId" class="notif-item match-item">
+        <image wx:if="{{item._hasAvatar}}" class="notif-avatar-img" src="{{item.partner.avatar}}" mode="aspectFill" />
+        <view wx:else class="notif-avatar"><text>{{item._initial}}</text></view>
+        <view class="notif-main">
+          <view class="notif-body">
+            <text class="notif-name">{{item._name}}</text>
+            <text class="notif-desc">{{item.partner.grade || ''}}</text>
+          </view>
+          <view wx:if="{{item.partner.buddyWechatId}}" class="match-contact">
+            <text class="contact-label">{{lang === 'en' ? 'WeChat: ' : '微信: '}}</text>
+            <text class="contact-value">{{item.partner.buddyWechatId}}</text>
+            <button class="copy-wx-btn" data-wechat="{{item.partner.buddyWechatId}}" catchtap="copyWechat">{{lang === 'en' ? 'Copy' : '复制'}}</button>
+          </view>
+          <view class="notif-actions">
+            <button class="unmatch-btn" data-pairid="{{item.pairId}}" data-userid="{{item.partner.id}}" data-name="{{item._name}}" catchtap="unmatchPair">{{lang === 'en' ? 'Unmatch' : '解除搭子'}}</button>
+            <button class="block-btn" data-userid="{{item.partner.id}}" data-name="{{item._name}}" catchtap="blockMatchUser">{{lang === 'en' ? 'Block' : '屏蔽'}}</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 收到的 Tab：匹配请求 + 入组申请 -->
+  <view wx:if="{{tab === 'incoming'}}">
+    <view wx:if="{{incomingItems.length === 0}}" class="empty">
+      <text class="empty-icon">📩</text>
+      <text class="empty-title">{{lang === 'en' ? 'No incoming requests' : '暂无收到的请求'}}</text>
+    </view>
+    <view wx:else class="notif-list">
+      <block wx:for="{{incomingItems}}" wx:key="id">
+        <!-- 匹配请求 -->
+        <view wx:if="{{item._kind === 'interest'}}" class="notif-item incoming-item">
+          <image wx:if="{{item._hasAvatar}}" class="notif-avatar-img" src="{{item.fromUser.avatar}}" mode="aspectFill" />
+          <view wx:else class="notif-avatar"><text>{{item._initial}}</text></view>
+          <view class="notif-main">
+            <view class="notif-body">
+              <text class="notif-name">{{item._name}}</text>
+              <text class="notif-desc">{{lang === 'en' ? 'Sent you a' : '向你发来'}}<text class="buddy-tag">{{item._buddyLabel}}</text>{{lang === 'en' ? 'request' : '请求'}}</text>
+            </view>
+            <view class="notif-actions">
+              <button class="accept-btn" data-id="{{item.id}}" catchtap="acceptInterest">{{lang === 'en' ? 'Accept' : '同意'}}</button>
+              <button class="ignore-btn" data-id="{{item.id}}" catchtap="ignoreInterest">{{lang === 'en' ? 'Ignore' : '忽略'}}</button>
+            </view>
+          </view>
+        </view>
+        <!-- 入组申请 -->
+        <view wx:elif="{{item._kind === 'application'}}" class="notif-item" data-item="{{item}}" data-index="{{index}}" bindtap="onIncomingTap">
+          <view class="notif-avatar"><text>📋</text></view>
+          <view class="notif-main">
+            <view class="notif-body">
+              <text class="notif-name">{{item.fromUserName || '?'}}</text>
+              <text class="notif-desc">{{lang === 'en' ? 'applied to join' : '申请加入'}} {{item.postTitle}}<text wx:if="{{item.count > 1}}"> ({{item.count}})</text></text>
+            </view>
+            <text class="notif-time">{{item.latest ? item.latest.substring(0, 10) : ''}}</text>
+          </view>
+          <view wx:if="{{!item.read}}" class="notif-dot"></view>
+        </view>
+        <!-- 申请结果通知（通过/拒绝） -->
+        <view wx:elif="{{item._kind === 'post_result'}}" class="notif-item" data-item="{{item}}" data-index="{{index}}" bindtap="onIncomingTap">
+          <view class="notif-avatar"><text>{{item.type === 'post_accepted' ? '✅' : '❌'}}</text></view>
+          <view class="notif-main">
+            <view class="notif-body">
+              <text class="notif-name">{{item.postTitle || '?'}}</text>
+              <text class="notif-desc">{{item.type === 'post_accepted' ? (lang === 'en' ? 'Your application has been approved!' : '你的入组申请已通过！') : (lang === 'en' ? 'Your application was rejected' : '你的入组申请被拒绝')}}</text>
+            </view>
+            <text class="notif-time">{{item.latest ? item.latest.substring(0, 10) : ''}}</text>
+          </view>
+          <view wx:if="{{!item.read}}" class="notif-dot"></view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 招募动态 Tab -->
+  <view wx:if="{{tab === 'recruit'}}">
+    <view wx:if="{{recruitItems.length === 0}}" class="empty">
+      <text class="empty-icon">📋</text>
+      <text class="empty-title">{{lang === 'en' ? 'No recruitment updates' : '暂无招募动态'}}</text>
+      <text class="empty-desc">{{lang === 'en' ? 'Notifications about your recruitment posts will appear here.' : '关于你发布的或加入的招募帖的通知会显示在这里。'}}</text>
+    </view>
+    <view wx:else class="notif-list">
+      <view wx:for="{{recruitItems}}" wx:key="id" class="notif-item" data-postid="{{item.postId}}" data-index="{{index}}" bindtap="{{item._kind === 'post_blocked_joined' ? '' : 'onRecruitTap'}}">
+        <view class="notif-avatar"><text>{{item._icon}}</text></view>
+        <view class="notif-main">
+          <view class="notif-body">
+            <text class="notif-name">{{item._title}}</text>
+          </view>
+          <text class="notif-desc">{{item._desc}}</text>
+          <text class="notif-time">{{item._time}}</text>
+          <view wx:if="{{item._kind === 'post_blocked_joined'}}" class="notif-actions">
+            <button class="leave-btn" data-postid="{{item.postId}}" catchtap="leavePost">{{lang === 'en' ? 'Leave Group' : '退出小组'}}</button>
+          </view>
+        </view>
+        <view wx:if="{{!item.read}}" class="notif-dot"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 已发 Tab：感兴趣申请 + 招募申请 -->
+  <view wx:if="{{tab === 'sent'}}">
+    <view wx:if="{{sentInterests.length === 0 && sentApplications.length === 0}}" class="empty">
+      <text class="empty-icon">💌</text>
+      <text class="empty-title">{{lang === 'en' ? 'No sent items' : '暂无已发内容'}}</text>
+    </view>
+    <view wx:else class="notif-list">
+      <!-- 已发感兴趣 -->
+      <view wx:for="{{sentInterests}}" wx:key="id" class="notif-item">
+        <image wx:if="{{item._hasAvatar}}" class="notif-avatar-img" src="{{item.toUser.avatar}}" mode="aspectFill" />
+        <view wx:else class="notif-avatar"><text>{{item._initial}}</text></view>
+        <view class="notif-body">
+          <text class="notif-name">{{item._name}}</text>
+          <text class="notif-desc">{{item.status === 'pending' ? (lang === 'en' ? 'Waiting...' : '等待回应') : (lang === 'en' ? 'Accepted' : '已接受')}}</text>
+        </view>
+        <view class="notif-right">
+          <text class="notif-time">{{item.createdAt ? item.createdAt.substring(0, 10) : ''}}</text>
+          <button wx:if="{{item.status === 'pending'}}" class="cancel-btn" data-id="{{item.id}}" catchtap="cancelInterest">{{lang === 'en' ? 'Cancel' : '撤回'}}</button>
+        </view>
+      </view>
+      <!-- 已发招募申请 -->
+      <view wx:for="{{sentApplications}}" wx:key="id" class="notif-item" data-postid="{{item.postId}}" bindtap="onRecruitTap">
+        <view class="notif-avatar"><text>📋</text></view>
+        <view class="notif-main">
+          <view class="notif-body">
+            <text class="notif-name">「{{item.postTitle || '?'}}」</text>
+            <text class="notif-desc">{{lang === 'en' ? 'Application pending...' : '等待发起人审核'}}</text>
+          </view>
+          <text wx:if="{{item.message}}" class="notif-desc">{{lang === 'en' ? 'Message: ' : '留言: '}}{{item.message}}</text>
+          <text class="notif-time">{{item.createdAt ? item.createdAt.substring(0, 10) : ''}}</text>
+        </view>
+        <view class="notif-right">
+          <button class="cancel-btn" data-postid="{{item.postId}}" data-appid="{{item.id}}" catchtap="cancelApplication">{{lang === 'en' ? 'Withdraw' : '撤回'}}</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 已拉黑 Tab -->
+  <view wx:if="{{tab === 'blocked'}}">
+    <view wx:if="{{blockedUsers.length === 0}}" class="empty">
+      <text class="empty-icon">🚫</text>
+      <text class="empty-title">{{lang === 'en' ? 'No blocked users' : '暂无拉黑'}}</text>
+    </view>
+    <view wx:else class="notif-list">
+      <view wx:for="{{blockedUsers}}" wx:key="id" class="notif-item">
+        <image wx:if="{{item._hasAvatar}}" class="notif-avatar-img" src="{{item.blockedUser.avatar}}" mode="aspectFill" />
+        <view wx:else class="notif-avatar"><text>{{item._initial}}</text></view>
+        <view class="notif-body">
+          <text class="notif-name">{{item._name}}</text>
+          <text class="notif-desc">{{lang === 'en' ? 'Blocked' : '已拉黑'}}</text>
+        </view>
+        <view class="notif-right">
+          <button class="unblock-btn" data-userid="{{item.blockedUserId}}" data-name="{{item._name}}" catchtap="unblockUser">{{lang === 'en' ? 'Unblock' : '解除'}}</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

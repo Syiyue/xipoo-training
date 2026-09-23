@@ -1,0 +1,9 @@
+.activities-page { animation: pageFadeIn 300ms ease; }
+.activity-row { margin-top: 18rpx; padding: 22rpx; }
+.activity-main { margin-bottom: 14rpx; }
+.activity-title { display: block; color: #0f172a; font-size: 26rpx; font-weight: 900; }
+.activity-meta { display: block; margin-top: 6rpx; color: #64748b; font-size: 22rpx; }
+.activity-actions { display: flex; gap: 12rpx; }
+.act-mini-ghost { flex: 1; height: 54rpx; border-radius: 14rpx; color: #0f172a; font-size: 21rpx; font-weight: 900; background: #eef4fb; }
+.act-mini-danger { flex: 1; height: 54rpx; border-radius: 14rpx; color: var(--brand-deep); font-size: 21rpx; font-weight: 900; background: var(--brand-tint); }
+.empty-state { margin-top: 18rpx; padding: 48rpx 24rpx; text-align: center; color: #94a3b8; font-size: 24rpx; }

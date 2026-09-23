@@ -1,0 +1,492 @@
+<view style="{{themeVars}}" class="page activities-page {{darkMode ? 'dark-mode' : ''}}">
+  <!-- 页面背景图（fixed 垫底，铺满整屏） -->
+  <image class="page-bg-image" src="/images/bg/activities_bg.jpg" mode="aspectFill" />
+  <view class="main-page-nav" style="padding-top: {{statusBarHeight}}px;">
+    <text class="main-page-nav-title">{{lang === 'en' ? 'Activities' : '活动'}}</text>
+  </view>
+  <banner visible="{{bannerVisible}}" request="{{bannerRequest}}" />
+  <!-- 游客提示条 -->
+  <view wx:if="{{isGuest}}" class="guest-tip-bar" bindtap="onGuestLogin">
+    <text class="guest-tip-text">{{lang === 'en' ? 'Sign in to see more activities' : '登录后查看更多活动'}}</text>
+    <text class="guest-tip-action">{{lang === 'en' ? 'Sign in' : '去登录'}} ›</text>
+  </view>
+  <view class="view-switch">
+    <button data-view="discovery" bindtap="switchView" class="{{viewMode === 'discovery' ? 'active' : ''}}">{{copy.discover}}</button>
+    <button data-view="calendar" bindtap="switchView" class="{{viewMode === 'calendar' ? 'active' : ''}}">{{copy.calendar}}</button>
+  </view>
+
+  <block wx:if="{{viewMode === 'calendar'}}">
+    <!-- 年月标题 + 视图切换 -->
+    <view class="cal-header-bar">
+      <text class="cal-year-month">{{calendarTitle}}</text>
+      <view class="cal-header-actions">
+        <view class="cal-view-icon-btn" catchtap="toggleViewDropdown">
+          <text class="view-icon-book">▦</text>
+        </view>
+      </view>
+      <!-- 下拉浮窗 -->
+      <view wx:if="{{viewDropdownOpen}}" class="view-dropdown" catchtap="noop">
+        <view
+          wx:for="{{viewOptions}}"
+          wx:key="key"
+          data-key="{{item.key}}"
+          catchtap="selectViewOption"
+          class="view-option {{viewType === item.key ? 'active' : ''}}"
+        >
+          <text class="vo-icon">{{item.icon}}</text>
+          <text class="vo-label">{{item.label}}</text>
+          <text class="vo-check">{{viewType === item.key ? '✓' : ''}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 固定展示当前周，避免滑动回弹 -->
+    <view class="cal-week-strip">
+      <view
+        wx:for="{{weekStrip}}"
+        wx:key="date"
+        data-date="{{item.date}}"
+        bindtap="selectStripDate"
+        class="week-day {{item.isToday ? 'today' : ''}} {{item.selected ? 'selected' : ''}}"
+      >
+        <text class="week-day-label">{{item.weekdayLabel}}</text>
+        <text class="week-day-num">{{item.day}}</text>
+        <view wx:if="{{item.hasDot}}" class="week-day-dot"></view>
+      </view>
+    </view>
+
+    <!-- ====== 视图1: 列表视图 ====== -->
+    <scroll-view wx:if="{{viewType === 'list'}}" class="cal-timeline" scroll-y enhanced show-scrollbar="{{false}}" bindscrolltolower="loadMore" lower-threshold="80">
+      <view wx:for="{{monthGroups}}" wx:key="monthKey" class="month-group">
+        <view class="month-divider"><text>{{item.monthLabel}}</text></view>
+        <view wx:for="{{item.days}}" wx:for-item="day" wx:key="date" class="day-row">
+          <view class="day-left">
+            <text class="day-date">{{day.dayNum}}</text>
+            <text class="day-weekday">{{day.weekdayShort}}</text>
+          </view>
+          <view class="day-right">
+            <view wx:for="{{day.events}}" wx:for-item="evt" wx:key="id" class="event-card" data-id="{{evt.id}}" catchtap="openDetail">
+              <view class="event-dot" style="background: {{evt.dotColor}};"></view>
+              <view class="event-info">
+                <text class="event-title">{{evt.displayTitle}}</text>
+                <text class="event-time">{{evt.timeLabel}}</text>
+              </view>
+              <text wx:if="{{evt.statusKey}}" class="ac-status ac-status-{{evt.statusKey}}">{{evt.statusText}}</text>
+              <text class="event-arrow">›</text>
+            </view>
+            <view wx:if="{{!day.events.length}}" class="day-empty" data-date="{{day.date}}" bindtap="goAddFromListDay">
+              <text class="day-empty-title">{{copy.noEvents}}</text>
+              <text class="day-empty-add">+ {{copy.addSchedule}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{loadingMore}}" class="list-loading-more">
+        <text>{{copy.loadingMore}}</text>
+      </view>
+      <view style="height: 160rpx;"></view>
+    </scroll-view>
+
+    <!-- ====== 视图2: 单日视图 (24h单栏时间轴) ====== -->
+    <view wx:if="{{viewType === 'single'}}" class="single-day-view">
+      <view class="sd-header">
+        <view class="sd-nav-btn" bindtap="shiftSingleDay" data-offset="-1">‹</view>
+        <text class="sd-nav-title" bindtap="openDayPicker">{{singleDayTitle}}</text>
+        <view class="sd-nav-btn" bindtap="shiftSingleDay" data-offset="1">›</view>
+      </view>
+      <scroll-view class="sd-timeline" scroll-y enhanced show-scrollbar="{{false}}" bindtouchstart="onTimelineTouchStart" bindtouchend="onSingleDaySwipe">
+        <view class="sd-grid">
+          <view
+            wx:for="{{singleDaySlots}}"
+            wx:key="hour"
+            class="sd-slot-row"
+            data-hour="{{item.hour}}"
+            data-hasevent="{{item.hasEvent}}"
+            bindtap="tapSingleDaySlot"
+          >
+            <text class="sd-hour">{{item.hourLabel}}</text>
+            <view class="sd-slot-content {{item.active ? 'active-slot' : ''}} {{item.hasEvent ? 'has-event' : ''}}">
+              <view wx:if="{{item.event}}" class="sd-event-block" style="background: {{item.event.dotColor}}15; border-left-color: {{item.event.dotColor}};" data-id="{{item.event.id}}" catchtap="openDetail">
+                <text class="sd-event-title">{{item.event.displayTitle}}</text>
+                <text class="sd-event-time">{{item.event.timeLabel}}</text>
+              </view>
+              <view wx:if="{{item.active && !item.event}}" class="sd-placeholder" catchtap="goAddFromSingleSlot" data-hour="{{item.hour}}">
+                <text class="sd-placeholder-text">+ {{copy.addSchedule}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view style="height: 160rpx;"></view>
+      </scroll-view>
+    </view>
+
+    <!-- ====== 视图3: 双日视图 (双栏时间轴) ====== -->
+    <view wx:if="{{viewType === 'double'}}" class="double-day-view">
+      <view class="dd-header">
+        <text class="dd-date-label">{{doubleDayLabel1}}</text>
+        <text class="dd-date-label">{{doubleDayLabel2}}</text>
+      </view>
+      <scroll-view class="dd-timeline" scroll-y enhanced show-scrollbar="{{false}}" bindtouchstart="onTimelineTouchStart" bindtouchend="onDoubleDaySwipe">
+        <view class="dd-grid">
+          <view class="dd-hours-col">
+            <view wx:for="{{doubleDaySlots}}" wx:key="hour" class="dd-hour-cell">
+              <text class="dd-hour">{{item.hourLabel}}</text>
+            </view>
+          </view>
+          <view class="dd-day-col">
+            <view wx:for="{{doubleDaySlots}}" wx:key="hour" class="dd-slot {{item.day1.hasEvent ? 'has-event' : ''}} {{item.day1.active ? 'active-slot' : ''}}" data-hour="{{item.hour}}" data-col="0" data-hasevent="{{item.day1.hasEvent}}" bindtap="tapDoubleDaySlot">
+              <view wx:if="{{item.day1.event}}" class="dd-event-block" style="background: {{item.day1.event.dotColor}}15; border-left-color: {{item.day1.event.dotColor}};" data-id="{{item.day1.event.id}}" catchtap="openDetail">
+                <text class="dd-event-title">{{item.day1.event.displayTitle}}</text>
+              </view>
+              <view wx:if="{{item.day1.active && !item.day1.event}}" class="dd-placeholder" catchtap="goAddFromDoubleSlot" data-hour="{{item.hour}}" data-col="0">
+                <text class="dd-placeholder-text">+ {{copy.addSchedule}}</text>
+              </view>
+            </view>
+          </view>
+          <view class="dd-day-col">
+            <view wx:for="{{doubleDaySlots}}" wx:key="hour" class="dd-slot {{item.day2.hasEvent ? 'has-event' : ''}} {{item.day2.active ? 'active-slot' : ''}}" data-hour="{{item.hour}}" data-col="1" data-hasevent="{{item.day2.hasEvent}}" bindtap="tapDoubleDaySlot">
+              <view wx:if="{{item.day2.event}}" class="dd-event-block" style="background: {{item.day2.event.dotColor}}15; border-left-color: {{item.day2.event.dotColor}};" data-id="{{item.day2.event.id}}" catchtap="openDetail">
+                <text class="dd-event-title">{{item.day2.event.displayTitle}}</text>
+              </view>
+              <view wx:if="{{item.day2.active && !item.day2.event}}" class="dd-placeholder" catchtap="goAddFromDoubleSlot" data-hour="{{item.hour}}" data-col="1">
+                <text class="dd-placeholder-text">+ {{copy.addSchedule}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view style="height: 160rpx;"></view>
+      </scroll-view>
+    </view>
+
+    <!-- ====== 视图4: 月视图 (7列日历网格) ====== -->
+    <view wx:if="{{viewType === 'month'}}" class="month-view" bindtouchstart="onCalendarTouchStart" bindtouchend="onCalendarTouchEnd">
+      <view class="mv-nav">
+        <view class="mv-nav-btn" data-offset="-1" bindtap="changeMonth">‹</view>
+        <text class="mv-nav-title" bindtap="openMonthPicker">{{calendarTitle}}</text>
+        <view class="mv-nav-btn" data-offset="1" bindtap="changeMonth">›</view>
+      </view>
+      <view class="mv-weekdays">
+        <text wx:for="{{weekdays}}" wx:key="*this">{{item}}</text>
+      </view>
+      <view class="mv-grid">
+        <view
+          wx:for="{{monthCells}}"
+          wx:key="date"
+          data-date="{{item.date}}"
+          data-hasevents="{{item.events.length > 0}}"
+          data-currentmonth="{{item.currentMonth}}"
+          bindtap="tapMonthCell"
+          class="mv-cell {{item.currentMonth ? '' : 'muted'}} {{item.isToday ? 'today' : ''}} {{item.selected ? 'selected' : ''}}"
+        >
+          <text class="mv-day-num">{{item.day}}</text>
+          <view wx:if="{{item.events.length}}" class="mv-dots">
+            <text wx:for="{{item.events}}" wx:for-item="dot" wx:key="id" class="mv-dot" style="background: {{dot.color}};"></text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{viewType === 'month'}}" class="calendar-day-panel">
+      <view class="calendar-section-head">
+        <text>{{selectedDateLabel}} {{copy.selectedDateActivities}}</text>
+        <text>{{selectedDateActivities.length}} {{copy.activitiesUnit}}</text>
+      </view>
+      <view wx:if="{{selectedDateActivities.length}}" class="selected-activity-list">
+        <view wx:for="{{selectedDateActivities}}" wx:key="id" class="selected-activity-row" data-id="{{item.id}}" bindtap="openDetail">
+          <view class="selected-activity-dot" style="background: {{item.dotColor}};"></view>
+          <view class="selected-activity-main">
+            <text>{{item.displayTitle}}</text>
+            <text>{{item.timeLabel}}<block wx:if="{{item.displayPlace}}"> · {{item.displayPlace}}</block></text>
+          </view>
+          <text class="selected-activity-arrow">›</text>
+        </view>
+      </view>
+      <view wx:else class="selected-day-empty">{{copy.noEvents}}</view>
+    </view>
+
+    <view wx:if="{{viewType === 'month'}}" class="calendar-source-entry" data-source="calendar" bindtap="openDiscoveryPicker">
+      <view>
+        <text>{{copy.calendarSources}}</text>
+        <text>{{sourceSelectionText}}</text>
+      </view>
+      <text>›</text>
+    </view>
+
+    <!-- 月份选择器底部弹窗（月视图用） -->
+    <view wx:if="{{monthPickerOpen}}" class="month-picker-mask" catchtap="closeMonthPicker">
+      <view class="month-picker-sheet" catchtap="noop">
+        <view class="mpick-header">
+          <text class="mpick-cancel" bindtap="closeMonthPicker">取消</text>
+          <text class="mpick-title">选择月份</text>
+          <text class="mpick-confirm" bindtap="confirmMonthPicker">确定</text>
+        </view>
+        <view class="mpick-body">
+          <picker-view
+            class="mpick-view"
+            value="{{pickerValue}}"
+            bindchange="onPickerChange"
+          >
+            <picker-view-column>
+              <view wx:for="{{pickerYears}}" wx:key="*this" class="mpick-item">{{item}}年</view>
+            </picker-view-column>
+            <picker-view-column>
+              <view wx:for="{{pickerMonths}}" wx:key="*this" class="mpick-item">{{item}}月</view>
+            </picker-view-column>
+          </picker-view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 日期选择器底部弹窗（单日视图用） -->
+    <view wx:if="{{dayPickerOpen}}" class="month-picker-mask" catchtap="closeDayPicker">
+      <view class="month-picker-sheet" catchtap="noop">
+        <view class="mpick-header">
+          <text class="mpick-cancel" bindtap="closeDayPicker">取消</text>
+          <text class="mpick-title">选择日期</text>
+          <text class="mpick-confirm" bindtap="confirmDayPicker">确定</text>
+        </view>
+        <view class="mpick-body">
+          <picker-view
+            class="mpick-view"
+            value="{{dayPickerValue}}"
+            bindchange="onDayPickerChange"
+          >
+            <picker-view-column>
+              <view wx:for="{{dayPickerMonths}}" wx:key="*this" class="mpick-item">{{item}}月</view>
+            </picker-view-column>
+            <picker-view-column>
+              <view wx:for="{{dayPickerDays}}" wx:key="*this" class="mpick-item">{{item}}日</view>
+            </picker-view-column>
+          </picker-view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 遮罩层：点击关闭下拉 -->
+    <view wx:if="{{viewDropdownOpen}}" class="dropdown-mask" catchtap="closeViewDropdown"></view>
+  </block>
+
+  <!-- 发现页 -->
+  <block wx:else>
+    <!-- 查找活动方：吸睛横幅入口（头像串展示已入驻活动方） -->
+    <view class="disco-hero" data-source="discover" bindtap="openDiscoveryPicker">
+      <view class="disco-hero-left">
+        <text class="disco-hero-title">{{copy.selectActivities}}</text>
+        <text class="disco-hero-sub">{{copy.findOrganizersSub}}</text>
+      </view>
+      <view class="disco-hero-right">
+        <image class="disco-hero-illustration" src="/images/activities/organizer-finder.jpg" mode="aspectFill" />
+        <text class="disco-hero-arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 优秀活动方：后台「置顶/排序权重」控制排序，点卡片进活动方门面，「更多」打开全部活动方 -->
+    <view wx:if="{{featuredPublishers.length}}" class="feat-section">
+      <view class="feat-head">
+        <text class="feat-title">🏅 {{copy.featuredOrganizers}}</text>
+        <text class="feat-more" data-source="discover" bindtap="openDiscoveryPicker">{{copy.more}} ›</text>
+      </view>
+      <scroll-view scroll-x class="feat-scroll" enhanced show-scrollbar="{{false}}">
+        <view wx:for="{{featuredPublishers}}" wx:key="key" class="feat-card" data-key="{{item.key}}" bindtap="openPublisher">
+          <image wx:if="{{item.logoUrl}}" src="{{item.logoUrl}}" class="feat-logo" mode="aspectFill" lazy-load />
+          <view wx:else class="feat-logo feat-logo-fallback" style="background: {{item.accent || item.color || '#cbceec'}};">{{item.initial}}</view>
+          <view class="feat-name-row">
+            <text class="feat-name">{{item.displayName}}</text>
+            <text wx:if="{{item.verified}}" class="feat-verified">✔</text>
+          </view>
+          <text class="feat-tagline">{{item.description}}</text>
+          <text class="feat-count">{{item.activityCount || 0}} {{copy.activitiesUnit}}</text>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 加载骨架屏：初始加载活动时显示 -->
+    <view wx:if="{{loading}}" class="skeleton-wrap">
+      <view class="skeleton-card"></view>
+      <view class="skeleton-card"></view>
+      <view class="skeleton-card"></view>
+    </view>
+
+    <!-- ====== 快闪轮播 ====== -->
+    <view wx:if="{{flashActivities.length}}" class="flash-section">
+      <view class="flash-head">
+        <text class="flash-title">{{copy.flash}}</text>
+        <text class="flash-hint">{{copy.swipeHint}}</text>
+      </view>
+  <swiper
+    class="flash-swiper"
+    autoplay
+    interval="5000"
+    duration="320"
+    circular
+    bindchange="onFlashSwiperChange"
+  >
+        <swiper-item wx:for="{{flashActivities}}" wx:key="id">
+          <view class="flash-card" data-id="{{item.id}}" bindtap="openDetail">
+            <image src="{{item.coverUrl}}" mode="aspectFill" class="flash-card-img" />
+            <view class="flash-corner">{{copy.hotBadge}}</view>
+            <text wx:if="{{item.statusKey}}" class="ac-status ac-status-{{item.statusKey}} ac-status-floating">{{item.statusText}}</text>
+            <view class="flash-card-body">
+              <view class="flash-publisher" data-key="{{item.publisherKey}}" catchtap="openPublisher">
+                <text class="flash-pub-avatar" style="background: {{item.publisherAccent}};" data-key="{{item.publisherKey}}" catchtap="openPublisher">{{item.publisherInitial}}</text>
+                <text class="flash-pub-name">{{item.publisherName}}</text>
+              </view>
+              <text class="flash-card-title">{{item.displayTitle}}</text><text wx:if="{{item.jumpType === 'nativeReservation'}}" class="ac-badge-native">{{lang === 'en' ? 'Booking' : '预约'}}</text>
+              <text class="flash-card-meta">{{item.displayTime}}</text>
+              <view class="flash-tags">
+                <text wx:for="{{item.displayTags}}" wx:for-item="tag" wx:key="*this">#{{tag}}</text>
+              </view>
+              <view class="flash-actions">
+                <button class="flash-reg-btn {{item.registered ? 'active' : ''}}" data-id="{{item.id}}" catchtap="toggleRegistration">{{item.registeredText}}</button>
+                <button class="flash-share-btn" open-type="share" data-id="{{item.id}}" catchtap="noop">↗</button>
+              </view>
+            </view>
+          </view>
+        </swiper-item>
+      </swiper>
+      <!-- 分页圆点指示器 -->
+      <view wx:if="{{flashActivities.length > 1}}" class="flash-dots">
+        <view
+          wx:for="{{flashActivities}}"
+          wx:key="id"
+          class="flash-dot {{flashIndex === index ? 'active' : ''}}"
+        ></view>
+      </view>
+    </view>
+
+    <!-- ====== 推荐活动列表（保留原有双列） ====== -->
+    <view class="feed-heading">
+      <view>
+        <text>{{copy.recommended}}</text>
+        <text>{{feedCount}} {{copy.activitiesUnit}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{leftActivities.length || rightActivities.length}}" class="waterfall">
+      <view class="waterfall-column">
+        <view wx:for="{{leftActivities}}" wx:key="id" class="activity-card" data-id="{{item.id}}" bindtap="openDetail">
+          <image src="{{item.coverUrl}}" mode="aspectFill" lazy-load />
+          <text wx:if="{{item.statusKey}}" class="ac-status ac-status-{{item.statusKey}} ac-status-floating">{{item.statusText}}</text>
+          <view class="card-body">
+            <view class="publisher-mini" data-key="{{item.publisherKey}}" catchtap="openPublisher">
+              <text style="background: {{item.publisherAccent}};" data-key="{{item.publisherKey}}" catchtap="openPublisher">{{item.publisherInitial}}</text>
+              <text>{{item.publisherName}}</text>
+            </view>
+            <text class="activity-title">{{item.displayTitle}}</text><text wx:if="{{item.jumpType === 'nativeReservation'}}" class="ac-badge-native">{{lang === 'en' ? 'Booking' : '预约'}}</text>
+            <text class="activity-meta">{{item.displayTime}}</text>
+            <view class="tag-row">
+              <text wx:for="{{item.displayTags}}" wx:for-item="tag" wx:key="*this">#{{tag}}</text>
+            </view>
+            <view class="card-actions">
+              <button class="{{item.registered ? 'register-button active' : 'register-button'}}" data-id="{{item.id}}" catchtap="toggleRegistration">{{item.registeredText}}</button>
+              <button class="icon-btn share-btn" open-type="share" data-id="{{item.id}}" catchtap="noop">
+                <text class="icon-symbol">↗</text>
+              </button>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="waterfall-column">
+        <view wx:for="{{rightActivities}}" wx:key="id" class="activity-card" data-id="{{item.id}}" bindtap="openDetail">
+          <image src="{{item.coverUrl}}" mode="aspectFill" lazy-load />
+          <text wx:if="{{item.statusKey}}" class="ac-status ac-status-{{item.statusKey}} ac-status-floating">{{item.statusText}}</text>
+          <view class="card-body">
+            <view class="publisher-mini" data-key="{{item.publisherKey}}" catchtap="openPublisher">
+              <text style="background: {{item.publisherAccent}};" data-key="{{item.publisherKey}}" catchtap="openPublisher">{{item.publisherInitial}}</text>
+              <text>{{item.publisherName}}</text>
+            </view>
+            <text class="activity-title">{{item.displayTitle}}</text><text wx:if="{{item.jumpType === 'nativeReservation'}}" class="ac-badge-native">{{lang === 'en' ? 'Booking' : '预约'}}</text>
+            <text class="activity-meta">{{item.displayTime}}</text>
+            <view class="tag-row">
+              <text wx:for="{{item.displayTags}}" wx:for-item="tag" wx:key="*this">#{{tag}}</text>
+            </view>
+            <view class="card-actions">
+              <button class="{{item.registered ? 'register-button active' : 'register-button'}}" data-id="{{item.id}}" catchtap="toggleRegistration">{{item.registeredText}}</button>
+              <button class="icon-btn share-btn" open-type="share" data-id="{{item.id}}" catchtap="noop">
+                <text class="icon-symbol">↗</text>
+              </button>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <empty-state wx:else title="{{copy.noOrganizers}}" desc="{{copy.adjustFilters}}" />
+  </block>
+
+  <!-- 活动方弹窗：calendar 来源=日程筛选（显隐），discover 来源=探索订阅（搜索/订阅） -->
+  <view wx:if="{{discoveryPickerOpen}}" class="disco-picker-mask" catchtap="closeDiscoveryPicker" catchtouchmove="noop">
+    <view class="disco-picker-sheet" catchtap="noop">
+      <!-- 弹层背景图（垫底，内容在上层） -->
+      <image class="dp-bg-image" src="/images/bg/profile_bg.jpg" mode="aspectFill" />
+      <view class="dp-header">
+        <view class="dp-tabs">
+          <button
+            class="dp-tab {{pickerTab === 'subscribed' ? 'active' : ''}}"
+            data-tab="subscribed"
+            bindtap="switchPickerTab"
+          >{{copy.tabSubscribed}}</button>
+          <button
+            wx:if="{{pickerSource === 'discover'}}"
+            class="dp-tab {{pickerTab === 'all' ? 'active' : ''}}"
+            data-tab="all"
+            bindtap="switchPickerTab"
+          >{{copy.tabAll}}</button>
+        </view>
+      </view>
+      <view wx:if="{{pickerSource === 'discover' && pickerTab === 'all'}}" class="dp-search">
+        <text class="dp-search-icon">⌕</text>
+        <input value="{{searchKeyword}}" bindinput="onSearchInput" placeholder="{{copy.searchOrganizers}}" />
+      </view>
+      <scroll-view wx:if="{{pickerSource === 'discover' && pickerTab === 'all'}}" class="dp-tags" scroll-x enhanced show-scrollbar="{{false}}">
+        <button
+          wx:for="{{discoveryTags}}"
+          wx:key="key"
+          data-tag="{{item.key}}"
+          bindtap="selectDiscoveryTag"
+          class="dp-tag {{activeDiscoveryTag === item.key ? 'active' : ''}}"
+        >{{item.label}}</button>
+      </scroll-view>
+      <scroll-view class="dp-organizers" scroll-y enhanced show-scrollbar="{{false}}">
+        <view wx:for="{{pickerSource === 'discover' && pickerTab === 'all' ? visiblePublishers : subscribedSources}}" wx:key="key" class="dp-org-row">
+          <view class="dp-org-avatar" style="background: {{item.accent}};" data-key="{{item.key}}" catchtap="openPublisher">{{item.initial}}</view>
+          <view class="dp-org-info" data-key="{{item.key}}" catchtap="openPublisher">
+            <view class="dp-org-name-row">
+              <text>{{item.displayName}}</text>
+              <text wx:if="{{item.verified}}" class="dp-verified">{{lang === 'en' ? 'Verified' : '认证'}}</text>
+              <text wx:elif="{{item.sourceChannel}}" class="dp-source">摘自 {{item.sourceChannel}}</text>
+            </view>
+            <text class="dp-org-desc">{{item.description}}</text>
+            <text class="dp-profile-link">{{lang === 'en' ? 'View profile' : '查看门面'}} ›</text>
+          </view>
+          <view class="dp-org-actions">
+            <button wx:if="{{pickerSource === 'calendar'}}" data-key="{{item.key}}" bindtap="togglePublisherVisibility" class="dp-select-btn {{item.selected ? 'active' : ''}}">{{item.selected ? copy.showing : copy.hide}}</button>
+            <button wx:else data-key="{{item.key}}" bindtap="toggleSubscription" loading="{{subscriptionLoadingKey === item.key}}" class="dp-sub-btn {{item.subscribed ? 'active' : ''}}">{{item.subscribed ? copy.unsubscribe : copy.subscribe}}</button>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="dp-footer">
+        <text wx:if="{{pickerSource === 'calendar'}}" class="dp-footer-hint">{{copy.calendarPickerHint}}</text>
+        <button class="dp-done" bindtap="closeDiscoveryPicker">{{copy.done}}</button>
+      </view>
+    </view>
+  </view>
+
+  <app-tabbar active="activities" />
+
+  <!-- AI 小章鱼助手 -->
+  <ai-companion page="activities" bind:activityfinder="openDiscoveryPicker" />
+
+  <!-- ===== 新手引导 ===== -->
+  <intro-guide
+    visible="{{introGuideVisible}}"
+    steps="{{introSteps}}"
+    lang="{{lang}}"
+    themePrimary="{{themePrimary || '#7c83c7'}}"
+    darkMode="{{darkMode}}"
+    storageKey="introGuideActivitiesDone"
+    bind:complete="onIntroComplete"
+    bind:exit="onIntroExit"
+    bind:gotoProfile="onIntroGotoProfile"
+    bind:stepenter="onIntroStepEnter"
+  />
+</view>

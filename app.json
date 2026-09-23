@@ -1,0 +1,89 @@
+{
+  "pages": [
+    "pages/schedule/schedule",
+    "pages/schedule/ics-bridge/ics-bridge",
+    "pages/activities/activities",
+    "pages/friends/friends",
+    "pages/profile/profile",
+    "pages/login/login"
+  ],
+  "usingComponents": {
+    "app-tabbar": "/components/app-tabbar/app-tabbar",
+    "empty-state": "/components/empty-state/empty-state",
+    "ai-companion": "/components/ai-companion/ai-companion"
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "plugins": {
+    "WechatSI": {
+      "version": "0.3.9"
+    }
+  },
+  "window": {
+    "navigationBarTitleText": "Xipoo 吸噗",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F4F4F4"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "custom": true,
+    "color": "#888",
+    "selectedColor": "#61B673",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      { "pagePath": "pages/schedule/schedule", "text": "日程" },
+      { "pagePath": "pages/activities/activities", "text": "活动" },
+      { "pagePath": "pages/friends/friends", "text": "共享" },
+      { "pagePath": "pages/profile/profile", "text": "我的" }
+    ]
+  },
+  "subPackages": [
+    {
+      "root": "packages/schedule",
+      "pages": [
+        "pages/settings/settings",
+        "pages/semester/semester",
+        "pages/scheduleDetail/scheduleDetail",
+        "pages/addSchedule/addSchedule",
+        "pages/friendSchedule/friendSchedule",
+        "pages/match/match",
+        "pages/matchResult/matchResult"
+      ]
+    },
+    {
+      "root": "packages/social",
+      "pages": [
+        "pages/friendProfile/friendProfile",
+        "pages/messages/messages"
+      ]
+    },
+    {
+      "root": "packages/activity",
+      "pages": [
+        "pages/activityDetail/activityDetail",
+        "pages/activityPublisher/activityPublisher",
+        "pages/reservation/reservation",
+        "pages/myReservations/myReservations",
+        "pages/paiSpace/paiSpace",
+        "pages/paiManager/paiManager"
+      ]
+    },
+    {
+      "root": "packages/account",
+      "pages": [
+        "pages/editProfile/editProfile",
+        "pages/accountInfo/accountInfo",
+        "pages/myActivities/myActivities",
+        "pages/blacklist/blacklist",
+        "pages/userAgreement/userAgreement",
+        "pages/privacyPolicy/privacyPolicy",
+        "pages/contactUs/contactUs",
+        "pages/friendList/friendList",
+        "pages/feedbackCenter/feedback",
+        "pages/privacy/privacy",
+        "pages/theme/theme"
+      ]
+    }
+  ]
+}

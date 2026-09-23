@@ -1,0 +1,108 @@
+.page { min-height: 100vh; padding: 24rpx; background: var(--brand-tint-2); }
+
+.post-hero { padding: 28rpx; border-radius: 18rpx; color: var(--brand-ink); background: var(--brand-soft); }
+.type-row { display: flex; align-items: center; justify-content: space-between; }
+.type-badge { font-size: 20rpx; font-weight: 900; background: rgba(255,255,255,.48); padding: 6rpx 14rpx; border-radius: 10rpx; }
+.post-status-tag { font-size: 20rpx; padding: 4rpx 12rpx; border-radius: 8rpx; font-weight: 800; }
+.post-status-tag.active { color: var(--brand-deep); background: var(--brand-tint); }
+.post-status-tag.closed { color: #991b1b; background: #fee2e2; }
+.title { display: block; margin-top: 16rpx; font-size: 34rpx; font-weight: 900; }
+.scope { display: block; margin-top: 8rpx; font-size: 20rpx; font-weight: 900; }
+.meta { display: block; margin-top: 11rpx; font-size: 20rpx; line-height: 1.5; color: var(--brand-ink); }
+.deadline { display: block; margin-top: 6rpx; font-size: 19rpx; color: var(--brand-deep); font-weight: 700; }
+.description { display: block; margin-top: 14rpx; padding: 12rpx; border-radius: 8rpx; color: var(--brand-deep); background: rgba(255,255,255,.68); font-size: 19rpx; line-height: 1.5; }
+
+.creator-card, .member-section { margin-top: 20rpx; padding: 22rpx; border-radius: 17rpx; background: #fff; box-shadow: 0 12rpx 30rpx rgba(31,117,71,.08); }
+.profile, .member-row { display: flex; align-items: center; gap: 13rpx; }
+.avatar, .avatar-sm { display: flex; align-items: center; justify-content: center; width: 62rpx; height: 62rpx; flex: 0 0 62rpx; border-radius: 50%; color: var(--brand-ink); background: var(--brand-soft); font-size: 24rpx; font-weight: 900; }
+.avatar-sm { width: 52rpx; height: 52rpx; flex: 0 0 52rpx; font-size: 20rpx; }
+.avatar-img, .avatar-img-sm { width: 62rpx; height: 62rpx; flex: 0 0 62rpx; border-radius: 50%; }
+.avatar-img-sm { width: 52rpx; height: 52rpx; flex: 0 0 52rpx; }
+.profile > view:nth-child(2), .member-row > view:nth-child(2) { min-width: 0; flex: 1; }
+.profile text, .member-row text { display: block; }
+.profile view text:first-child, .member-row view text:first-child { color: var(--brand-ink); font-size: 23rpx; font-weight: 900; }
+.profile view text:last-child, .member-row view text:last-child { margin-top: 5rpx; color: #74837a; font-size: 18rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.minor-actions { display: flex; justify-content: flex-end; gap: 8rpx; margin-top: 10rpx; }
+.minor-actions button { min-height: 44rpx; padding: 0 12rpx; border-radius: 9rpx; color: #805347; background: #f8f2f0; font-size: 17rpx; }
+
+.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12rpx; }
+.section-head text:first-child { color: var(--brand-ink); font-size: 25rpx; font-weight: 900; }
+.section-head text:last-child { color: var(--brand-deep); font-size: 20rpx; font-weight: 900; }
+.member-row { min-height: 70rpx; padding: 10rpx 0; border-top: 1rpx solid var(--brand-border); }
+.member-info { min-width: 0; flex: 1; }
+.member-name-row { display: flex; align-items: center; gap: 10rpx; flex-wrap: wrap; }
+.member-name { color: var(--brand-ink); font-size: 23rpx; font-weight: 900; display: block; }
+.member-grade { font-size: 17rpx; color: var(--brand-deep); }
+.member-creator-tag { font-size: 17rpx; color: #fff; background: var(--brand-primary); padding: 2rpx 10rpx; border-radius: 6rpx; font-weight: 700; }
+.member-contact { display: flex; align-items: center; gap: 6rpx; margin-top: 8rpx; flex-wrap: wrap; }
+.contact-label { font-size: 19rpx; color: #74837a; }
+.contact-value { font-size: 19rpx; color: var(--brand-deep); font-weight: 700; }
+.copy-wx-btn { height: 40rpx; padding: 0 14rpx; border-radius: 8rpx; color: #fff; background: var(--brand-primary); font-size: 17rpx; font-weight: 700; border: none; line-height: 40rpx; }
+
+.creator-grade { font-size: 17rpx !important; color: var(--brand-deep) !important; }
+
+.main-action { width: 100%; height: 72rpx; margin-top: 22rpx; border-radius: 18rpx; color: var(--brand-ink); font-size: 25rpx; font-weight: 900; background: linear-gradient(135deg, var(--brand-bright), var(--brand-bright)); border: none; }
+.pending { margin-top: 22rpx; padding: 18rpx; border-radius: 13rpx; color: var(--brand-deep); background: var(--brand-tint); text-align: center; font-size: 21rpx; font-weight: 900; }
+.danger-action { width: 100%; height: 64rpx; margin-top: 16rpx; color: #a64c38; font-size: 21rpx; font-weight: 900; background: none; border: none; }
+
+.loading-container { display: flex; align-items: center; justify-content: center; height: 60vh; color: #829087; font-size: 22rpx; }
+
+/* 申请弹窗 */
+.modal-mask { position: fixed; z-index: 60; inset: 0; display: flex; align-items: flex-end; background: rgba(17,34,25,.46); }
+.editor { width: 100%; max-height: 75vh; padding: 28rpx 28rpx calc(28rpx + env(safe-area-inset-bottom)); overflow-y: auto; border-radius: 18rpx 18rpx 0 0; background: #fff; }
+.editor-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12rpx; }
+.editor-head text { color: var(--brand-ink); font-size: 28rpx; font-weight: 900; }
+.editor-head button { height: 48rpx; padding: 0 13rpx; border-radius: 8rpx; color: var(--brand-deep); background: var(--brand-tint); font-size: 18rpx; border: none; }
+.editor .sec-title { margin: 16rpx 0 8rpx; font-size: 22rpx; font-weight: 800; color: var(--brand-ink); display: block; }
+.apply-post-title { font-size: 24rpx; font-weight: 700; color: var(--brand-deep); display: block; margin: 12rpx 0; padding: 14rpx; background: var(--brand-tint); border-radius: 8rpx; }
+.apply-msg-input { width: 100%; height: 140rpx; padding: 14rpx; border-radius: 8rpx; background: var(--brand-tint-2); font-size: 24rpx; margin-top: 8rpx; }
+.save-btn { width: 100%; height: 58rpx; margin-top: 20rpx; font-size: 19rpx; border: none; border-radius: 12rpx; color: var(--brand-ink); font-weight: 900; background: linear-gradient(135deg, var(--brand-bright), var(--brand-bright)); }
+.apply-note { margin: 8rpx 0; padding: 12rpx; border-radius: 8rpx; background: #fff8e1; font-size: 18rpx; color: #6b5a2e; }
+
+/* 待审核申请 */
+.apps-section { margin-top: 20rpx; padding: 22rpx; border-radius: 17rpx; background: #fff; box-shadow: 0 12rpx 30rpx rgba(31,117,71,.08); }
+.app-card { padding: 18rpx 0; border-top: 1rpx solid var(--brand-border); }
+.app-card:first-child { border-top: none; padding-top: 0; }
+.app-info { margin-bottom: 12rpx; }
+.app-user { font-size: 23rpx; font-weight: 900; color: var(--brand-ink); display: block; }
+.app-msg { display: block; margin-top: 8rpx; font-size: 19rpx; color: var(--brand-deep); font-style: italic; }
+.app-actions { display: flex; gap: 10rpx; }
+.action-btn { height: 48rpx; padding: 0 20rpx; border-radius: 10rpx; font-size: 19rpx; font-weight: 800; border: none; }
+.btn-accept { color: #fff; background: var(--brand-primary); }
+.btn-reject { color: #a64c38; background: #f8f2f0; }
+
+/* 已拒绝状态 */
+.rejected { margin-top: 22rpx; padding: 18rpx; border-radius: 13rpx; color: #991b1b; background: #fee2e2; text-align: center; font-size: 21rpx; font-weight: 900; }
+
+/* 成员状态 + 退出 */
+.member-status { margin-top: 22rpx; }
+.confirm-btn { width: 100%; height: 56rpx; margin-top: 14rpx; border-radius: 12rpx; color: var(--brand-ink); background: linear-gradient(135deg, var(--brand-bright), var(--brand-bright)); font-size: 19rpx; font-weight: 900; }
+.leave-btn { width: 100%; height: 56rpx; margin-top: 14rpx; border-radius: 12rpx; color: #a64c38; background: #fef0ed; font-size: 19rpx; font-weight: 700; border: 1rpx solid #f5d6ce; }
+
+/* Figma UI */
+.page { background: #f4f4f4; }
+.post-card,
+.creator-card,
+.member-section,
+.apps-section {
+  border: 3rpx solid var(--brand-primary);
+  border-radius: 30rpx;
+  background: #f4f4f4;
+  box-shadow: none;
+}
+.main-action, .save-btn, .confirm-btn, .copy-wx-btn {
+  border-radius: 30rpx;
+  color: #ffffff;
+  background: var(--brand-primary);
+  box-shadow: none;
+}
+.editor { border-radius: 30rpx 30rpx 0 0; }
+
+.post-card,
+.creator-card,
+.member-section,
+.apps-section {
+  border: 2rpx solid #cac4d0;
+  border-radius: 22rpx;
+  background: #ffffff;
+}

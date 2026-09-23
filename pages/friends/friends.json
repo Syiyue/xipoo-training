@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "日程共享",
+  "usingComponents": {
+    "banner": "/components/banner/banner",
+    "requestDialog": "/components/requestDialog/requestDialog",
+    "intro-guide": "/components/intro-guide/intro-guide"
+  }
+}

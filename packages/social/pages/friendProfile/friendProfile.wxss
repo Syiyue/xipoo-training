@@ -1,0 +1,489 @@
+.profile-cover { padding: 34rpx 28rpx; border-radius: 20rpx; color: var(--brand-ink); box-shadow: 0 20rpx 50rpx rgba(31,94,59,.14); }
+.theme-mint { background: linear-gradient(135deg, #8cf0a5, #dff8e8); }
+.theme-sky { background: linear-gradient(135deg, #8bd4f6, #e6f6ff); }
+.theme-coral { background: linear-gradient(135deg, #ffaaa0, #fff0ed); }
+.theme-graphite { color: #fff; background: linear-gradient(135deg, #34423a, #718078); }
+
+/* 封面背景图（覆盖紫色渐变框） */
+.profile-cover {
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-cover-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+
+/* 头像区不额外遮罩，保留头像白圈即可 */
+.profile-head {
+  position: relative;
+  z-index: 1;
+}
+
+/* 有封面图时，昵称/ID 白字 + 阴影 — 任何背景上都能看清 */
+.profile-cover.has-cover .name {
+  color: #ffffff;
+  text-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.55);
+}
+
+.profile-cover.has-cover .id {
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.5);
+}
+
+.note-row {
+  position: relative;
+  z-index: 1;
+}
+.profile-head, .sharing-row { display: flex; align-items: center; justify-content: space-between; }
+.profile-head { justify-content: flex-start; gap: 20rpx; }
+.avatar { display: flex; align-items: center; justify-content: center; width: 112rpx; height: 112rpx; border-radius: 50%; color: var(--brand-ink); background: rgba(255,255,255,.76); font-size: 40rpx; font-weight: 900; }
+.name, .id, .signature, .sharing-row text, .bio text { display: block; }
+.name { font-size: 36rpx; font-weight: 900; }
+.id { margin-top: 7rpx; font-size: 21rpx; opacity: .7; }
+.signature { margin-top: 26rpx; font-size: 26rpx; line-height: 1.5; font-weight: 800; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 10rpx; margin-top: 18rpx; }
+.tag-row text { padding: 10rpx 15rpx; border-radius: 10rpx; background: rgba(255,255,255,.6); font-size: 20rpx; font-weight: 800; }
+.info-section, .schedule-section { margin-top: 24rpx; padding: 24rpx; border-radius: 18rpx; background: #fff; box-shadow: 0 14rpx 34rpx rgba(31,117,71,.08); }
+.section-title { display: block; color: var(--brand-ink); font-size: 28rpx; font-weight: 900; margin-bottom: 16rpx; }
+
+/* ========== 好友备注 ========== */
+.note-row { display: flex; align-items: center; gap: 16rpx; padding: 18rpx 20rpx; margin-bottom: 16rpx; border-radius: 14rpx; background: var(--brand-tint-2); }
+.note-label { color: #87948c; font-size: 22rpx; font-weight: 800; white-space: nowrap; }
+.note-display { display: flex; align-items: center; flex: 1; gap: 10rpx; }
+.note-text { flex: 1; color: var(--brand-ink); font-size: 24rpx; font-weight: 900; }
+.note-placeholder { flex: 1; color: #b0bab3; font-size: 22rpx; }
+.note-edit-icon { color: #87948c; }
+.note-edit { display: flex; align-items: center; flex: 1; gap: 12rpx; }
+.note-edit input { flex: 1; padding: 10rpx 16rpx; border: 1rpx solid var(--brand-border); border-radius: 10rpx; color: var(--brand-ink); background: #fff; font-size: 24rpx; }
+.note-done-btn { padding: 10rpx 20rpx; color: var(--brand-deep); font-size: 22rpx; font-weight: 900; white-space: nowrap; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; margin-top: 16rpx; }
+.info-grid view { padding: 16rpx; border-radius: 12rpx; background: var(--brand-tint); }
+.info-grid text { display: block; color: #718078; font-size: 19rpx; }
+.info-grid text:last-child { margin-top: 5rpx; color: var(--brand-ink); font-size: 23rpx; font-weight: 900; }
+.bio { margin-top: 16rpx; padding-top: 16rpx; border-top: 1rpx solid var(--brand-border); }
+.bio text:first-child { color: #718078; font-size: 19rpx; }
+.bio text:last-child { margin-top: 8rpx; color: var(--brand-ink); font-size: 22rpx; line-height: 1.6; }
+.private-note, .loading { padding: 36rpx; color: #839087; text-align: center; }
+.sharing-row { margin-bottom: 20rpx; }
+.sharing-row text:first-child { color: var(--brand-ink); font-size: 22rpx; font-weight: 900; }
+.sharing-row text:last-child { margin-top: 5rpx; color: #829087; font-size: 19rpx; }
+.schedule-section .ghost-btn { margin-top: 12rpx; }
+.remove-button { width: 100%; height: 66rpx; margin-top: 24rpx; color: #b6533d; font-size: 22rpx; font-weight: 900; }
+.report-button { width: 100%; height: 66rpx; margin-top: 24rpx; color: #d97706; font-size: 22rpx; font-weight: 900; background: transparent; border: 1rpx solid #fcd34d; border-radius: 14rpx; }
+
+/* ========== 好友信息浮层弹窗 ========== */
+.modal-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.45); }
+.profile-popup-card { width: 630rpx; max-height: 80vh; overflow-y: auto; padding: 40rpx 34rpx 30rpx; border-radius: 24rpx; background: #fff; box-shadow: 0 20rpx 60rpx rgba(0,0,0,.18); }
+.popup-avatar { display: flex; justify-content: center; margin-bottom: 24rpx; }
+.popup-avatar-inner { display: flex; align-items: center; justify-content: center; width: 120rpx; height: 120rpx; border-radius: 50%; color: var(--brand-ink); background: var(--brand-tint); font-size: 44rpx; font-weight: 900; }
+.popup-identity { text-align: center; margin-bottom: 20rpx; }
+.popup-name { display: block; color: var(--brand-ink); font-size: 34rpx; font-weight: 900; }
+.popup-id-row { margin-top: 8rpx; }
+.popup-id { color: #87948c; font-size: 22rpx; }
+.popup-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 12rpx; margin-bottom: 24rpx; }
+.popup-chip { padding: 10rpx 18rpx; border-radius: 12rpx; color: var(--brand-ink); background: var(--brand-tint); font-size: 21rpx; font-weight: 800; }
+.popup-field { margin-top: 20rpx; }
+.popup-label { display: block; color: #87948c; font-size: 20rpx; margin-bottom: 8rpx; }
+.popup-value-signature { display: block; color: var(--brand-ink); font-size: 24rpx; font-style: italic; font-weight: 800; }
+.popup-value-bio { display: block; color: var(--brand-ink); font-size: 22rpx; line-height: 1.6; }
+.popup-tags { display: flex; flex-wrap: wrap; gap: 10rpx; }
+.popup-tag-chip { padding: 8rpx 14rpx; border-radius: 10rpx; color: var(--brand-ink); background: var(--brand-tint); font-size: 20rpx; font-weight: 800; }
+.popup-photos { display: flex; gap: 12rpx; }
+.popup-photo-thumb { width: 160rpx; height: 160rpx; border-radius: 14rpx; }
+.popup-close-btn { width: 100%; height: 66rpx; margin-top: 28rpx; color: #718078; font-size: 22rpx; font-weight: 800; background: var(--brand-tint); border-radius: 14rpx; }
+
+/* ========== Figma：好友资料页最终视觉 ========== */
+.friend-profile-page {
+  min-height: 100vh;
+  padding: 20rpx 20rpx 120rpx;
+  background: #f4f4f4;
+}
+
+.profile-cover,
+.theme-mint,
+.theme-sky,
+.theme-coral,
+.theme-graphite {
+  padding: 26rpx;
+  border-radius: 28rpx;
+  color: #212121;
+  background: var(--brand-soft);
+  box-shadow: none;
+}
+
+.profile-head {
+  gap: 18rpx;
+}
+
+.avatar {
+  width: 104rpx;
+  height: 104rpx;
+  overflow: hidden;
+  border: 4rpx solid #ffffff;
+  color: var(--brand-ink);
+  background: #ffffff;
+  font-size: 32rpx;
+}
+
+.avatar-image,
+.popup-avatar-image {
+  width: 100%;
+  height: 100%;
+}
+
+.name {
+  color: #212121;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.id {
+  color: #526158;
+  font-size: 20rpx;
+  opacity: 1;
+}
+
+.signature {
+  margin-top: 20rpx;
+  padding: 14rpx 18rpx;
+  border-radius: 18rpx;
+  color: #526158;
+  background: rgba(255, 255, 255, .72);
+  font-size: 21rpx;
+  font-weight: 500;
+}
+
+.tag-row text {
+  border-radius: 16rpx;
+  color: var(--brand-ink);
+  background: rgba(255, 255, 255, .72);
+  font-weight: 600;
+}
+
+.info-section,
+.schedule-section {
+  margin-top: 16rpx;
+  padding: 22rpx;
+  border-radius: 24rpx;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.section-title {
+  color: #212121;
+  font-size: 27rpx;
+  font-weight: 700;
+}
+
+.note-row {
+  display: inline-flex;
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 8rpx 18rpx;
+  margin-bottom: 8rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.info-grid view {
+  border-radius: 16rpx;
+  background: var(--brand-tint);
+}
+
+.schedule-section .primary-btn,
+.schedule-section .ghost-btn {
+  height: 68rpx;
+  border-radius: 20rpx;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.schedule-section .primary-btn {
+  color: #ffffff;
+  background: var(--brand-primary);
+}
+
+.schedule-section .ghost-btn {
+  color: var(--brand-deep);
+  background: #ffffff;
+  border: 2rpx solid var(--brand-primary);
+}
+
+.report-button,
+.remove-button {
+  height: 68rpx;
+  border-radius: 20rpx;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.report-button {
+  margin-top: 20rpx;
+  color: #d8264f;
+  border: 2rpx solid #d8264f;
+  background: #ffffff;
+}
+
+.remove-button {
+  margin-top: 12rpx;
+  color: #ffffff;
+  background: #d8264f;
+}
+
+.profile-popup-card {
+  border-radius: 28rpx;
+  box-shadow: none;
+}
+
+.popup-avatar-inner {
+  overflow: hidden;
+  border: 3rpx solid #ffffff;
+  background: var(--brand-soft);
+}
+
+/* ==================== 共享设置（重构新增） ==================== */
+.share-section {
+  background: #ffffff;
+  border: 1rpx solid #e6eae7;
+  border-radius: 28rpx;
+  padding: 32rpx;
+  margin: 24rpx 32rpx 0;
+}
+.share-section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1f2421;
+  display: block;
+  margin-bottom: 24rpx;
+}
+.share-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+.share-status-label {
+  font-size: 28rpx;
+  color: #7a817c;
+}
+.share-status-value {
+  font-size: 28rpx;
+  color: var(--brand-primary);
+  font-weight: 600;
+}
+.share-status-value.off {
+  color: #a4aaa6;
+}
+.level-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+.level-option {
+  border: 1rpx solid #e6eae7;
+  border-radius: 20rpx;
+  padding: 20rpx 24rpx;
+}
+.level-option.active {
+  border-color: var(--brand-primary);
+  background: var(--brand-tint-2);
+}
+.level-option-head {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+.level-radio {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  border: 2rpx solid #e6eae7;
+  box-sizing: border-box;
+}
+.level-radio.active {
+  border-color: var(--brand-primary);
+  background: var(--brand-primary);
+  box-shadow: inset 0 0 0 6rpx #ffffff;
+}
+.level-option-name {
+  font-size: 28rpx;
+  color: #1f2421;
+  font-weight: 500;
+}
+.level-option-desc {
+  display: block;
+  font-size: 22rpx;
+  color: #a4aaa6;
+  margin-top: 6rpx;
+  padding-left: 48rpx;
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-top: 1rpx solid #e6eae7;
+}
+.setting-label {
+  font-size: 28rpx;
+  color: #1f2421;
+}
+.setting-picker {
+  font-size: 28rpx;
+  color: #7a817c;
+}
+.save-settings-btn {
+  margin-top: 24rpx;
+  width: 100%;
+  height: 92rpx;
+  line-height: 92rpx;
+  border-radius: 46rpx;
+  font-size: 30rpx;
+}
+.save-settings-btn[disabled] {
+  opacity: 0.5;
+}
+
+/* ========== 名片内部个人资料（in-card profile） ========== */
+.in-card-profile {
+  position: relative;
+  z-index: 1;
+  margin-top: 24rpx;
+  padding: 20rpx 18rpx;
+  border-radius: 16rpx;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.icp-row {
+  display: flex;
+  align-items: center;
+  padding: 10rpx 0;
+}
+
+.icp-label {
+  width: 120rpx;
+  color: rgba(33, 33, 33, 0.72);
+  font-size: 22rpx;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.icp-value {
+  flex: 1;
+  color: #212121;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.icp-signature {
+  margin-top: 12rpx;
+}
+
+.icp-sig-text {
+  display: block;
+  margin-top: 6rpx;
+  color: #334155;
+  font-size: 22rpx;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.icp-tags {
+  margin-top: 14rpx;
+}
+
+.icp-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-top: 8rpx;
+}
+
+.icp-tag-chip {
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.72);
+  color: #212121;
+  font-size: 20rpx;
+  font-weight: 600;
+}
+
+.icp-showcase {
+  margin-top: 14rpx;
+}
+
+.icp-photo-grid {
+  display: flex;
+  gap: 10rpx;
+  margin-top: 8rpx;
+}
+
+.icp-photo {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+
+/* 备注编辑内联栏 */
+.note-edit-inline {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-top: 16rpx;
+  padding: 10rpx 16rpx;
+  border-radius: 12rpx;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.note-edit-inline input {
+  flex: 1;
+  font-size: 24rpx;
+  color: #1f2421;
+}
+
+/* 名称行：备注名 + 原名 + 编辑图标 */
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.name-original {
+  color: rgba(33, 33, 33, 0.55);
+  font-size: 24rpx;
+  font-weight: 400;
+}
+
+.name-edit-icon {
+  font-size: 28rpx;
+  color: #87948c;
+  padding: 4rpx;
+}
+
+/* 第三个按钮：白底浅紫描边 */
+.light-btn {
+  height: 68rpx;
+  margin-top: 12rpx;
+  border-radius: 20rpx;
+  font-size: 23rpx;
+  font-weight: 700;
+  color: var(--brand-primary);
+  background: #ffffff;
+  border: 2rpx solid var(--brand-primary);
+}
+
+/* ===== 有封面图时强制透明背景（必须在 Figma 区域之后，优先级最高） ===== */
+.profile-cover.has-cover {
+  background: transparent !important;
+}
