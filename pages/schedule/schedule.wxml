@@ -41,16 +41,12 @@
         <text class="semester-arrow">▼</text>
       </view>
       <text class="semester-month">{{currentMonthText}}</text>
-      <!-- 右侧：AI 识别记录 + 分享 + 导出日历 + 设置 -->
+      <!-- 右侧：AI 识别记录 + 导出日历 + 设置 -->
+      <!-- 分享按钮已下线；页面转发仍可用右上角「···」菜单，onShareAppMessage 保留 -->
       <view class="semester-actions">
         <view class="action-wrapper">
           <button class="icon-btn ai-record-btn" catchtap="openAiImportRecords" aria-label="{{lang === 'en' ? 'AI import history' : 'AI 识别记录'}}">
             <view class="ico ico-clock"></view>
-          </button>
-        </view>
-        <view class="action-wrapper">
-          <button class="icon-btn share-btn" open-type="share" aria-label="{{lang === 'en' ? 'Share' : '分享'}}">
-            <view class="ico ico-share"></view>
           </button>
         </view>
         <view class="action-wrapper">
@@ -91,43 +87,8 @@
   </view>
 
   <!-- ===== 课程表视图 ===== -->
-
-<!--
-            <view class="ico ico-share"></view>
-          </button>
-        </view>
-        <view class="action-wrapper">
-          <button class="icon-btn share-btn" open-type="share" aria-label="{{lang === 'en' ? 'Share' : '分享'}}">
-            <view class="ico ico-share"></view>
-          </button>
-        </view>
-        <view class="action-wrapper">
-          <button class="icon-btn settings-btn" catchtap="toggleSettingsPopup" aria-label="{{lang === 'en' ? 'Settings' : '设置'}}">
-            <view class="ico ico-settings"></view>
-          </button>
-        </view>
-      </view>
-    </view>
-
-
-  <view wx:if="{{scheduleKind === 'course' && viewMode === 'week'}}" class="course-view" bindtouchstart="onCalendarTouchStart" bindtouchend="onCalendarTouchEnd">
-    <view wx:if="{{weekPickerOpen}}" class="week-picker-mask" catchtap="closeWeekPicker">
-      <view class="week-picker-sheet" catchtap="noop">
-        <view class="week-picker-title">{{lang === 'en' ? 'Select Week' : '选择周数'}}</view>
-        <scroll-view class="week-picker-scroll" scroll-y>
-          <view
-            wx:for="{{weekOptions}}"
-            wx:key="*this"
-            class="week-picker-item {{currentWeek === item ? 'active' : ''}}"
-            data-week="{{item}}"
-            catchtap="selectWeek"
-          >{{lang === 'en' ? 'Week ' + item : '第 ' + item + ' 周'}}</view>
-        </scroll-view>
-      </view>
-    </view>
-  </view>
-
-  <!-- ===== 课程表视图 ===== -->
+  <!-- 旧版周视图片段（顶部操作栏尾部 + 重复的周选择弹窗）已移除：周/月视图共用
+       semester-bar 中的周选择弹窗，周视图本体见下方 week-view-bg 版本 -->
   <view wx:if="{{scheduleKind === 'course' && viewMode === 'week'}}" class="course-view week-view-bg" bindtouchstart="onCalendarTouchStart" bindtouchend="onCalendarTouchEnd">
 
     <!-- 周视图背景图（小程序 WXSS 不支持本地背景图，用 image 垫底） -->
